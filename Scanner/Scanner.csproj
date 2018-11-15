@@ -200,6 +200,13 @@
     <Compile Include="Controllers\api\FileUpIdController.cs" />
     <Compile Include="Controllers\api\InternalController.cs" />
     <Compile Include="Controllers\api\MapController.cs" />
+    <Compile Include="Controllers\api\MessageController.cs" />
+    <Compile Include="Controllers\api\OrderController.cs" />
+    <Compile Include="Controllers\api\OrderListBoardController.cs" />
+    <Compile Include="Controllers\api\OrderSetHandleController.cs" />
+    <Compile Include="Controllers\api\ReturnController.cs" />
+    <Compile Include="Controllers\api\UserController.cs" />
+    <Compile Include="Controllers\api\ValuesController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ScannerController.cs" />
@@ -305,6 +312,13 @@
     <Folder Include="Views\FileUpId\" />
     <Folder Include="Views\Internal\" />
     <Folder Include="Views\Map\" />
+    <Folder Include="Views\Message\" />
+    <Folder Include="Views\OrderListBoard\" />
+    <Folder Include="Views\OrderSetHandle\" />
+    <Folder Include="Views\Order\" />
+    <Folder Include="Views\Return\" />
+    <Folder Include="Views\User\" />
+    <Folder Include="Views\Values\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
