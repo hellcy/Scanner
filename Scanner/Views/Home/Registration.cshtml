@@ -1,0 +1,598 @@
+﻿@model Scanner.Models.User
+@using Scanner.Models
+@using System.Web.Configuration
+@{
+    ViewBag.Title = "Home Page";
+
+    var updateFlag = false;
+    var title = "Registration";
+    var buttonName = "Submit";
+    var msg = "";
+    if (Model.isUpdate != 0)
+    {
+        title = "Profile";
+        updateFlag = true;
+        buttonName = "Update";
+
+        if (Model.isUpdate == -1)
+        {
+            msg = "User profile details have been added successfully.";
+        }
+
+        if (Model.isUpdate == -2)
+        {
+            msg = "User profile details have been updated successfully.";
+        }
+
+        if (Model.isUpdate == -3)
+        {
+            msg = "User profile is already existing.";
+        }
+    }
+
+    var role = ((Scanner.Models.User)Session["User"]).Role;
+
+    var GramDisp = "";
+    var enable = "";
+    var checked_ = "";
+    var readOnlyBkc = "";
+    var tableWidth = "1800px";
+    if (role.IndexOf("Gram") < 0)
+    {
+        GramDisp = "none";
+        enable = "readonly";
+        checked_ = "checked";
+        readOnlyBkc = "background:yellow !important";
+        tableWidth = "900px";
+    }
+
+    var ReturnUrl = (Request.QueryString["ReturnUrl"] != null) ? "ReturnUrl=" + Request.QueryString["ReturnUrl"] : "";
+    var IdImage = "";
+    var imgDisp = "hidden";
+    if (!string.IsNullOrEmpty(Model.UserName))
+    {
+        IdImage = "../../UserImages/" + Model.UserName + ".png";
+        imgDisp = "";
+    }
+
+    var urlPre = "";
+    if (WebConfigurationManager.AppSettings["pubDir"].ToString() != "")
+    {
+        urlPre = "/" + WebConfigurationManager.AppSettings["pubDir"].ToString();
+    }
+}
+
+<div class="row" style="margin-top:10px;">
+    <div class="col-md-4" style="width:100%;text-align:center">
+        <fieldset>
+            <table style="border:solid; border-width:1px;margin-left:auto;margin-right:auto;width:@tableWidth;">
+                <tr>
+                    <td valign="top">
+                        <table>
+                            <tr>
+                                <td colspan="3" style="padding:10px"><font style="font-size:30px; font-weight:bold;">@title:</font></td>
+                            </tr>
+                            <tr>
+                                <td style="width:100px;"></td>
+                                <td style="font-size:20px; padding:10px; width:200px;">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.UserName)
+                                    </div>
+                                </td>
+                                <td style="width:500px;">
+                                    @if (updateFlag)
+                                    {
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(u => u.UserName, new { @readonly = "readonly", @style = "background:yellow !important" })*
+                                            <br /><font color="red">@Html.ValidationMessageFor(u => u.UserName)</font>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(u => u.UserName)*
+                                            <br /><font color="red">@Html.ValidationMessageFor(u => u.UserName)</font>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.Password)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.PasswordFor(u => u.Password, new { value = Model.Password })*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.Password)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.RePassword)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.PasswordFor(u => u.RePassword, new { value = Model.Password })*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.RePassword)</font>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.CompanyName)
+                                    </div>
+                                </td>
+                                <td>
+
+                                    @if (role.IndexOf("Gram") < 0)
+                                    {
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(u => u.CompanyName, new { style = "width:400px;display: inline-block;" + readOnlyBkc, list = "companyList", @readonly = "readonly" })*<span style="color:red;font-weight:bold;display: inline-block;">@ViewBag.Newcompany</span><div style="display: inline-block;"><input type="checkbox" name="compConfirm" id="compConfirm" style="display: @GramDisp" onChange="checkCompany()" @checked_ /></div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(u => u.CompanyName, new { style = "width:400px;display: inline-block;" + readOnlyBkc, list = "companyList" })*<span style="color:red;font-weight:bold;display: inline-block;">@ViewBag.Newcompany</span><div style="display: inline-block;"><input type="checkbox" name="compConfirm" id="compConfirm" style="display: @GramDisp" onChange="checkCompany()" @checked_ /></div>
+                                            <datalist id="companyList" size="3">
+                                                @foreach (var comp in ViewBag.CompanyList)
+                                                {
+                                                    <option value="@comp" />
+                                                }
+                                            </datalist>
+                                        </div>
+                                    }
+                                    <br />
+                                    <font color="red">@Html.ValidationMessageFor(u => u.CompanyName)</font>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.DriverLic)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.DriverLic)<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.DriverLic)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.ABN)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.ABN)<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.ABN)</font>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <tr style="display:@GramDisp">
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.ACCGroup)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        <select name="ACCGroup" id="ACCGroup">
+                                            @foreach (ACCGroup acc in ((IList<ACCGroup>)ViewBag.AccGroups))
+                                            {
+                                                var sel = "";
+                                                if (Model.ACCGroup == acc.ACCGROUP)
+                                                {
+                                                    sel = "selected";
+                                                }
+                                                <option value=@acc.ACCGROUP @sel>@acc.GROUPNAME</option>
+                                            }
+                                        </select>*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.ACCNO)</font>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:100px;"></td>
+                                <td style="font-size:20px; padding:10px; width:200px;">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.UserEmail)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.UserEmail)*
+                                        <br /><font color="red">@Html.ValidationMessageFor(u => u.UserEmail)</font>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.FirstName)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.FirstName)*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.FirstName)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.LastName)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.LastName)<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.LastName)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.Mobile)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.Mobile)*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.Mobile)</font>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.Phone)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.Phone)<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.Phone)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.Address1)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.Address1)*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.Address1)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.Address2)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.Address2)*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.Address2)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.State)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.State)*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.State)</font>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.Postcode)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.Postcode)*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.Postcode)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.Country)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.Country)*<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.Country)</font>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <tr style="display:@GramDisp">
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.Approved)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.CheckBoxFor(u => u.Approved)
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr style="display:none">
+                                <td></td>
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.isUpdate)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.TextBoxFor(u => u.isUpdate)<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.isUpdate)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px"></td>
+                                <td></td>
+                                <td>
+                                    <input type="button" value="@buttonName" class="btn btn-primary btn-lg" style="height:40px; margin-bottom:10px;margin-top:10px;" onclick="goRegistration('Registration','Home','@ReturnUrl')" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    @if (msg != "")
+                                    {
+                                        @*<div style="color:green; font-size:18px;">@msg</div>*@
+
+                                        if (Model.isUpdate == -1)
+                                        {
+                                            <input type="hidden" name="regWarning" id="regWarning" value="@msg" />
+                                        }
+                                        else
+                                        {
+                                            <input type="hidden" name="regInfo" id="regInfo" value="@msg" />
+                                        }
+
+                                        if (Request.QueryString["ReturnUrl"] != null)
+                                        {
+                                            <input type="hidden" name="goToOrderTrack" id="goToOrderTrack" value="" />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <font color="red">@Html.ValidationSummary(true, "Submit failed. Check your input details.")</font>
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td valign="top" style="display:@GramDisp">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td align="center"><b>Live Camera</b></td>
+                                <td></td>
+                                <td align="center"><b>ID Photo</b></td>
+                            </tr>
+                            <tr>
+                                <td><div id="webcam"></div></td>
+                                <td>&nbsp;&nbsp;</td>
+                                <td><img id="imgCapture" style="visibility:@imgDisp; width: 320px;height: 240px" src="@IdImage" /></td>
+                            </tr>
+                        </table>
+                        <br />
+                        <input type="button" value="Capture" onclick="Capture();" />
+                        <br />
+                        <span id="camStatus"></span>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+        @*@Server.MapPath("~/UserImages/")*@
+    </div>
+</div>
+
+
+
+@*<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>*@
+<script src="~/Webcam_Plugin/jquery.webcam.js"></script>
+<script type="text/javascript">
+    $(function () {
+        jQuery("#webcam").webcam({
+            width: 320,
+            height: 240,
+            mode: "save",
+            swffile: '@urlPre/Webcam_Plugin/jscam.swf',
+            debug: function (type, status) {
+                $('#camStatus').append(type + ": " + status + '<br /><br />');
+            },
+            onSave: function (data, ab) {
+                $.ajax({
+                    type: "POST",
+                    url: '@urlPre/Home/GetCapture',
+                    data: '',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    success: function (r) {
+                        var d = new Date();
+
+                        r = r + "?t=" + d.toString();
+                        $("#imgCapture").css("visibility", "visible");
+                        $("#imgCapture").attr("src", r);
+                    },
+                    failure: function (response) {
+                        alert(response.d);
+                    }
+                });
+            },
+            onCapture: function () {
+                $('#camStatus').empty();
+                $("input[name=UserName]").val($("input[name=UserName]").val().replace(/ /g, ""));
+                if ($("input[name=UserName]").val() != "") {
+                    webcam.save('@urlPre/Home/Capture?filename=' + $("input[name=UserName]").val());
+                }
+                else {
+                    showWarning("Error: User Name input is null.");
+                }
+            }
+        });
+    });
+
+    function Capture() {
+        webcam.capture();
+    }
+
+
+    function checkCompany() {
+        if ($('#compConfirm').prop('checked')) {
+            var founded = 0;
+            $('#companyList option').each(function () {
+                if ($(this).val() == $('#CompanyName').val()) {
+                    founded = 1;
+                    return;
+                }
+            });
+
+            if (founded == 0) {
+                var msg = $("#CompanyName").val() + "<br/> is not in the existing list.<br />Click YES to continue registry as a new company.<br />Click NO to select a proper company from the list";
+                $("#webcam").css("display", "none");
+
+                BootstrapDialog.show({
+                    title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+                    message: "<font style='font-size:25px;'>" + msg + "</font>",
+                    closable: false,
+                    buttons: [{
+                        label: 'NO',
+                        cssClass: 'btn-dialog',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                            $('#CompanyName').val("");
+                            $('#compConfirm').attr('checked', false);
+                            $("#webcam").css("display", "");
+                        }
+                    }, {
+                        label: 'YES',
+                        cssClass: 'btn-dialog',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                            $("#webcam").css("display", "");
+
+                        }
+                    }]
+                });
+            }
+        }
+    }
+
+    function goRegistration(page, Ctrl, rtnUrl){
+        if ($("#compConfirm").length) {
+            if (!$('#compConfirm').prop('checked')) {
+                showWarning("Please click the check box to confirm the customer company.");
+            }
+            else {
+                gotoPage(page, Ctrl, rtnUrl);
+            }
+        }
+    }
+
+    function showWarning(msg) {
+        $("#webcam").css("display", "none");
+
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            closable: false,
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                    $("#webcam").css("display", "");
+                }
+            }]
+        });
+    }
+
+    function showInfo(msg) {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-info-sign"></i> Information</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+    if ($("#regWarning").length) {
+        if ($("#regWarning").val() != "")
+        {
+            showWarning($("#regWarning").val());
+        }
+    }
+
+    if ($("#regInfo").length) {
+        if ($("#regInfo").val() != "") {
+            showInfo($("#regInfo").val());
+        }
+    }
+
+</script>

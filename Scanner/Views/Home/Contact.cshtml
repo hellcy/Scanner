@@ -1,0 +1,1127 @@
+﻿@model Scanner.Models.Contact
+
+@{
+    ViewBag.Title = "Contact";
+    var role = "";
+    if (Request.IsAuthenticated)
+    {
+        if (Session["User"] != null)
+        {
+            role = ((Scanner.Models.User)Session["User"]).Role;
+        }
+    }
+
+    var conDisp = "";
+    var cond = "";
+    if ((role != "") && (role.IndexOf("Gram Admin") > -1))
+    {
+        conDisp = "none";
+        cond = "sendGramBulk=yes1true";
+    }
+
+
+    IList<Scanner.Models.Bridge> bridges = (List<Scanner.Models.Bridge>)ViewBag.Bridges;
+
+
+}
+
+
+
+<div class="row" style="margin-top:10px;">
+
+    <div class="col-md-4" style="width:100%;text-align:center">
+        <fieldset>
+            <table style="border:solid; border-width:1px;margin-left:auto;margin-right:auto;width:800px;">
+                <tr>
+                    <td colspan="3" style="padding:10px"><font style="font-size:30px; font-weight:bold;">@ViewBag.Title</font></td>
+                </tr>
+                <tr style="display:@conDisp">
+                    <td style="width:100px;"></td>
+                    <td style="font-size:20px; padding:10px; width:200px;">
+                        <div class="editor-label">
+                            @Html.LabelFor(u => u.Name)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(u => u.Name)
+                            <br /><font color="red">@Html.ValidationMessageFor(u => u.Name)</font>
+                        </div>
+                    </td>
+                </tr>
+                <tr style="display:@conDisp">
+                    <td style="width:100px;"></td>
+                    <td style="font-size:20px; padding:10px; width:200px;">
+                        <div class="editor-label">
+                            @Html.LabelFor(u => u.Mobile)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(u => u.Mobile)
+                            <br /><font color="red">@Html.ValidationMessageFor(u => u.Mobile)</font>
+                        </div>
+                    </td>
+                </tr>
+                <tr style="display:@conDisp">
+                    <td></td>
+                    <td style="font-size:20px; padding:10px">
+                        <div class="editor-label">
+                            @Html.LabelFor(u => u.Email)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(u => u.Email)<br />
+                            <font color="red">@Html.ValidationMessageFor(u => u.Email)</font>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="font-size:20px; padding:10px">
+                        <div class="editor-label">
+                            @Html.LabelFor(u => u.Subject)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(u => u.Subject, new { style = "width:490px;" })<br />
+                            <font color="red">@Html.ValidationMessageFor(u => u.Subject)</font>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="font-size:20px; padding:10px" valign="top">
+                        <div class="editor-label">
+                            @Html.LabelFor(u => u.EmailBody)
+                        </div>
+                    </td>
+                    <td style="padding-top:10px;padding-bottom:10px">
+                        <div class="editor-field">
+                            @Html.TextAreaFor(u => u.EmailBody, new { rows = "15", cols = "15", style = "text-align:left;" })<br />
+                            <font color="red">@Html.ValidationMessageFor(u => u.EmailBody)</font>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr style="display:none;">
+                    <td></td>
+                    <td style="font-size:20px; padding:10px">
+                        <div class="editor-label">
+                            @Html.LabelFor(u => u.Attachment)
+                        </div>
+                    </td>
+                    <td style="padding-top:10px;" valign="top">
+                        <div class="editor-field">
+                            <input type="file" name="fileUploader" />
+                            @Html.TextBoxFor(u => u.Attachment, new { style = "display: none;" }) <br />
+                            <font color="red">@Html.ValidationMessageFor(u => u.Attachment)</font>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:10px"></td>
+                    <td></td>
+                    <td>
+                        <button value="" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Contact','Home','@cond');"><b>SUBMIT</b></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        @*@if (successMsg != "")
+                            {
+                                <div style="color:green; font-size:18px;">@successMsg</div>
+                            }
+                            else
+                            {
+                                <font color="red">@Html.ValidationSummary(true, "Submit failed. Check your input details.")</font>
+                            }*@
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+    <div>4545454</div>
+    <br />
+    <div>
+        <table>
+            <tr>
+
+                @{
+                    int _PSDT = 0;
+                    string spades = "";
+                    string hearts = "";
+                    string diamonds = "";
+                    string clubs = "";
+                    string vul = "";
+                    string flag = "NET-HCP";
+                    flag = "SHL";
+                    flag = "R18";
+                    //  flag = "TOP";
+                    int spadeHCP = 0;
+                    int heartHCP = 0;
+                    int diamondHCP = 0;
+                    int clubHCP = 0;
+
+                    int spadeHCP_E = 0;
+                    int heartHCP_E = 0;
+                    int diamondHCP_E = 0;
+                    int clubHCP_E = 0;
+
+                    int spadePSDT = 0;
+                    int heartPSDT = 0;
+                    int diamondPSDT = 0;
+                    int clubPSDT = 0;
+
+                    int spadeSC = 0;
+                    int heartSC = 0;
+                    int diamondSC = 0;
+                    int clubtSC = 0;
+
+                    int rCnt = 0;
+
+                    foreach (var item in bridges)
+                    {
+
+                        if (rCnt == 3)
+                        {
+                            rCnt = 0;
+                        @:</tr><tr>
+
+
+                        }
+                        rCnt++;
+                        spadeHCP = 0;
+                        heartHCP = 0;
+                        diamondHCP = 0;
+                        clubHCP = 0;
+
+                        spadeHCP_E = 0;
+                        heartHCP_E = 0;
+                        diamondHCP_E = 0;
+                        clubHCP_E = 0;
+
+
+                        spades = item.NHand.Split('.')[0].ToString();
+                        hearts = item.NHand.Split('.')[1].ToString();
+                        diamonds = item.NHand.Split('.')[2].ToString();
+                        clubs = item.NHand.Split('.')[3].ToString();
+                        spadeSC = spades.Length - spades.Replace("A", "").Replace("K", "").Length;
+                        heartSC = hearts.Length - hearts.Replace("A", "").Replace("K", "").Length;
+                        diamondSC = diamonds.Length - diamonds.Replace("A", "").Replace("K", "").Length;
+
+                        if (spades.IndexOf("AQT") > -1)
+                        {
+                            spadeHCP_E += 1;
+                        }
+
+                        if (spades.IndexOf("AJT") > -1)
+                        {
+                            spadeHCP_E += 1;
+                        }
+
+                        if (spades.IndexOf("A") > -1)
+                        {
+                            spadeHCP += 4;
+                        }
+
+                        if (spades.IndexOf("K") > -1)
+                        {
+                            spadeHCP += 3;
+                        }
+
+                        if (spades.IndexOf("Q") > -1)
+                        {
+                            spadeHCP += 2;
+                        }
+
+                        if (spades.IndexOf("J") > -1)
+                        {
+                            spadeHCP += 1;
+                        }
+
+
+                        if (hearts.IndexOf("AQT") > -1)
+                        {
+                            heartHCP_E += 1;
+                        }
+
+                        if (hearts.IndexOf("AJT") > -1)
+                        {
+                            heartHCP_E += 1;
+                        }
+
+
+                        if (hearts.IndexOf("A") > -1)
+                        {
+                            heartHCP += 4;
+                        }
+
+                        if (hearts.IndexOf("K") > -1)
+                        {
+                            heartHCP += 3;
+                        }
+
+                        if (hearts.IndexOf("Q") > -1)
+                        {
+                            heartHCP += 2;
+                        }
+
+                        if (hearts.IndexOf("J") > -1)
+                        {
+                            heartHCP += 1;
+                        }
+
+
+
+                        if (diamonds.IndexOf("AQT") > -1)
+                        {
+                            diamondHCP_E += 1;
+                        }
+
+                        if (diamonds.IndexOf("AJT") > -1)
+                        {
+                            diamondHCP_E += 1;
+                        }
+
+
+
+                        if (diamonds.IndexOf("A") > -1)
+                        {
+                            diamondHCP += 4;
+                        }
+
+                        if (diamonds.IndexOf("K") > -1)
+                        {
+                            diamondHCP += 3;
+                        }
+
+                        if (diamonds.IndexOf("Q") > -1)
+                        {
+                            diamondHCP += 2;
+                        }
+
+                        if (diamonds.IndexOf("J") > -1)
+                        {
+                            diamondHCP += 1;
+                        }
+
+                        if (clubs.IndexOf("AQT") > -1)
+                        {
+                            clubHCP_E += 1;
+                        }
+
+                        if (clubs.IndexOf("AJT") > -1)
+                        {
+                            clubHCP_E += 1;
+                        }
+
+
+                        if (clubs.IndexOf("A") > -1)
+                        {
+                            clubHCP += 4;
+                        }
+
+                        if (clubs.IndexOf("K") > -1)
+                        {
+                            clubHCP += 3;
+                        }
+
+                        if (clubs.IndexOf("Q") > -1)
+                        {
+                            clubHCP += 2;
+                        }
+
+                        if (clubs.IndexOf("J") > -1)
+                        {
+                            clubHCP += 1;
+                        }
+
+
+
+
+
+
+                        switch (item.Vulnerability)
+                        {
+
+                            case 1:
+                                vul = "NIL";
+                                break;
+                            case 2:
+                                vul = "N-S";
+                                break;
+                            case 3:
+                                vul = "E-W";
+                                break;
+                            default:
+                                vul = "Both";
+                                break;
+                        }
+
+
+                        switch (spades.Length)
+                        {
+                            case 4:
+                                _PSDT += 1;
+                                spadePSDT = 1;
+                                break;
+                            case 5:
+                                _PSDT += 2;
+                                spadePSDT = 2;
+                                break;
+                            case 6:
+                                _PSDT += 3;
+                                spadePSDT = 3;
+                                break;
+                            case 7:
+                                _PSDT += 5;
+                                spadePSDT = 5;
+                                break;
+                            case 8:
+                                _PSDT += 6;
+                                spadePSDT = 6;
+                                break;
+                            case 9:
+                                _PSDT += 7;
+                                spadePSDT = 7;
+                                break;
+                            case 10:
+                                _PSDT += 9;
+                                spadePSDT = 9;
+                                break;
+                            case 11:
+                                _PSDT += 10;
+                                spadePSDT = 10;
+                                break;
+                            case 12:
+                                _PSDT += 11;
+                                spadePSDT = 11;
+                                break;
+                            case 13:
+                                _PSDT += 13;
+                                spadePSDT = 13;
+                                break;
+                            default:
+                                _PSDT += 0;
+                                spadePSDT = 0;
+                                break;
+                        }
+
+
+                        switch (hearts.Length)
+                        {
+                            case 4:
+                                _PSDT += 1;
+                                heartPSDT = 1;
+                                break;
+                            case 5:
+                                _PSDT += 2;
+                                heartPSDT = 2;
+                                break;
+                            case 6:
+                                _PSDT += 3;
+                                heartPSDT = 3;
+                                break;
+                            case 7:
+                                _PSDT += 5;
+                                heartPSDT = 5;
+                                break;
+                            case 8:
+                                _PSDT += 6;
+                                heartPSDT = 6;
+                                break;
+                            case 9:
+                                _PSDT += 7;
+                                heartPSDT = 7;
+                                break;
+                            case 10:
+                                _PSDT += 9;
+                                heartPSDT = 9;
+                                break;
+                            case 11:
+                                _PSDT += 10;
+                                heartPSDT = 10;
+                                break;
+                            case 12:
+                                _PSDT += 11;
+                                heartPSDT = 11;
+                                break;
+                            case 13:
+                                _PSDT += 13;
+                                heartPSDT = 13;
+                                break;
+                            default:
+                                _PSDT += 0;
+                                heartPSDT = 0;
+                                break;
+                        }
+
+
+                        switch (diamonds.Length)
+                        {
+                            case 4:
+                                _PSDT += 1;
+                                diamondPSDT = 1;
+                                break;
+                            case 5:
+                                _PSDT += 2;
+                                diamondPSDT = 2;
+                                break;
+                            case 6:
+                                _PSDT += 3;
+                                diamondPSDT = 3;
+                                break;
+                            case 7:
+                                _PSDT += 5;
+                                diamondPSDT = 5;
+                                break;
+                            case 8:
+                                _PSDT += 6;
+                                diamondPSDT = 6;
+                                break;
+                            case 9:
+                                _PSDT += 7;
+                                diamondPSDT = 7;
+                                break;
+                            case 10:
+                                _PSDT += 9;
+                                diamondPSDT = 9;
+                                break;
+                            case 11:
+                                _PSDT += 10;
+                                diamondPSDT = 10;
+                                break;
+                            case 12:
+                                _PSDT += 11;
+                                diamondPSDT = 11;
+                                break;
+                            case 13:
+                                _PSDT += 13;
+                                diamondPSDT = 13;
+                                break;
+                            default:
+                                _PSDT += 0;
+                                diamondPSDT = 0;
+                                break;
+                        }
+
+
+
+                        switch (clubs.Length)
+                        {
+                            case 4:
+                                _PSDT += 1;
+                                clubPSDT = 1;
+                                break;
+                            case 5:
+                                _PSDT += 2;
+                                clubPSDT = 2;
+                                break;
+                            case 6:
+                                _PSDT += 3;
+                                clubPSDT = 3;
+                                break;
+                            case 7:
+                                _PSDT += 5;
+                                clubPSDT = 5;
+                                break;
+                            case 8:
+                                _PSDT += 6;
+                                clubPSDT = 6;
+                                break;
+                            case 9:
+                                _PSDT += 7;
+                                clubPSDT = 7;
+                                break;
+                            case 10:
+                                _PSDT += 9;
+                                clubPSDT = 9;
+                                break;
+                            case 11:
+                                _PSDT += 10;
+                                clubPSDT = 10;
+                                break;
+                            case 12:
+                                _PSDT += 11;
+                                clubPSDT = 11;
+                                break;
+                            case 13:
+                                _PSDT += 13;
+                                clubPSDT = 13;
+                                break;
+                            default:
+                                _PSDT += 0;
+                                clubPSDT = 0;
+                                break;
+                        }
+
+                        int HCP = spadeHCP + heartHCP + diamondHCP + clubHCP;
+                        int HCP_E = spadeHCP_E + heartHCP_E + diamondHCP_E + clubHCP_E;
+                        int NETHCP = HCP + HCP_E;
+
+                        int sc_s = 0;
+                        int sc_h = 0;
+                        int sc_d = 0;
+                        int sc_c = 0;
+                        int sc = 0;
+
+                        sc_s = spades.Length - spades.Replace("A", "").Replace("K", "").Length;
+                        sc_h = hearts.Length - hearts.Replace("A", "").Replace("K", "").Length;
+                        sc_d = diamonds.Length - diamonds.Replace("A", "").Replace("K", "").Length;
+                        sc_c = clubs.Length - clubs.Replace("A", "").Replace("K", "").Length;
+                        sc = sc_s + sc_h + sc_d + sc_c;
+
+                        string queens_s = "";
+                        string queens_h = "";
+                        string queens_d = "";
+                        string queens_c = "";
+                        double queens = 0;
+                        if (spades.IndexOf("AQT") < 0)
+                        {
+                            if (spades.IndexOf("AQT") > -1)
+                            {
+                                queens += 0.5;
+                                queens_s = "0.5";
+                            }
+                        }
+
+                        if (hearts.IndexOf("AQT") < 0)
+                        {
+                            if (hearts.IndexOf("AQT") > -1)
+                            {
+                                queens += 0.5;
+                                queens_h = "0.5";
+                            }
+                        }
+
+                        if (diamonds.IndexOf("AQT") < 0)
+                        {
+                            if (diamonds.IndexOf("AQT") > -1)
+                            {
+                                queens += 0.5;
+                                queens_d = "0.5";
+                            }
+                        }
+
+                        if (clubs.IndexOf("AQT") < 0)
+                        {
+                            if (clubs.IndexOf("AQT") > -1)
+                            {
+                                queens += 0.5;
+                                queens_c = "0.5";
+                            }
+                        }
+
+                        Double top = Convert.ToDouble(_PSDT) + Convert.ToDouble(sc) + Convert.ToDouble(item.HCP_N) + Convert.ToDouble(queens);
+                        <td>
+
+                            @if (flag == "NET-HCP")
+                            {
+                                <table>
+                                    <tr>
+                                        <td style="font-size:20px;font-weight:bold;">Hand ID: @item.HandId.ToString()</td>
+                                    </tr>
+                                    @*<tr>
+                                            <td  style="font-size:20px;font-weight:bold;">VUL: @vul.ToString()</td>
+                                        </tr>*@
+                                    <tr>
+                                        <td>
+                                            <table style="width:200px; border:solid 1px">
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        HAND
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        HCP
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        CHH
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        ♠@spades
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @spadeHCP
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @spadeHCP_E
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        <font color="red">♥</font>@hearts
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @heartHCP
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @heartHCP_E
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        <font color="red">♦</font>@diamonds
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @diamondHCP
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @diamondHCP_E
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        ♣@clubs
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @clubHCP
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @clubHCP_E
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        TOTAL
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @HCP
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @HCP_E
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-right:solid 1px;">
+                                                        NET-HCP
+                                                    </td>
+                                                    <td colspan="2" style="font-size:20px;font-weight:bold;text-align:center">
+                                                        @HCP  + @HCP_E = @NETHCP
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+
+
+
+                            @if (flag == "SHL")
+                            {
+                                <table>
+                                    <tr>
+                                        <td style="font-size:20px;font-weight:bold;">Hand ID: @item.HandId.ToString()</td>
+                                    </tr>
+                                    @*<tr>
+                                            <td  style="font-size:20px;font-weight:bold;">VUL: @vul.ToString()</td>
+                                        </tr>*@
+                                    <tr>
+                                        <td>
+                                            <table style="width:200px; border:solid 1px">
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        HAND
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        SHL
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        ♠@spades
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.S_SHL
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        <font color="red">♥</font>@hearts
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.H_SHL
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        <font color="red">♦</font>@diamonds
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.D_SHL
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        ♣@clubs
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.C_SHL
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        SHL
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.NSHL
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        Opening Bid
+                                                    </td>
+                                                    <td colspan="2" style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.BidMade
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-right:solid 1px;">
+                                                        Group
+                                                    </td>
+                                                    <td colspan="2" style="font-size:20px;font-weight:bold;text-align:center">
+                                                        @item.Grouping2
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+
+
+                            @if (flag == "R18")
+                            {
+                                var ranks = item.OpenerShape.Split(':')[1].Split('-')[0] + "-" + item.OpenerShape.Split(':')[1].Split('-')[1];
+
+                                <table>
+                                    <tr>
+                                        <td style="font-size:20px;font-weight:bold;">Hand ID: @item.HandId.ToString()</td>
+                                    </tr>
+                                    @*<tr>
+                                            <td  style="font-size:20px;font-weight:bold;">VUL: @vul.ToString()</td>
+                                        </tr>*@
+                                    <tr>
+                                        <td>
+                                            <table style="width:200px; border:solid 1px">
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        HAND
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        POINT
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        ♠@spades
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @if (ranks.IndexOf("S") > -1)
+                                                        {
+                                                            <span>@spades.Length</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        <font color="red">♥</font>@hearts
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @if (ranks.IndexOf("H") > -1)
+                                                        {
+                                                            <span>@hearts.Length</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        <font color="red">♦</font>@diamonds
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @if (ranks.IndexOf("D") > -1)
+                                                        {
+                                                            <span>@diamonds.Length</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        ♣@clubs
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @if (ranks.IndexOf("C") > -1)
+                                                        {
+                                                            <span>@clubs.Length</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        NET-HCP
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.HCP_N
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        RULE OF 18
+                                                    </td>
+                                                    <td colspan="2" style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+
+                                                        @if (item.NR < 16)
+                                                        {
+                                                            <span>< 16</span>
+                                                        }
+                                                        else if (item.NR > 19)
+                                                        {
+                                                            <span>> 19</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@item.NR</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        Opening Bid
+                                                    </td>
+                                                    <td colspan="2" style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.BidMade
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        Shape
+                                                    </td>
+                                                    <td colspan="2" style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.NShape
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-right:solid 1px;">
+                                                        Group
+                                                    </td>
+                                                    <td colspan="2" style="font-size:20px;font-weight:bold;text-align:center">
+                                                        @item.Grouping2
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+
+
+
+                            @if (flag == "TOP")
+                            {
+                                var ranks = item.OpenerShape.Split(':')[1].Split('-')[0] + "-" + item.OpenerShape.Split(':')[1].Split('-')[1] + "-" + item.OpenerShape.Split(':')[1].Split('-')[2]; ;
+
+                                <table>
+                                    <tr>
+                                        <td style="font-size:20px;font-weight:bold;">Hand ID: @item.HandId.ToString()</td>
+                                    </tr>
+                                    @*<tr>
+                                            <td  style="font-size:20px;font-weight:bold;">VUL: @vul.ToString()</td>
+                                        </tr>*@
+                                    <tr>
+                                        <td>
+                                            <table style="width:200px; border:solid 1px">
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        HAND
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        PSDT
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        SC
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        NOT AQT<br />
+                                                        QUEENS
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        ♠@spades
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @if (ranks.IndexOf("S") > -1)
+                                                        {
+                                                            <span>@spadePSDT</span>
+                                                        }
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @if (sc_s != 0)
+                                                        {
+                                                            <span>@sc_s.ToString()</span>
+                                                        }
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        <span>@queens_s</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        <font color="red">♥</font>@hearts
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @if (ranks.IndexOf("H") > -1)
+                                                        {
+                                                            <span>@heartPSDT</span>
+                                                        }
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @if (sc_h != 0)
+                                                        {
+                                                            <span>@sc_h.ToString()</span>
+                                                        }
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        <span>@queens_h</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        <font color="red">♦</font>@diamonds
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @if (ranks.IndexOf("D") > -1)
+                                                        {
+                                                            <span>@diamondPSDT</span>
+                                                        }
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @if (sc_d != 0)
+                                                        {
+                                                            <span>@sc_d.ToString()</span>
+                                                        }
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        <span>@queens_d</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        ♣@clubs
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @if (ranks.IndexOf("C") > -1)
+                                                        {
+                                                            <span>@clubPSDT</span>
+                                                        }
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        @if (sc_c != 0)
+                                                        {
+                                                            <span>@sc_c.ToString()</span>
+                                                        }
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        <span>@queens_c</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        SUM
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        <span>@_PSDT</span>
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;text-align:center">
+                                                        <span>@sc.ToString()</span>
+                                                    </td>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        <span>@queens</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        NET-HCP
+                                                    </td>
+                                                    <td colspan="4" style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.HCP_N
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        T.O.P.
+                                                    </td>
+                                                    <td colspan="4" style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @top.ToString()
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        Opening Bid
+                                                    </td>
+                                                    <td colspan="4" style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.BidMade
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-bottom:solid 1px;border-right:solid 1px;">
+                                                        SHAPE
+                                                    </td>
+                                                    <td colspan="4" style="font-size:20px;font-weight:bold;border-bottom:solid 1px;text-align:center">
+                                                        @item.NShape
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-size:20px;font-weight:bold;border-right:solid 1px;">
+                                                        GROUP
+                                                    </td>
+                                                    <td colspan="4" style="font-size:20px;font-weight:bold;text-align:center">
+                                                        @item.Grouping2
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+
+
+
+                        </td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    }
+                }
+
+
+
+
+            </tr>
+        </table>
+
+    </div>
+
+</div>
+<script language="javascript">
+    var msg = '@ViewBag.Message';
+    if (msg != "") {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-info-sign"></i> Information</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+
+    }
+</script>

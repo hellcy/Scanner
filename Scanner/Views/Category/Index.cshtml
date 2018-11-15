@@ -1,0 +1,135 @@
+﻿@using System.Data
+@using Scanner.Models
+@{
+    var catId = Request.QueryString["catId"].ToString();
+    IList<SideMenu> menus = ((List<SideMenu>)Session["SideMenu"]);
+    var user = (User)Session["User"];
+    IList<SideMenuItem> cats = new List<SideMenuItem>();
+    var clnCnt = 0;
+    int ini = 0;
+    foreach (var menu in menus)
+    {
+        if (ini == 1)
+        {
+            if (catId.Split('.')[0] != menu.SideMenuId.Split('.')[0])
+            {
+                break;
+            }
+            if (!string.IsNullOrEmpty(menu.lv2))
+            {
+                SideMenuItem itm = new SideMenuItem();
+                itm.MenuName = menu.lv2;
+                itm.MenuId = menu.SideMenuId;
+                itm.IsSubMenu = false;
+                itm.OnlyFor = menu.OnlyFor;
+                if (menu.SideMenuId[menu.SideMenuId.Length - 1].ToString() == "0")
+                {
+                    itm.IsSubMenu = true;
+                }
+
+                cats.Add(itm);
+            }
+        }
+
+        if (menu.SideMenuId == catId)
+        {
+            ini = 1;
+            ViewBag.Title = menu.lv1.Split('!')[0];
+        }
+    }
+}
+
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px; vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td style="width:20px;"></td>
+        <td style="width:100%" valign="top">
+            <div class="jumbotron">
+                <table style="width:100%">
+                    <tr>
+                        <td><font class="subPagetitle">@ViewBag.Title</font></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div style="margin-left:10px; margin-top:20px;margin-bottom:200px;">
+                <table>
+                    <tr>
+                        <td valign="top">
+                            <table style="width:100%;">
+
+                                @foreach (var cat in cats)
+                                {
+
+                                    string display = "";
+
+                                    if ((user.Role.IndexOf("Gram") < 0) && (cat.OnlyFor != ""))
+                                    {
+                                        if (cat.OnlyFor.IndexOf("|" + user.Id.ToString() + "|") < 0)
+                                        {
+                                            display = "none";
+                                        }
+                                    }
+
+                                    var catName = cat.MenuName.Split('!')[0];
+                                    var act = cat.MenuName.Split('!')[1];
+                                    if (clnCnt == 0)
+                                    {
+                                        @:<tr>
+                                        }
+
+                                        if (!cat.IsSubMenu)
+                                        {
+                                            <td style="padding-right:20px;padding-bottom:20px;display:@display">
+                                                <button value="" class="btn btn-primary btn-lg" style="width:200px;height:100px;white-space: normal;" onclick="gotoPage('@act','Order','');return false;"><b>@catName</b></button>
+                                                @*<input type="button" value="@catName" class="btn btn-primary btn-lg" style="width:200px;height:100px;white-space: normal;" onclick="gotoPage('@act','Order','');" />*@
+
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="padding-right:20px;padding-bottom:20px;display:@display">
+                                                <button value="" class="btn btn-primary btn-lg" style="width:200px;height:100px;white-space: normal;" onclick="gotoSubCat('@cat.MenuId');return false;"><b>@catName</b>&nbsp;<span class='glyphicon glyphicon-plus-sign'></button>
+                                            </td>
+                                        }
+                                        clnCnt++;
+                                        if (clnCnt == 3)
+                                        {
+                                        @:</tr>
+                                        clnCnt = 0;
+                                    }
+                                }
+                                <tr>
+                                    <td colspan="3">
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        @Html.Partial("_BottomPanel")
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td valign="top">
+                            @Html.Partial("_Adverts")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <input type="hidden" name="rows" id="rowsCnt" value="0" />
+            <input type="hidden" name="cols" id="colsCnt" value="0" />
+        </td>
+    </tr>
+</table>
+
+<script language="javascript">
+    function displayNoImage(img) {
+        //img.src = "../../Images/no-image.jpg";
+        $("#titleImage").hide();
+    }
+</script>
