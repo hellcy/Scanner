@@ -1,0 +1,440 @@
+﻿@using Scanner.Models
+
+@{
+
+    var loginAs = "";
+    var role = "";
+    if (Request.IsAuthenticated)
+    {
+        if (Session["User"] != null)
+        {
+            loginAs = ((Scanner.Models.User)Session["User"]).UserName;
+            role = ((Scanner.Models.User)Session["User"]).Role;
+        }
+
+        if (Request.Url.AbsoluteUri.IndexOf("/CheckOut") > -1)
+        {
+            Session["CurrForm"] = "CheckOut";
+            ViewBag.Title = "CHECK OUT";
+        }
+    }
+
+    // var showSideMenu = false;
+}
+<!DOCTYPE html>
+<!--[if IE 6]>
+
+<html id="ie6" lang="en-US">
+
+<![endif]-->
+<!--[if IE 7]>
+
+<html id="ie7" lang="en-US">
+
+<![endif]-->
+<!--[if IE 8]>
+
+<html id="ie8" lang="en-US">
+
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html lang="en-US">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Gram Engineering </title>
+    @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+
+    <script src="~/Scripts/jquery-2.1.4/jquery-2.1.4.js"></script>
+    <link href="~/Content/3.3.5/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/boostrap-3.3.5/bootstrap.js"></script>
+    <script src="~/Scripts/boostrap-3.3.5/run_prettify.min.js"></script>
+    <link href="~/Content/3.3.5/bootstrap-dialog.css" rel="stylesheet" />
+    <script src="~/Scripts/boostrap-3.3.5/bootstrap-dialog.js"></script>
+
+
+    <script src="~/Scripts/Gram/Global.js"></script>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @*<link rel="stylesheet" type="text/css" media="all" href="http://www.gram.com.au/wp-content/themes/twentyeleven/style.css" />*@
+    <link rel="stylesheet" type="text/css" media="all" href="~/Content/Gram/Style.css" />
+
+    <!--[if lt IE 9]>
+    <![endif]-->
+    <style type='text/css'>
+        img#wpstats {
+            display: none
+        }
+    </style>
+    @*<link rel="stylesheet" href="http://www.gram.com.au/wp-content/plugins/jquery-vertical-mega-menu/skin.php?widget_id=2&amp;skin=blue" type="text/css" media="screen" />*@
+    <meta name="description" itemprop="description" content="Gramline is the #1 fencing supplier and contractor in Australia, provide fencing services in Sydney, Melbourne, Perth and Brisbane." />
+    <meta name="keywords" itemprop="keywords" content="Fencing supplies Melbourne; Fencing supplies Sydney, Fencing contractors Sydney, Fencing contractors Brisbane, Fencing supplies Brisbane, Fencing contractors Perth, Fencing contractors Melbourne" />
+    <meta name="google-site-verification" content="z_ydDaOJ7CFSIyEizTzpnAxejccnOlqZ9BnnxR4ZqP0" />
+
+    <style type="text/css" media="screen">
+        body {
+            position: relative
+        }
+    </style>
+    <style type="text/css" id="custom-background-css">
+        body.custom-background {
+            background-color: #eaf6ff;
+        }
+    </style>
+
+
+    <script type="text/javascript" language="javascript">
+
+        var needRefresh = 0;
+        function startTime() {
+            var today = new Date();
+            var d = today.getDate();
+            var mo = today.getMonth() + 1;
+            var y = today.getFullYear();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            var s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+
+            if ($("#OrderDate")) {
+                $("#OrderDate").val(d + "/" + mo + "/" + y + " " + h + ":" + m + ":" + s);
+            }
+            var t = setTimeout(startTime, 500);
+        }
+        function checkTime(i) {
+            if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+            return i;
+        }
+
+        window.onhashchange = function () {
+            alert(document.location);
+            updateHistory(document.location);
+        }
+
+        function updateHistory(curr) {
+            window.location.lasthash.push(window.location.hash);
+            window.location.hash = curr;
+        }
+
+        window.onbeforeunload = function () {
+            if ($("#byClick").length) {
+                if ($("#byClick").val() == "") {
+                    return "!! Warning: Once the Back Button clicked to leave the current page will losing the input data while placing the order.\nPlease use the page links or navigation buttons.";
+                }
+            }
+        };
+
+        //window.history.go = function () {
+        //}
+
+        //history.go(1);
+        // if (document.URL.indexOf("#") >-1) {
+        //  history.go(1);
+        //   }
+
+        //function disableBackButton() {
+        //     window.history.forward();
+        //}
+        //disableBackButton();
+        //window.onload = disableBackButton();
+        //window.onpageshow = function (evt) { if (evt.persisted) disableBackButton() }
+        //window.onunload = function () { void (0) }
+
+        function displayNoImage(img) {
+            //img.src = "../../Images/no-image.jpg";
+            $("#titleImage").hide();
+        }
+
+        function setByClick() {
+            if ($("#byClick").length) {
+                $("#byClick").val("1");
+            }
+        }
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+
+        //function googleTranslateElementInit() {
+        //    new google.translate.TranslateElement({
+        //        pageLanguage: 'en', includedLanguages: 'en,zh-CN,zh-TW', layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        //    }, 'google_translate_element');
+        //}
+    </script>
+    @*<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>*@
+</head>
+
+<body onload="startTime()" style="width:100% !important;">
+    @using (Html.BeginForm("CheckOut", "Order", new { @id = string.Empty }, FormMethod.Post, new { @id = "frmMain" }))
+    {
+
+        @*<div class="wrapper2"  style="width:100%">
+            <div id="page" class="hfeed">
+                <header id="branding" role="banner">*@
+
+        <div id="google_translate_element"></div>
+        <table style="width:100%">
+            <tr>
+                <td>
+
+                    <div class="wrapper2" style="width:100% !important;">
+                        <div id="page" class="hfeed" style="width:100% !important;">
+                            <header id="branding" role="banner" style="width:100% !important;">
+                                @*<hgroup>*@
+                                <div style="width:100%; height:100px; float:left; margin-top:17px;">
+                                    <table style="margin-left:auto;margin-right:auto;width:1200px;">
+                                        <tr>
+                                            <td>
+                                                <img border="0" src="http://www.gram.com.au/wp-content/themes/twentyeleven/images/logo1.jpg" width="290" height="100" alt="Gramline" title="GramLine" />
+                                            </td>
+                                            <td>
+                                                <table style="height:100%;">
+                                                    <tr>
+                                                        <td>
+                                                            <div style="position:absolute; width:315px;  right:176px; top:15px;">
+                                                                <img height="16" width="16" style="display:inline-block; margin-right:8px;" src="http://www.gram.com.au/wp-content/themes/twentyeleven/images/phone.png">
+                                                                <span style="font-size:17px; color:#fff;">1800GRAMLINE</span>
+                                                                @if (Session["User"] != null)
+                                                                {
+                                                                    <br /><span style="font-size:17px; color:#fff;">Login&nbsp;as:&nbsp;@loginAs</span>
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="bottom">
+                                                            @if (Session["User"] != null)
+                                                            {
+                                                                <div style="width:800px;">
+                                                                    @Html.Partial("_TopMenuPanel")
+                                                                </div>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                @*</hgroup>*@
+                            </header>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:5%"></td>
+                            <td style="width:95%">@RenderBody()</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <br /><br /><br />
+                                <footer style="width:100%">
+                                    <div style="text-align:center;"><hr style="width:400px;" /><p>&copy; @DateTime.Now.Year - Gram Engineering Pty Ltd</p></div>
+                                </footer>
+                                <br /><br /><br />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    }
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts", required: false)
+    @*<div class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" >
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                        <h4 class="modal-title">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>One fine body…</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->*@
+</body>
+</html>
+<script type="text/javascript" language="javascript">
+
+
+    if ($("#goToOrderTrack").length) {
+         gotoPage("OrderTrack","Order","")
+    }
+
+    function gotoPage(pageName, ctrl, cons) {
+        var errMsg = checkSpecicalPage();
+        if (errMsg != "") {
+            showWarning(errMsg);
+        } else {
+            setValueBack2(1);
+            var act = '@Url.Action("pageName", "Ctrl")';
+            act = act.replace("pageName", pageName);
+            act = act.replace("Ctrl", ctrl);
+
+            if (cons != "")
+            {
+                act += "?"+cons;
+            }
+
+            $("#frmMain").attr('action', act);
+            $("#byClick").val("1");
+            if ($("#actReq").length) {
+                $("#actReq").val("f");
+            }
+            $("#frmMain").submit();
+        }
+    }
+
+     function checkSpecicalPage() {
+         var errMsg = "";
+         if ($("#frmName").length) {
+             if (($("#frmName").val() == "SmartSlat") || ($("#frmName").val() == "Roofing")) {
+                 for (var j = 1; j < $("#colsCnt").val(); j++) {
+                     if ((j == 1) || (j == 3) || (j == 6) || (j == 8) || (j == 11) || (j == 13)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j + 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j + 1).toString()).css("background-color", "red");
+                             $("#tdR-1C" + (j + 1).toString()).css("background-color", "red");
+                         }
+                     }
+
+                     if ((j == 2) || (j == 4) || (j == 7) || (j == 9) || (j == 12) || (j == 14)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j - 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j - 1).toString()).css("background-color", "red");
+                             $("#tdR-1C" + (j - 1).toString()).css("background-color", "red");
+                         }
+                     }
+                 }
+             }
+
+             if ($("#frmName").val() == "SmartSlatAng") {
+                 for (var j = 1; j < $("#colsCnt").val(); j++) {
+                     if ((j == 1) || (j == 3) || (j == 5) || (j == 7) || (j == 9)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j + 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j + 1).toString()).css("background-color", "red");
+                             $("#td-1C" + (j + 1).toString()).css("background-color", "red");
+                         }
+                     }
+
+                     if ((j == 2) || (j == 4) || (j == 6) || (j == 8) || (j == 10)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j - 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j - 1).toString()).css("background-color", "red");
+                             $("#tdR-1C" + (j - 1).toString()).css("background-color", "red");
+                         }
+                     }
+                 }
+             }
+         }
+
+
+         if ($("#frmName").val() == "Fasteners") {
+             if ($("#selColour").length) {
+                 $("#selColour").css("background-color", "white");
+                 if ($("#selColour").css("display") != "none") {
+                     if (($("#cR-1C1").val() != "") && ($("#cR-1C2").val() == "")) {
+                         errMsg = "Error:<br/>* No value in red cells."
+                         $("#cR-1C2").css("background-color", "red");
+                     }
+
+                     if (($("#cR-1C1").val() == "") && ($("#cR-1C2").val() != "")) {
+                         errMsg = "Error:<br/>* No value in red cells."
+                         $("#selColour").css("background-color", "red");
+                     }
+                 }
+             }
+         }
+
+         return errMsg;
+    }
+
+     function setValueBack2(shw) {
+         if ($("#LR-1C0").length) {
+             var rid = $('#currRowId').val();
+             if (shw == 1) {
+                 $("#tr" + rid).css("display", "");
+             }
+
+             for (var j = 1; j < $("#colsCnt").val(); j++) {
+                if ($("#cR-1" + "C" + j.toString()).length) {
+                    $("#cR" + rid + "C" + j.toString()).val($("#cR-1" + "C" + j.toString()).val());
+                    $("#cR-1" + "C" + j.toString()).val("");
+                    if ($("#cR"+ rid + "C" + j.toString()).val() != "") {
+                        $("#cR" + rid + "C" + j.toString()).css("background-color", "wheat");
+                        $("#tdR" + rid + "C" + j.toString()).css("background-color", "wheat");
+                    }
+                    else {
+
+                        if ($('#forceBlock').val().indexOf($("#cR" + rid + "C0").val() + " " + $("#head" + j.toString()).attr("data")) > -1) {
+                            $("#cR" + rid + "C" + j.toString()).css("background-color", "#000");
+                            $("#tdR" + rid + "C" + j.toString()).css("background-color", "#000");
+                        }
+                        else {
+                            $("#cR" + rid + "C" + j.toString()).css("background-color", "white");
+                            $("#tdR" + rid + "C" + j.toString()).css("background-color", "white");
+                        }
+                    }
+                }
+             }
+
+             //var prevColorInput = $("#currColour").val();
+             //$("#tr-1").css("display", "none");
+             //for (var i = 0; i < $("#rowsCnt").val(); i++) {
+             //    if (prevColorInput == $("#LR" + i + "C0").html()) {
+             //        if (($("#inValid").val() == "") && (shw == 1)) {
+             //            $("#tr" + i).css("display", "");
+             //        }
+             //        for (var j = 1; j < $("#colsCnt").val(); j++) {
+             //            if ($("#cR-1" + "C" + j.toString()).length) {
+             //                $("#cR" + i + "C" + j.toString()).val($("#cR-1" + "C" + j.toString()).val());
+             //                if ($("#cR-1" + "C" + j.toString()).val() != "") {
+             //                    $("#cR" + i.toString() + "C" + j.toString()).css("background-color", "wheat");
+             //                    $("#tdR" + i.toString() + "C" + j.toString()).css("background-color", "wheat");
+             //                }
+             //                else {
+             //                    $("#cR" + i.toString() + "C" + j.toString()).css("background-color", "white");
+             //                    $("#tdR" + i.toString() + "C" + j.toString()).css("background-color", "white");
+             //                }
+             //            }
+             //        }
+             //    }
+             //}
+         }
+     }
+
+     function setValueBack(shw) {
+         var errMsg = checkSpecicalPage();
+         if (errMsg != "") {
+             showWarning(errMsg);
+         }
+         else {
+             setValueBack2(shw)
+         }
+     }
+
+</script>

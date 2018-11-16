@@ -1,0 +1,444 @@
+﻿@using Scanner.Models
+@{
+    var CurrForm = Session["CurrForm"].ToString();
+    IList<SideMenu> menu = ((List<SideMenu>)Session["SideMenu"]);
+    var user = (User)Session["User"];
+    var rqCatId = (Request.QueryString["catId"] != null) ? Request.QueryString["catId"].ToString() : "";
+    var mVal = "";
+
+    int isFront = 0;
+    if (Session["TradeType"] != null)
+    {
+        if (Convert.ToUInt32(Session["TradeType"]) > 0)
+        {
+            isFront = 1;
+        }
+    }
+}
+<input type="text" name="mSearch" id="mSearch" value="" style="margin-top:5px;" onkeyup="checkMTxt(event.keyCode,0);" />
+<button class="btn btn-primary btn-sm" style="width:35px;height:30px;white-space: normal;margin-top:5px;" onclick="checkMTxt(13,0);"><b><span class='glyphicon glyphicon-search' /></b></button>
+<br />
+<select name="sList" id="sList" size="10" style="position:absolute; z-index:1000; display:none;min-width:250px;font-size:20px" onkeyup="checkMTxt(event.keyCode,1);" onclick="checkMTxt(13,1);">
+    @for (int i = 0; i < menu.Count; i++)
+    {
+        if ((menu[i].lv1 != "") && (menu[i].OnlyFor.IndexOf("|" + user.Id.ToString() + "|") < 0))
+        {
+            mVal = menu[i].lv1.Split('!')[1] + "," + menu[i].SideMenuId;
+            <option value="@mVal" style="display:none;">@menu[i].lv1.Split('!')[0]</option>
+        }
+
+        if ((menu[i].lv2 != "") && (menu[i].OnlyFor.IndexOf("|" + user.Id.ToString() + "|") < 0))
+        {
+            mVal = menu[i].lv2.Split('!')[1] + "," + menu[i].SideMenuId;
+
+            if (mVal.IndexOf("Category") > -1)
+            {
+                mVal = "sub" + mVal;
+            }
+            <option value="@mVal" style="display:none;">@menu[i].lv2.Split('!')[0]</option>
+        }
+
+        if ((menu[i].lv3 != "") && (menu[i].OnlyFor.IndexOf("|" + user.Id.ToString() + "|") < 0))
+        {
+            mVal = menu[i].lv3.Split('!')[1] + "," + menu[i].SideMenuId;
+            <option value="@mVal" style="display:none;">@menu[i].lv3.Split('!')[0]</option>
+        }
+    }
+</select>
+<nav>
+    <div id="sideMenu">
+        <ul>
+            @for (int i = 0; i < menu.Count; i++)
+            {
+                string[] Ids = menu[i].SideMenuId.Split('.');
+                string[] nIds = null;
+                string display = "";
+
+                if ((user.Role.IndexOf("Gram") < 0) && (menu[i].OnlyFor != ""))
+                {
+                    if (menu[i].OnlyFor.IndexOf("|" + user.Id.ToString() + "|") < 0)
+                    {
+                        display = "none";
+                    }
+                }
+
+                if (i < menu.Count - 1)
+                {
+                    nIds = menu[i + 1].SideMenuId.Split('.');
+                }
+                switch (Ids.Length)
+                {
+                    case 1:
+                        var actName1 = menu[i].lv1.Split('!')[1];
+                        if ((isFront == 1) && (actName1 == "SpecialOrder"))
+                        {
+                            display = "none";
+                        }
+                        <li id="@menu[i].SideMenuId" style="display:@display">
+                            <hr style="margin-top:0px;margin-bottom:5px;" />
+                            @if (actName1 != CurrForm)
+                            {
+                                <a onclick="gotoPage('@actName1','Order','');">
+                                    <table style="height:40px;width:100%;">
+                                        <tr>
+                                            <td valign="middle" style="text-align:left;">
+                                                <b>@menu[i].lv1.Split('!')[0]</b>
+                                        </tr>
+                                    </table>
+                                </a>
+                            }
+                            else
+                            {
+                                <div style="height:100%;width:100%;text-align:left;vertical-align:middle;background-color:red;font-weight:bold;color:white;">
+                                    @menu[i].lv1.Split('!')[0]
+                                </div>
+                            }
+                        </li>
+                        break;
+                    case 2:
+                        if (Ids[1] == "0")
+                        {
+                            var mlbId = "L" + menu[i].SideMenuId;
+                            @:<li style="display:@display">
+                                <hr style="margin-top:0px;margin-bottom:5px;" />
+                                if (rqCatId != menu[i].SideMenuId)
+                                {
+
+                                    <a onclick="gotoPage('Index', 'Category','catId=@menu[i].SideMenuId');">
+                                        <table style="height:40px;width:100%;">
+                                            <tr>
+                                                <td valign="middle" style="text-align:left;">
+                                                    <b>@menu[i].lv1.Split('!')[0]</b>&nbsp;<label id="@mlbId" style="color:inherit"><span class="glyphicon glyphicon-plus-sign"></span></label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div style="height:100%;width:100%;text-align:left;vertical-align:middle;background-color:red;font-weight:bold;color:white;">
+                                        @menu[i].lv1.Split('!')[0]&nbsp;<label id="@mlbId" style="color:inherit"><span class="glyphicon glyphicon-minus-sign"></span></label>
+                                    </div>
+                                }
+                                @:<ul style="display:none;" id="@menu[i].SideMenuId">
+                                }
+                                else
+                                {
+                                    var actName2 = menu[i].lv2.Split('!')[1];
+                                    <li style="margin-left:5px;display:@display" id="@menu[i].SideMenuId">
+                                        @if (actName2 != CurrForm)
+                                        {
+                                            <a onclick="gotoPage('@actName2','Order','');">
+                                                <table style="height:40px;width:100%;">
+                                                    <tr>
+                                                        <td valign="middle" style="text-align:left;">
+                                                            @menu[i].lv2.Split('!')[0]
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <div style="height:100%;width:100%;text-align:left;vertical-align:middle;background-color:red;font-weight:bold;color:white;">
+                                                @menu[i].lv2.Split('!')[0]
+                                            </div>
+                                        }
+                                    </li>
+
+                                    if (nIds != null)
+                                    {
+                                        if (nIds.Length == 1)
+                                        {
+                                        @:</ul></li>
+                                    }
+
+                                    if ((nIds.Length == 2) && (nIds[0] != Ids[0]))
+                                    {
+                                    @:</ul></li>
+                                }
+
+                            }
+                            else
+                            {
+                                @:</ul></li>
+                            }
+                        }
+                        break;
+                    default:
+                        if (Ids[2] == "0")
+                        {
+                            var mlbId = "L" + menu[i].SideMenuId;
+                            @:<li style="margin-left:5px;display:@display">
+                                if (rqCatId != menu[i].SideMenuId)
+                                {
+                                    <a onclick="gotoPage('SubCat', 'Category','catId=@menu[i].SideMenuId');">
+                                        <table style="height:40px;width:100%;">
+                                            <tr>
+                                                <td valign="middle" style="text-align:left;">
+                                                    @menu[i].lv2.Split('!')[0]&nbsp;<label id="@mlbId" style="color:inherit"><span class="glyphicon glyphicon-plus-sign"></span></label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div style="height:100%;width:100%;text-align:left;vertical-align:middle;background-color:red;font-weight:bold;color:white;">
+                                        @menu[i].lv2.Split('!')[0]&nbsp;<label id="@mlbId" style="color:inherit"><span class="glyphicon glyphicon-minus-sign"></span></label>
+                                    </div>
+                                }
+                                @:<ul style="display:none;" id="@menu[i].SideMenuId">
+                                }
+                                else
+                                {
+                                    var actName3 = menu[i].lv3.Split('!')[1];
+                                    <li style="margin-left:10px;display:@display" id="@menu[i].SideMenuId">
+                                        @if (actName3 != CurrForm)
+                                        {
+                                            <a onclick="gotoPage('@actName3','Order','');">
+                                                <table style="height:40px;width:100%;">
+                                                    <tr>
+                                                        <td valign="middle" style="text-align:left;">
+                                                            <i>@menu[i].lv3.Split('!')[0]</i>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <div style="height:100%;width:100%;text-align:left;vertical-align:middle;background-color:red;font-weight:bold;color:white;">
+                                                @menu[i].lv3.Split('!')[0]
+                                            </div>
+                                        }
+
+                                    </li>
+                                    if (nIds != null)
+                                    {
+                                        if (nIds.Length == 1)
+                                        {
+                                        @:</ul></li></ul></li>
+                                    }
+
+                                    if (nIds.Length == 2)
+                                    {
+                                        if (Ids[0] != nIds[0])
+                                        {
+                                            @:</ul></li></ul></li>
+                                        }
+                                        else
+                                        {
+                                            @:</ul></li>
+                                        }
+                                    }
+
+                                    if ((nIds.Length == 3) && (nIds[1] != Ids[1]))
+                                    {
+                                        @:</ul></li>
+                                    }
+                                }
+                                else
+                                {
+                                    @:</ul></li></ul></li>
+                                }
+                            }
+                            break;
+                    }
+                }
+            </ul>
+        </div>
+    </nav>
+    <input type="hidden" id="MenuExpandings" name="MenuExpandings" value='@Session["MenuExpandings"]' />
+    <input type="hidden" id="backUpList" name="backUpList" value="" />
+    <script language="javascript">
+    function checkMTxt(keyCode, f) {
+        if ($("#mSearch").val().replace(/ /g, "") != "") {
+
+            if ($("#backUpList").val() == "") {
+                $("#sList option").each(function () {
+                    $("#backUpList").val($("#backUpList").val() + $(this).text() + "!" + $(this).val() + ";")
+                });
+            }
+
+            var lArr = $("#backUpList").val().split(";");
+            var txt = "";
+            var val = "";
+            var cnt = 0;
+            var errMsg = "";
+
+            if ((f == 0) && (keyCode == 40) && ($("#sList").css("display") != "none")) {
+                $("#sList").focus();
+            }
+            else if ((f == 1) && (keyCode == 40) && ($("#sList").css("display") != "none")) {
+            }
+            else {
+
+                if (keyCode == 13) {
+                    if (f == 1) {
+                        $("#mSearch").val($("#sList option[value='" + $("#sList").val() + "']").html().replace(/&amp;/g,"&"));
+                    }
+
+                    var url = "";
+                    var sideMId = "";
+                    for (var i = 0; i < lArr.length - 1; i++) {
+                        txt = lArr[i].split("!")[0];
+                        val = lArr[i].split("!")[1];
+
+                        if (txt.toLowerCase() == $("#mSearch").val().toLowerCase()) {
+
+                            url = val.split(",")[0];
+                            sideMId = val.split(",")[1];
+                            if (sideMId.indexOf(".") > -1) {
+                                var sideMIdArr = sideMId.split(".");
+                                if (sideMIdArr.length == 3) {
+                                    sideMId = ";" + sideMIdArr[0] + ".0;" + sideMIdArr[0] + "." + sideMIdArr[1]+".0";
+                                }
+                                else {
+                                    sideMId = ";" + sideMIdArr[0] + ".0"
+                                }
+                            }
+                            $("#actReq").val("f");
+                            $("#MenuExpandings").val(sideMId);
+                            break;
+                        }
+                    }
+
+                    if (url != "") {
+                        if (url.indexOf("subCategory") > -1) {
+                            url = url.replace("subCategory?", "");
+                            gotoPage('SubCat', 'Category', url);
+                        }
+                        else {
+                            if (url.indexOf("Category") > -1) {
+                                url = url.replace("Category?", "");
+                                gotoPage('Index', 'Category', url);
+                            }
+                            else {
+                                gotoPage(url, "Order", "");
+                            }
+                        }
+                    }
+                    else {
+                        errMsg = "Search Text is invalid";
+                    }
+                }
+
+                if (errMsg != "") {
+                    $("#frmMain").attr("onsubmit", "return false;");
+                    BootstrapDialog.show({
+                        //size: BootstrapDialog.SIZE_WIDE,
+                        title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+                        message: "<font style='font-size:25px;'><div style='max-height:600px;overflow:auto;'>" + errMsg + "</div></font>",
+                        buttons: [{
+                            label: 'OK',
+                            cssClass: 'btn-dialog',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }]
+                    });
+                }
+                else {
+                    for (var i = 0; i < lArr.length - 1; i++) {
+                        val = lArr[i].split("!")[1];
+                        $("#sList option[value='" + val + "']").remove();
+                    }
+
+                    for (var i = 0; i < lArr.length - 1; i++) {
+                        txt = lArr[i].split("!")[0];
+                        val = lArr[i].split("!")[1];
+                        if (txt.toLowerCase().indexOf($("#mSearch").val().toLowerCase()) > -1) {
+                            $('#sList').append(new Option(txt, val));
+                            cnt++;
+                        }
+                    }
+
+                    if (cnt > 10)
+                        $("#sList").attr("size", "10")
+                    else
+                        $("#sList").attr("size", cnt.toString());
+
+                    $("#sList").css("display", "");
+
+                }
+            }
+        }
+        else {
+            $("#sList").css("display", "none");
+        }
+
+    }
+
+    function menuToggle(mId) {
+        var strArr;
+
+        var newMIds = ""
+        strArr = mId.split(".");
+        if (strArr.length == 2) {
+            newMIds = ";" + mId;
+        }
+        else {
+            newMIds = ";" + strArr[0] + ".0;" + mId;
+        }
+
+        if (document.getElementById(mId).style.display != "none") {
+            newMIds = "c" + newMIds;
+        }
+
+         if (document.getElementById("MenuExpandings").value != "") {
+               strArr = document.getElementById("MenuExpandings").value.split(";");
+               for (var i = 1; i < strArr.length; i++) {
+                    document.getElementById("L" + strArr[i]).innerHTML = "<span class='glyphicon glyphicon-plus-sign'>";
+                    document.getElementById(strArr[i]).style.display = "none";
+               }
+          }
+
+        document.getElementById("MenuExpandings").value = newMIds;
+        openMenu();
+    }
+
+    function openMenu() {
+        var strArr;
+        if (document.getElementById("MenuExpandings").value != "") {
+            strArr = document.getElementById("MenuExpandings").value.split(";");
+            for (var i = 1; i < strArr.length; i++) {
+                document.getElementById("L" + strArr[i]).innerHTML = "<span class='glyphicon glyphicon-minus-sign'>";
+                document.getElementById(strArr[i]).style.display = "";
+            }
+
+            //if (strArr[0] !== "c") {
+            //    if (strArr.length == 3) {
+            //        document.getElementById("L" + strArr[1]).innerHTML = "<span class='glyphicon glyphicon-minus-sign'>";
+            //        document.getElementById(strArr[1]).style.display = "";
+
+            //        document.getElementById("L" + strArr[2]).innerHTML = "<span class='glyphicon glyphicon-minus-sign'>";
+            //        document.getElementById(strArr[2]).style.display = "";
+            //    }
+            //    else {
+            //        document.getElementById("L" + strArr[1]).innerHTML = "<span class='glyphicon glyphicon-minus-sign'>";
+            //        document.getElementById(strArr[1]).style.display = "";
+            //    }
+            //}
+            //else {
+            //    if (strArr.length == 3) {
+            //        document.getElementById("L" + strArr[1]).innerHTML = "<span class='glyphicon glyphicon-minus-sign'>";
+            //        document.getElementById(strArr[1]).style.display = "";
+
+            //        document.getElementById("L" + strArr[2]).innerHTML = "<span class='glyphicon glyphicon-plus-sign'>";
+            //        document.getElementById(strArr[2]).style.display = "none";
+
+            //     //   document.getElementById("MenuExpandings").value = ";" + strArr[1];
+            //    }
+            //    else {
+            //        document.getElementById("L" + strArr[1]).innerHTML = "<span class='glyphicon glyphicon-minus-sign'>";
+            //        document.getElementById(strArr[1]).style.display = "";
+            //      //  document.getElementById("MenuExpandings").value = "";
+            //    }
+            //}
+        }
+    }
+
+    openMenu();
+    </script>
+

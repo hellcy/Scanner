@@ -1,0 +1,275 @@
+﻿@using Scanner.Models
+@model Scanner.Models.FolderFile
+
+<link href="~/Scripts/Tree/css/dtree.css" rel="stylesheet" />
+<script src="~/Scripts/Tree/dtree.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".dTree").dTree();
+    });
+</script>
+
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px; vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td style="width:20px;"></td>
+        <td style="width:100%" valign="top">
+            <div class="jumbotron">
+                <table style="width:100%">
+                    <tr>
+                        <td><font class="subPagetitle">@ViewBag.Title</font></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div style="margin-left:10px; margin-top:20px;margin-bottom:200px;">
+                <div>
+                    <table>
+                        <tr style="vertical-align:top">
+                            <td>
+                                <input type="text" name="searchTxt" id="searchTxt" value="@Model.searchTxt" list="ffList" />
+                                <datalist id="ffList" size="3">
+                                    @foreach (var name in ViewBag.ff.names)
+                                    {
+                                        <option value="@name" />
+                                    }
+                                </datalist>
+                                <div class="dTree">
+                                    @foreach (string str in ViewBag.ff.folderAndFiles)
+                                    {
+                                        @Html.Raw(str);
+                                    }
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <div class="btn-group-sm">
+                                    <input type="button" name="search" id="search" class="btn btn-primary" value="SEARCH" style="vertical-align:top;width:100px;" onclick="ffSearch()" />
+                                    <input type="button" name="search" id="search" class="btn btn-primary" value="Refresh" style="vertical-align:top;width:100px;" onclick="refreshFolders()" />
+                                </div>
+                            </td>
+                            <td>
+                                <iframe src="Uploads" width="700px" height="350px" frameborder="0"></iframe>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                @* <div class="dTree">
+                     <li><a href="#">Site</a></li>
+                        <li><a href="#">About the Web Site</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li>
+                            <a href="#">Cars</a>
+                            <ul>
+                                <li><a href="#">Add New Brand</a></li>
+                                <li><a href="#">List All Brand</a></li>
+                                <li>
+                                    <a href="#">Mercedes - Benz</a>
+                                    <ul>
+                                        <li><a href="#">About the Mercedes - Benz</a></li>
+                                        <li><a href="#">History</a></li>
+                                        <li>
+                                            <a href="#">Series</a>
+                                            <ul>
+                                                <li>
+                                                    <a href="#">A Series</a>
+                                                    <ul>
+                                                        <li><a href="#">A 140</a></li>
+                                                        <li><a href="#">A 150</a></li>
+                                                        <li><a href="#">A 180 CDI</a></li>
+                                                        <li><a href="#">A 200 CDI</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">B Series</a>
+                                                    <ul>
+                                                        <li><a href="#">B 140</a></li>
+                                                        <li><a href="#">B 150</a></li>
+                                                        <li><a href="#">B 180 CDI</a></li>
+                                                        <li>
+                                                            <a href="#">B Special Series</a>
+                                                            <ul>
+                                                                <li><a href="#">B Extreme</a></li>
+                                                                <li><a href="#">B Jumper</a></li>
+                                                                <li><a href="#">B Raiden</a></li>
+                                                                <li><a href="#">B Subzero</a></li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li><a href="#">Concept Cars</a></li>
+                                                <li><a href="#">Best Prototypes</a></li>
+                                                <li><a href="#">List all other categories</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#">Custom Series</a></li>
+                                        <li><a href="#">A+ Series for children</a></li>
+                                        <li><a href="#">B+ Series for women</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Chevrolet</a></li>
+                                <li><a href="#">Saab Custom models</a></li>
+                                <li>
+                                    <a href="#">Fiat</a>
+                                    <ul>
+                                        <li><a href="#">Kartal SLX</a></li>
+                                        <li><a href="#">Dogan 1.6 Turbo</a></li>
+                                        <li><a href="#">Sahin</a></li>
+                                        <li>
+                                            <a href="#">Dogan Gorunumlu Sahin</a>
+                                            <ul>
+                                                <li><a href="#">1.3 Motor</a></li>
+                                                <li><a href="#">1.6 Motor</a></li>
+                                                <li><a href="#">1.8 Motor</a></li>
+                                                <li><a href="#">2.0 Motor</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#">Serce</a></li>
+                                        <li><a href="#">Murat 131</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Electronic Models</a></li>
+                        <li><a href="#">Real Estate</a></li>
+                        <li><a href="#">Bruce Lee</a></li>
+                        <li><a href="#">Graphics</a></li>
+                        <li>
+                            <a href="#">Smart Phones</a>
+                            <ul>
+                                <li><a href="#">Apple</a></li>
+                                <li><a href="#">Samsung</a></li>
+                                <li><a href="#">LG</a></li>
+                                <li><a href="#">Sony</a></li>
+                                <li><a href="#">HTC</a></li>
+                                <li><a href="#">Samsung</a></li>
+                                <li><a href="#">Samsung</a></li>
+                                <li>
+                                    <a href="#">Other Models</a>
+                                    <ul>
+                                        <li><a href="#">First other model</a></li>
+                                        <li><a href="#">Second other model</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Add New Model</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                                </div>*@
+            </div>
+            <input type="hidden" name="rows" id="rowsCnt" value="@ViewBag.ff.names.Count" />
+            <input type="hidden" name="cols" id="colsCnt" value="0" />
+            <input type="hidden" name="currPath" id="currPath" value="" />
+        </td>
+    </tr>
+</table>
+
+<script language="javascript">
+
+    function displayNoImage(img) {
+        //img.src = "../../Images/no-image.jpg";
+        $("#titleImage").hide();
+    }
+
+    function ffSearch() {
+        if ($("#searchTxt").val().replace(/ /g, "") == "") {
+            showWarning("Search Text is null.");
+        }
+        else {
+            for (var i = 0; i < parseInt($("#rowsCnt").val()); i++) {
+                var attr = $("#df_" + i.toString()).children("a:first").attr('href');
+                var $selected = $("#df_" + i.toString()).children("span:first");
+
+                if ($("#df_" + i.toString()).children("a:first").html() == $("#searchTxt").val()) {
+                    $("#df_" + i.toString()).children("a:first").css("background-color", "red");
+
+                    $("#currPath").val($("#df_" + i.toString()).children("a:first").attr("data"));
+                    var self = $("#df_" + i.toString());
+                    for (var k = 0; k <= parseInt($("#rowsCnt").val()); k++) {
+                        var parent = self.parent().parent();
+
+                        if (parent.prop("tagName").toLowerCase() != "li") {
+                            break;
+                        }
+                        else {
+                          //  parent.children("a:first").css("background-color", "red");
+
+                            if (parent.children("span:first").attr('class') == "plus") {
+                                $.fn.dTree.set_icons(parent.children("span:first").siblings("span"));
+                            }
+
+                            var $same_level = parent.children("span:first").siblings("span").parent().children('ul:first');
+                            if (!$same_level.is(':visible')) {
+                                $same_level.toggle(250);
+                            }
+
+                            self = parent;
+                        }
+                    }
+                }
+                else {
+                    $("#df_" + i.toString()).children("a:first").css("background-color", "");
+                    if (typeof attr !== typeof undefined && attr !== false) {
+                        $selected.removeClass("minus").addClass("plus");
+                        $selected.siblings("span").removeClass("folder-open").addClass("folder");
+                    }
+                }
+            }
+        }
+    }
+
+    function showWarning(msg) {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+    function openFile(id) {
+        window.open($("#" + id).attr("data"), "_blank","toolbar=1, location=1, scrollbars=1, resizable=1, width=" + 1015 + ", height=" + 800);
+    }
+
+    function openDir(id) {
+        window.open($("#" + id).attr("data"), "_blank", "toolbar=1, location=1, scrollbars=1, resizable=1, width=" + 1015 + ", height=" + 800);
+    }
+
+
+    function refreshFolders() {
+        var actUrl = "../../api/FileUpld"
+        $.ajax({
+                url: actUrl,
+                type: "Get",
+            //    data: "",
+            //dataType: 'text',
+                success: function (data) {
+                    alert("ok " + data);
+                },
+                error: function (msg) {
+                    alert(msg);
+                }
+        });
+    }
+
+</script>
+
+
+
+
+
+
+
+
+
+

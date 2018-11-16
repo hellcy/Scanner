@@ -1,0 +1,2124 @@
+﻿@using Scanner.Models
+@{
+    var nextButtontext = "CHECK OUT";
+
+    if (Request.Url.AbsoluteUri.IndexOf("/CheckOut") > -1)
+    {
+        Session["CurrForm"] = "CheckOut";
+        ViewBag.Title = "CHECK OUT";
+    }
+
+    int isFront = 0;
+    int newUser = 0;
+    if (Session["TradeType"] != null)
+    {
+        if (Convert.ToUInt32(Session["TradeType"]) > 0)
+        {
+            isFront = 1;
+        }
+
+        if (Convert.ToUInt32(Session["TradeType"]) == 2)
+        {
+            newUser = 1;
+        }
+    }
+
+    var CurrForm = Session["CurrForm"].ToString();
+    var printBtnDisp = "none";
+    var backBtnDisp = "none";
+    var saveBtnDisp = "none";
+    var quoteBtnDisp = "none";
+    var sendLoginBtnDisp = "none";
+    var newOrderDisp = "none";
+    var ReadyToProceeDisp = "none";
+    var clearDisp = "none";
+    var addSpLengthDisp = (Session["AddSpLength"] != null) ? "" : "none";
+    var actReq = "";
+    var role = ((Scanner.Models.User)Session["User"]).Role;
+    var username = ((Scanner.Models.User)Session["User"]).UserName;
+    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+    var isTrial = ((Scanner.Models.User)Session["User"]).isTrial;
+
+    if (username.ToLower() == "suzis@gram.com.au")
+    {
+        quoteBtnDisp = "";
+    }
+
+    var aebn = "0";
+    if (Session["aebn"] != null)
+    {
+        aebn = Session["aebn"].ToString();
+    }
+
+    var orderOrQuoteID = "Order Track Id";
+    var orderOrQuoteMsg = "And wait to be served.";
+    if (username == "quotation")
+    {
+        orderOrQuoteID = "Quotation Id";
+        orderOrQuoteMsg = "And we will contact you as soon as possible.";
+    }
+
+    var orderId = "";
+    var status = "";
+    var SubmittedBy = "";
+    var HandleBy = "";
+    var CreatedDate = "";
+    var ReadyToSubmitDate = "";
+    var SubmitDate = "";
+    var ServerSEQNO = "";
+    var btnPanelDisp = "";
+
+    NewOrder newOrder = null;
+    if (Session["newOrder"] != null)
+    {
+        newOrder = (NewOrder)Session["newOrder"];
+        orderId = newOrder.Head.Id.ToString();
+        ServerSEQNO = (string.IsNullOrEmpty(newOrder.Head.ServerSEQNO)) ? "" : newOrder.Head.ServerSEQNO;
+        status = newOrder.Head.Status;
+        SubmittedBy = newOrder.Head.SubmittedBy;
+        HandleBy = newOrder.Head.HandleBy;
+        CreatedDate = (String.IsNullOrEmpty(newOrder.Head.OrderDate)) ? "" : newOrder.Head.OrderDate;
+        ReadyToSubmitDate = (String.IsNullOrEmpty(newOrder.Head.ReadyToSubmitDate)) ? "" : newOrder.Head.ReadyToSubmitDate;
+        SubmitDate = (String.IsNullOrEmpty(newOrder.Head.SubmitDate)) ? "" : newOrder.Head.SubmitDate;
+        if (!string.IsNullOrEmpty(newOrder.Head.Message))
+        {
+            newOrderDisp = "none";
+        }
+    }
+
+    switch (CurrForm)
+    {
+        case "CheckOut":
+            nextButtontext = "CONFIRMATION";
+            saveBtnDisp = "";
+            //quoteBtnDisp = "";
+            newOrderDisp = "";
+
+            if (Convert.ToUInt32(Session["TradeType"]) != 1)
+            {
+                if ((isTrial) || (newUser == 1))
+                {
+                    actReq = "trial";
+                    nextButtontext = "READY TO<br/>PROCEED";
+                }
+            }
+
+            if (Session["Got_UnNormal"] != null)
+            {
+                if (Session["Got_UnNormal"].ToString() == "1")
+                {
+                    if (role.IndexOf("Gram") < 0)
+                    {
+                        actReq = "trial";
+                        nextButtontext = "READY TO<br/>PROCEED";
+                    }
+                }
+            }
+
+            if (role.IndexOf("Gram") > -1)
+            {
+                if ((status != "3. Quotation") && (status != "4. Submitted") && (status != "5. Custom"))
+                {
+                    ReadyToProceeDisp = "";
+                    printBtnDisp = "";
+                }
+
+                if (role.IndexOf("Gram Admin Super") > -1)
+                {
+                    sendLoginBtnDisp = "";
+                }
+            }
+            break;
+        case "Confirmation":
+            backBtnDisp = "";
+            newOrderDisp = "";
+            nextButtontext = "SUBMIT";
+            break;
+        case "OrderTrack":
+        case "QuotationTrack":
+            saveBtnDisp = "none";
+            quoteBtnDisp = "none";
+            newOrderDisp = "none";
+            break;
+        case "Category":
+            addSpLengthDisp = "none";
+            btnPanelDisp = "none";
+            break;
+        default:
+            newOrderDisp = "";
+            nextButtontext = "CHECK OUT";
+            break;
+    }
+
+    if (username == "quotation")
+    {
+        nextButtontext = "SUBMIT<br/>QUOTATION";
+    }
+
+    if ((CurrForm == "EnterMeterage") || (CurrForm == "EnterNoOfPanels"))
+    {
+        clearDisp = "";
+    }
+
+    if (Session["JustViewPrint"] != null)
+    {
+        backBtnDisp = "none";
+        saveBtnDisp = "none";
+        quoteBtnDisp = "none";
+        newOrderDisp = "none";
+        addSpLengthDisp = "none";
+        printBtnDisp = "";
+        Session["JustViewPrint"] = null;
+    }
+
+    if (Session["newOrder"] != null)
+    {
+        if (!string.IsNullOrEmpty(newOrder.Head.Message))
+        {
+            if (newOrder.Head.Message.IndexOf("Reference No") > 0)
+            {
+                newOrderDisp = "none";
+            }
+        }
+    }
+
+    if (Session["needAdvice"] != null)
+    {
+        if (Session["needAdvice"].ToString() == "1")
+        {
+            ReadyToProceeDisp = "none";
+        }
+    }
+
+}
+<div>
+    <table style="border-width:0px; border-collapse:collapse;margin-left:0px;">
+        <tr>
+            <td style="border-width:0px; border-collapse:collapse; vertical-align:bottom">
+                <table style="border-width:0px; border-collapse:collapse;width:1000px;display:@btnPanelDisp" align="left">
+                    <tr style="border-width:0px; border-collapse:collapse;">
+                        <td colspan="5"><div id="sevErr" style="display:none;">@Html.ValidationMessage("noOrder")</div></td>
+                    </tr>
+                    <tr style="border-width:0px; border-collapse:collapse;">
+                        <td style="border-width:0px; border-collapse:collapse; padding:0px;">
+                            <input type="button" name="btnBACK" id="btnBACK" class="btn btn-primary btn-group-lg" style="margin-left:2px;height:55px;width:145px;font-size:14px;font-weight:bold; display:@backBtnDisp " onclick="goBackToCheckOut()" value="BACK" />
+                        </td>
+                        @*<td style="border-width:0px; border-collapse:collapse; padding:0px;"><input type="button" name="btnNEWORDER" id="btnNEWORDER" class="btn btn-newOrderPrimary btn-group-lg" style="margin-left:2px;height:55px;width:145px;font-size:14px;font-weight:bold; display:@newOrderDisp" onclick="gotoNewOrder()" value="NEW ORDER" /></td>*@
+                        <td style="border-width:0px; border-collapse:collapse; padding:0px;">
+                            <button type="button" name="btnSAVEORDER" id="btnSAVEORDER" class="btn btn-saveOrderPrimary btn-group-lg" style="margin-left:2px;height:55px;width:145px;font-size:14px;font-weight:bold; display:@saveBtnDisp" onclick="gotoSaveOrder()">SAVE ORDER<br />ONLY</button>
+                        </td>
+                        <td style="border-width:0px; border-collapse:collapse; padding:0px;">
+                            <input type="button" name="btnPRINTORDER" id="btnPRINTORDER" class="btn btn-primary btn-group-lg" style="margin-left:2px;height:55px;width:145px;font-size:14px;font-weight:bold; display:@printBtnDisp" onclick="PrintElem('@orderId', '@status',0)" Value="PRINT ORDER" />
+                        </td>
+                        <td style="border-width:0px; border-collapse:collapse; padding:0px;">
+                            <button type="button" name="btnReadyToProcee" id="btnReadyToProcee" class="btn btn-primary btn-group-lg" style="margin-left:2px;height:55px;width:145px;font-size:14px;font-weight:bold; display:@ReadyToProceeDisp" onclick="gotoReadyToProcee()">READY TO<br />PROCEED</button>
+                        </td>
+                        <td style="border-width:0px; border-collapse:collapse; padding:0px;">
+                            <input type="button" name="btnNewLen" id="btnNewLen" class="btn btn-primary btn-group-lg" style="margin-left:2px;height:55px;width:145px;font-size:14px;font-weight:bold;display:@addSpLengthDisp" onclick="addNewLength()" value="SPECIAL LENGTH" />
+                        </td>
+                        <td style="border-width:0px; border-collapse:collapse; padding:0px;">
+                            <input type="button" name="btnClearInputs" id="btnClearInputs" class="btn btn-primary btn-group-lg" style="margin-left:2px;height:55px;width:145px;font-size:16px;font-weight:bold;display:@clearDisp" onclick="clearInputs()" value="CLEAR" />
+                        </td>
+                        <td style="border-width:0px; border-collapse:collapse; padding:0px;">
+                            <button type="button" name="btnNEXT" id="btnNEXT" class="btn btn-primary btn-group-lg" style="margin-left:2px;height:55px;width:145px;font-size:16px;font-weight:bold;display:@newOrderDisp" onclick="gotoNextPage()">@Html.Raw(nextButtontext)</button>
+                        </td>
+                        <td style="border-width:0px; border-collapse:collapse; padding:0px;width:100%">
+                            <button type="button" name="btnQuotation" id="btnQuotation" class="btn btn-quotationOrderPrimary btn-group-lg" style="float:right;height:55px;width:145px;font-size:14px;font-weight:bold; display:@quoteBtnDisp" onclick="gotoQuoteOrder()">QUOTE<br />ONLY</button>
+                        </td>
+                        <td style="border-width:0px; border-collapse:collapse; padding:0px;width:100%">
+                            <button type="button" name="btnSendLonginEmail" id="btnSendLonginEmail" class="btn btn-quotationOrderPrimary btn-group-lg" style="float:right;height:55px;width:145px;font-size:14px;font-weight:bold; display:@sendLoginBtnDisp" onclick="sendLogin()">SEND<br />LOGIN DDETAILS</button>
+                        </td>
+                    </tr>
+                </table>
+                <input type="hidden" name="frmName" id="frmName" value="@CurrForm" />
+                <input type="hidden" name="actReq" id="actReq" value="@actReq" />
+                <input type="hidden" name="processing" id="processing" value="" />
+                <input type="hidden" name="newColour" id="newColour" value="" />
+                <input type="hidden" name="newLength" id="newLength" value="" />
+                <input type="hidden" name="newQty" id="newQty" value="" />
+                <input type="hidden" name="currColour" id="currColour" value="" />
+                <input type="hidden" name="currFieldId" id="currFieldId" value="" />
+                <input type="hidden" name="currRowId" id="currRowId" value="" />
+                <input type="hidden" name="currColId" id="currColId" value="" />
+                <input type="hidden" name="showed" id="showed" value="" />
+                <input type="hidden" name="inValid" id="inValid" value="" />
+                <input type="hidden" name="aebn" id="aebn" value="@aebn" />
+                <input type="hidden" name="currOrderStatus" id="currOrderStatus" value="@status" />
+            </td>
+        </tr>
+    </table>
+    @*<input type="button" name="testbn" id="testbn" value="test" onclick="testtest()"/>*@
+</div>
+
+
+<script language="javascript">
+    if ($("#isFront").length) {
+        if ($("#isFront").val() == 1) {
+            if ($("#btnSAVEORDER").length) {
+                $("#btnSAVEORDER").css("display", "none");
+            }
+        }
+    }
+
+
+    function gotoNextPage() {
+        var msg = "";
+        var btnName = $("#btnNEXT").html();
+
+        if (btnName.indexOf("PROCEED") > -1) {
+            msg = "To proceed press YES, no further changes or edit <br/>";
+            msg += "will be possible online.  <br/><br/>";
+            msg += "To make edits press NO and you will return to the  <br/>";
+            msg += "previous screen.  <br/>";
+
+
+            BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'NO',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+
+                }
+            }, {
+                label: 'YES',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                        gotoNextPage0();
+                        dialogItself.close();
+                    }
+                }]
+            });
+        }
+        else if (btnName.indexOf("ASSISTANCE") > -1){
+            showAssistance();
+        }
+        else {
+          gotoNextPage0();
+        }
+    }
+
+
+    function gotoNextPage0() {
+        var errMsg = "";
+        if ($("#confirmVerCode").length) {
+            if ($("#confirmVerCode").css("display") != "none") {
+                if ($("#verifyCode").val() != $("#verifyCode_f").val()) {
+                    errMsg = "Error: Verification code is not matched.";
+                }
+            }
+        }
+
+        if (errMsg == "") {
+            errMsg = checkSpecicalPage();
+        }
+
+        if (errMsg != "") {
+            if (errMsg.indexOf("Error") > -1) {
+                showWarning(errMsg);
+            }
+            else {
+                BootstrapDialog.show({
+                    title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+                    message: "<font style='font-size:25px;'>" + errMsg + "</font>",
+                    buttons: [{
+                        label: 'NO',
+                        cssClass: 'btn-dialog',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+
+                        }
+                    }, {
+                        label: 'YES',
+                        cssClass: 'btn-dialog',
+                        action: function (dialogItself) {
+                            gotoNextPage1();
+                            dialogItself.close();
+                        }
+                    }]
+                });
+            }
+        } else {
+            gotoNextPage1();
+        }
+
+    }
+
+
+    function gotoNextPage1() {
+        if ($("#frmName").val() == "CheckOut") {
+            if ($("#compConfirm").length) {
+                if (!$('#compConfirm').prop('checked')) {
+                    showWarning("Please click the check box to confirm the customer.");
+                }
+                else {
+                    setValueBack2(0);
+                    gotoNextPage2();
+                }
+            }
+            else {
+                setValueBack2(0);
+                gotoNextPage2();
+            }
+        }
+        else {
+            if ($("#confirmCheck").length) {
+                if (!$('#confirmCheck').prop('checked')) {
+                    showWarning("Please click the check box to to final confirmation.");
+                }
+                else {
+                    setValueBack2(0);
+                    gotoNextPage2();
+                }
+            }
+            else {
+                setValueBack2(0);
+                gotoNextPage2();
+            }
+        }
+    }
+
+    function newOpenPage(url) {
+        $("#byClick").val("1");
+        window.open(url);
+    }
+
+
+    function gotoNextPage2() {
+        $("#frmMain").attr("onsubmit", "");
+        if (($("#unNormalCnt").length) && ($("#unNormalCnt").val() != "0")) {
+            if ($("#normalCnt").val() == "0") {
+                if ($("#actReq").val() != "trial") {
+                    $("#actReq").val("");
+                }
+
+                $("#byClick").val("1");
+
+                if ($("#frmName").val() == "Confirmation") {
+                    $("#btnNEXT").css("display", "none");
+                    var act = '@Url.Action("Confirmation", "Order")';
+                    $("#frmMain").attr('action', act);
+                }
+
+                if (($("#btnNEXT").html() == "CONFIRMATION") && ($("#needAdvice").val().toString() == "1")) {
+                    if (($("#normalCnt").val() == "0") && ($("#unNormalCnt").val() == "0")) {
+                        showWarning("All items need to be advised.");
+                    }
+                    else {
+                        BootstrapDialog.show({
+                            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+                            message: "<font style='font-size:25px;'>All items that need to be advised will be in a separate order?</font>",
+                            buttons: [{
+                                label: 'NO',
+                                cssClass: 'btn-dialog',
+                                action: function (dialogItself) {
+                                    dialogItself.close();
+                                }
+                            }, {
+                                label: 'YES',
+                                cssClass: 'btn-dialog',
+                                action: function (dialogItself) {
+                                    $("#frmMain").submit();
+                                    dialogItself.close();
+                                }
+                            }]
+                        });
+                    }
+                }
+                else {
+                    $("#frmMain").submit();
+                }
+            }
+            else {
+                var msg = "";
+                if ($("#btnNEXT").html() == "CONFIRMATION"){
+                    if ($("#needAdvice").val().toString() == "1") {
+                        if (($("#normalCnt").val() == "0") && ($("#unNormalCnt").val() == "0")) {
+                            showWarning("All items need to be advised.");
+                        }
+                        else {
+                            BootstrapDialog.show({
+                                title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+                                message: "<font style='font-size:25px;'>All items that need to be advised will be in a separate order?</font>",
+                                buttons: [{
+                                    label: 'NO',
+                                    cssClass: 'btn-dialog',
+                                    action: function (dialogItself) {
+                                        dialogItself.close();
+                                    }
+                                }, {
+                                    label: 'YES',
+                                    cssClass: 'btn-dialog',
+                                    action: function (dialogItself) {
+                                        finalConfirm();
+                                        dialogItself.close();
+                                    }
+                                }]
+                            });
+                        }
+                    }
+                    else {
+                        finalConfirm();
+                    }
+                }
+                else {
+                    $("#btnSAVEORDER").css("display", "none");
+                    $("#btnQuotation").css("display", "none");
+                    $("#btnNEXT").css("display", "none");
+                    $("#actReq").val("trial");
+                    $("#byClick").val("1");
+                    $("#frmMain").submit();
+                }
+            }
+        }
+        else {
+            if ($("#frmName").val() == "Confirmation") {
+                $("#btnNEXT").css("display", "none");
+
+                var act = '@Url.Action("Confirmation", "Order")';
+                $("#frmMain").attr('action', act);
+            }
+
+            $("#byClick").val("1");
+            if (($("#btnNEXT").html() == "CONFIRMATION") && ($("#needAdvice").val().toString() == "1")) {
+                if (($("#normalCnt").val() == "0") && ($("#unNormalCnt").val() == "0")) {
+                    showWarning("All items need to be advised.");
+                }
+                else {
+                    BootstrapDialog.show({
+                        title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+                        message: "<font style='font-size:25px;'>All items that need to be advised will be in a separate order?</font>",
+                        buttons: [{
+                            label: 'NO',
+                            cssClass: 'btn-dialog',
+                            action: function (dialogItself) {
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: 'YES',
+                            cssClass: 'btn-dialog',
+                            action: function (dialogItself) {
+                                $("#frmMain").submit();
+                                dialogItself.close();
+                            }
+                        }]
+                    });
+                }
+            }
+            else {
+                $("#btnSAVEORDER").css("display", "none");
+                $("#btnQuotation").css("display", "none");
+                $("#btnNEXT").css("display", "none");
+                $("#frmMain").submit();
+            }
+        }
+    }
+
+
+    function finalConfirm() {
+        var msg = "";
+        if ($("#userRole").val().indexOf("Gram") > -1) {
+            if ($("#splitOrder").length) {
+                if ($("#splitOrder").val().toString() == "1") {
+                    $("#actReq").val("splitOrder");
+                }
+            }
+            if ($("#actReq").val() == "splitOrder") {
+                msg = "<font style='font-size:20px;'>Standard Stock items placed : "
+                    + $("#normalCnt").val() + "<br/>"
+                    + "Custom made items placed : "
+                    + $("#unNormalCnt").val()
+                    + "<br/><br/>Click YES to pickup standard stock items now.<br/>Click NO to pickup all together.</font>"
+                    + "<br/><font color='red'>!!NOTE: The Order has been already set as split Order, please click <b>YES</b>."
+                    + "<br/><font color='red'>Click NO, unless client wantted to change.<br/>Verify Code: FGH <input name='cVerf' id='Cverf' value='' style='width:40px'/>";
+
+                showConfirmationCode(msg, "splitOrder", 0);
+            }
+            else {
+                msg = "<font style='font-size:20px;'>Standard Stock items placed : "
+                    + $("#normalCnt").val() + "<br/>"
+                    + "Custom made items placed : "
+                    + $("#unNormalCnt").val()
+                    + "<br/><br/>Click YES to pickup standard stock items now.<br/>Click NO to pickup all together.</font>"
+                    + "<br/><font color='red'>!!NOTE: The Order has been already set as no split, please click <b>No</b>."
+                    + "<br/><font color='red'>Click YES, unless client wantted to change.<br/>Verify Code: FGH <input name='cVerf' id='Cverf' value='' style='width:40px'/>";
+
+                showConfirmationCode(msg, "splitOrder", 1);
+            }
+        }
+        else {
+            msg = "<font style='font-size:20px;'>Standard Stock items placed : "
+                + $("#normalCnt").val() + "<br/>"
+                + "Custom made items placed : "
+                + $("#unNormalCnt").val()
+                + "<br/><br/>Click YES to pickup standard stock items now.<br/>Click NO to pickup all together.</font>";
+            showConfirmation(msg, "splitOrder");
+        }
+    }
+
+    function gotoReadyToProcee() {
+        var msg = "To proceed press YES, no further changes or edit <br/>";
+        msg += "will be possible online.  <br/><br/>";
+        msg += "To make edits press NO and you will return to the  <br/>";
+        msg += "previous screen.  <br/>";
+
+        $("#actReq").val("trial");
+
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'NO',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+
+                }
+            }, {
+                label: 'YES',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    gotoNextPage0();
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+
+    function gotoSaveOrder() {
+
+        var msg = "      ***PLEASE BEWARE***<br/>";
+        msg += "You have only saved your order. <br/>";
+        msg += "The save feature allows you to come <br/>";
+        msg += "back at a later stage to add, revise or <br/>";
+        msg += "edit your order before submitting.  <br/>";
+        msg += "If you are ready now and want to submit <br/>";
+        msg += "your order please click on READY TO <br/>";
+        msg += "PROCEED button and follow prompts. <br/>";
+
+
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'NO',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+
+                }
+            }, {
+                label: 'YES',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                        dialogItself.close();
+                        $("#frmMain").attr("onsubmit", "");
+                        var goNext = 0;
+
+                        if ($("#confirmVerCode").length) {
+                            if ($("#confirmVerCode").css("display") != "none") {
+                                if ($("#verifyCode").val() == $("#verifyCode_f").val()) {
+                                    goNext = 1;
+                                }
+                                else {
+                                    showWarning("Verfication Code is not matched.");
+                                }
+                            }
+
+                        } else {
+                            goNext = 1;
+                        }
+
+                        if (goNext == 1) {
+                            $("#btnSAVEORDER").css("display", "none");
+                            $("#btnQuotation").css("display", "none");
+                            $("#btnNEXT").css("display", "none");
+                            $("#byClick").val("1");
+                            $("#actReq").val("save");
+                            $("#frmMain").attr('action', '@Url.Action("CheckOut", "Order")');
+                            $("#frmMain").submit();
+                        }
+                }
+            }]
+        });
+    }
+
+    function sendLogin() {
+        var dir = $("#pubDir2").val();
+        if ($("#Company").val().replace(/ /g, "") == "") {
+            $("#Company").val("");
+            showWarning("Error: Company input is null.");
+        }
+        else {
+            $.ajax({
+                url: dir + "api/User?company=" + encodeURIComponent($("#Company").val()),
+                type: "Post",
+                success: function (data) {
+                    if (data != null) {
+                        if (data != "") {
+                            if (data.indexOf("Error") > -1) {
+                                showWarning(data);
+                            }
+                            else {
+                                showInfo3(data);
+                            }
+                        }
+                    }
+                    else {
+                        showWarning("Error: Login has not been sent.");
+                    }
+                },
+                error: function (msg) {
+                    showWarning(msg);
+                }
+            });
+        }
+    }
+
+    function gotoQuoteOrder() {
+        var msg = "You have requested for a quote ONLY for this order.<br/>";
+        msg += "A quotation will be emailed to you shortly after you have submitted this quotation.<br/>";
+
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'NO',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+
+                }
+            }, {
+                label: 'YES',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                        dialogItself.close();
+                         $("#frmMain").attr("onsubmit", "");
+                        var goNext = 0;
+
+                        if ($("#confirmVerCode").length) {
+                            if ($("#confirmVerCode").css("display") != "none") {
+                                if ($("#verifyCode").val() == $("#verifyCode_f").val()) {
+                                    goNext = 1;
+                                }
+                                else {
+                                    showWarning("Verfication Code is not matched.");
+                                }
+                            }
+                        } else {
+                            goNext = 1;
+                        }
+
+                        if (goNext == 1) {
+                            $("#btnSAVEORDER").css("display", "none");
+                            $("#btnQuotation").css("display", "none");
+                            $("#btnNEXT").css("display", "none");
+                            $("#byClick").val("1");
+                            $("#actReq").val("quotation");
+                            $("#frmMain").attr('action', '@Url.Action("CheckOut", "Order")');
+                            $("#frmMain").submit();
+                        }
+                }
+            }]
+        });
+    }
+
+    function showConfirmation(msg, actReq) {
+        $("#frmMain").attr("onsubmit", "");
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'NO',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    $("#byClick").val("1");
+                    $("#frmMain").submit();
+                    dialogItself.close();
+
+                }
+            }, {
+                label: 'YES',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    $("#actReq").val(actReq);
+                    $("#byClick").val("1");
+                    $("#frmMain").submit();
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+
+    function showConfirmationCode(msg, actReq, f) {
+        $("#frmMain").attr("onsubmit", "");
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'NO',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    if (f == 0) {
+                        if ($("#Cverf").val().toUpperCase() == "FGH") {
+                            $("#actReq").val("");
+                            $("#byClick").val("1");
+                            $("#frmMain").submit();
+                            dialogItself.close();
+                        }
+                        else {
+                            alert("Error: Verify Code is not Matching.")
+                        }
+                    }
+                    else {
+                        $("#actReq").val("");
+                        $("#byClick").val("1");
+                        $("#frmMain").submit();
+                        dialogItself.close();
+                    }
+                }
+            }, {
+                label: 'YES',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    if (f == 1) {
+                        if ($("#Cverf").val().toUpperCase() == "FGH") {
+                            $("#actReq").val(actReq);
+                            $("#byClick").val("1");
+                            $("#frmMain").submit();
+                            dialogItself.close();
+                        }
+                        else {
+                            alert("Error: Verify Code is not Matching.")
+                        }
+                    }
+                    else {
+                        $("#actReq").val(actReq);
+                        $("#byClick").val("1");
+                        $("#frmMain").submit();
+                        dialogItself.close();
+                    }
+                }
+            }]
+        });
+    }
+
+
+    function showConfirmationForPrint(orderId, status, msg, reNew) {
+        $("#frmMain").attr("onsubmit", "");
+        BootstrapDialog.show({
+            closable: false,
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'NO',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                    if ($("#isFront").val() == 1) {
+                        showInfo("@orderOrQuoteID", orderId, "Please keep in mind your @orderOrQuoteID: <b>" + orderId + "</b>. <br/>@orderOrQuoteMsg<br/>Thank you.", "", "Logout", "Home");
+                    }
+                    else {
+                        if (reNew == 1) {
+                            $("#byClick").val("1");
+                            var url = '@Url.Action("-1", "-2")';
+                            if ($("#aebn").val() != "1") {
+                                url = url.replace("-1", "NewOrder").replace("-2", "Order");
+
+                                $("#frmMain").attr('action', url);
+                                $("#frmMain").submit();
+                            }
+                            //else {
+                            //    var wnd = window.open("exo://saleorder", "_blank");
+                            //    setTimeout(function () {
+                            //        wnd.close();
+                            //        setByClick();
+                            //        // window.open('', '_self');
+                            //        window.close();
+                            //    }, 2000);
+                            //}
+                        }
+                    }
+                }
+            }, {
+                label: 'YES',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                    PrintElem(orderId,status,reNew);
+                }
+            }]
+        });
+    }
+
+    function showWarning(msg) {
+        BootstrapDialog.show({
+            //size: BootstrapDialog.SIZE_WIDE,
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+            message: "<font style='font-size:25px;'><div style='max-height:600px;overflow:auto;'>" + msg + "</div></font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+
+    function showWarningWithId(msg,id) {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                  //  $("#" + id).prop('disabled', false);
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+    function showInfo(orderOrQuoteID, orderId, msg, actReq, act, crtl) {
+        $("#frmMain").attr("onsubmit", "");
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-info-sign"></i> Information</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    $("#byClick").val("1");
+                    $("#actReq").val(actReq);
+                    var url = ($("#isFront").val() != 1) ? '@Url.Action("-1", "-2")' : '@Url.Action("-1", "-2", new { frontOrderId=-3, orderOrQuoteID =-4})';
+                    url = url.replace("-1", act).replace("-2", crtl).replace("-3", orderId).replace("-4", orderOrQuoteID);
+                    $("#frmMain").attr('action', url);
+                    $("#frmMain").submit();
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+
+    function showInfo2(msg, col) {
+        $("#cR-1" + "C" + col.toString()).css("background-color", "#000");
+     //   $("#tdR-1" + "C" + col.toString()).css("background-color", "#000");
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-info-sign"></i> Information</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    $("#cR-1" + "C" + col.toString()).css("background-color", "#000");
+                //    $("#tdR-1" + "C" + col.toString()).css("background-color", "#000");
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+
+    function showInfo4(val1,val2,val3,val4) {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-info-sign"></i> Information</font>',
+            message: "<font style='font-size:25px;'>" + val3.split("|")[0] + ".</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                    showConfirmationForPrint(val1, val2, val3.split("|")[1], val4);
+                }
+            }]
+        });
+    }
+
+
+
+
+    function LoadUser() {
+        var dir = $("#pubDir2").val();
+        if ($("#DriverLicSrch").val().replace(/ /g, "") == "") {
+            $("#DriverLicSrch").val("");
+            showWarning("Error: Driver License input is null.");
+        }
+        else {
+            $.ajax({
+                url: dir+"api/User?DriverLic=" + $("#DriverLicSrch").val(),
+                type: "Get",
+                success: function (data) {
+                    if (data.length == 0) {
+                        showWarning("Your user account is not existing.<br/>Please fill below detail as NEW CUSTOMER ordering.");
+                        $("#fillUser_tb").css("display", "");
+                    }
+                    else {
+                        $("#fillUser_tb").css("display", "");
+                        for (var i = 0; i < data.length; i++) {
+                            $("#Company").val(data[i].CompanyName);
+                            $("#OrderBy").val(data[i].FirstName + " " + data[i].LastName);
+                            $("#Address").val(data[i].Address1);
+                            $("#City").val(data[i].Address2);
+                            $("#Postcode").val(data[i].Postcode);
+                            $("#State").val(data[i].State);
+                            $("#Country").val(data[i].Country);
+                            $("#Mobile").val(data[i].Mobile);
+                            $("#DriverLic").val(data[i].DriverLic);
+                            $("#ABN").val(data[i].ABN);
+                            $("#Email").val(data[i].UserEmail);
+
+                        }
+                    }
+                },
+                error: function (msg) {
+                    showWarning(msg);
+                }
+            });
+        }
+    }
+
+
+    function ReloadDefault() {
+        var dir = $("#pubDir2").val();
+        $.ajax({
+            url: dir + "api/User?Id=" + $("#userId").val(),
+            type: "Get",
+            success: function (data) {
+                if (data.length == 0) {
+                    showWarning("Your user account is not existing.");
+                }
+                else {
+                    for (var i = 0; i < data.length; i++) {
+                        $("#Company").val(data[i].CompanyName);
+                        $("#OrderBy").val(data[i].FirstName + " " + data[i].LastName);
+                        $("#Address").val(data[i].Address1);
+                        $("#City").val(data[i].Address2);
+                        $("#Postcode").val(data[i].Postcode);
+                        $("#State").val(data[i].State);
+                        $("#Country").val(data[i].Country);
+                        $("#Mobile").val(data[i].Mobile);
+                        $("#DriverLic").val(data[i].DriverLic);
+                        $("#ABN").val(data[i].ABN);
+                        $("#Email").val(data[i].UserEmail);
+
+                    }
+                }
+            },
+            error: function (msg) {
+                showWarning(msg);
+            }
+        });
+    }
+
+
+    function goBackToCheckOut() {
+           $("#frmMain").attr("onsubmit", "");
+            $("#byClick").val("1");
+            $("#actReq").val("c");
+            $("#frmMain").attr('action', '@Url.Action("CheckOut", "Order")');
+            $("#frmMain").submit();
+        }
+
+
+    function gotoSubCat(id) {
+        $("#frmMain").attr("onsubmit", "");
+        var act = '@Url.Action("SubCat", "Category", new {catId = -1 })';
+        act = act.replace("-1", id);
+        $("#frmMain").attr('action', act);
+        $("#byClick").val("1");
+        $("#frmMain").submit();
+    }
+
+
+    function fillAllCellsBkColor() {
+        $("#byClick").val("");
+        for (var i = 0; i < $("#rowsCnt").val(); i++){
+            $("#tr" + i).css("background-color", "white");
+            for (var j = 1; j < $("#colsCnt").val(); j++){
+                var flag = isPosInteger($("#cR" + i.toString() + "C" + j.toString()).val());
+                if (!flag) {
+                        $("#cR" + i.toString() + "C" + j.toString()).val("");
+                }
+
+                if ($("#cR"+i.toString()+"C"+j.toString()).val() != ""){
+                    $("#cR" +i.toString()+"C"+j.toString()).css("background-color", "wheat");
+                    $("#tdR" + i.toString()+"C"+j.toString()).css("background-color", "wheat");
+                }
+        else {
+            $("#cR" + i.toString() + "C" + j.toString()).css("background-color", "white");
+            $("#tdR" + i.toString() + "C" + j.toString()).css("background-color", "white");
+                }
+            }
+        }
+    }
+
+    function fillCellBkColor(Id) {
+        var flag = isPosInteger($("#" + Id).val());
+
+        if (($("#" + Id).val() != "") && (flag == true)) {
+            $("#td" + Id.replace("c","")).css("background-color", "wheat");
+            $("#" + Id).css("background-color", "wheat");
+                }
+        else {
+            $("#" + Id).val("");
+            $("#td" + Id.replace("c", "")).css("background-color", "white");
+            $("#" + Id).css("background-color", "white");
+            }
+    }
+
+    function ToggleDisp(Id) {
+
+      //  $("#" + Id).hide()
+
+        //if ($("#" + Id).attr("style") = "display:none") {
+        //    $("#" + Id).attr("style", "display:");
+        //}
+    }
+
+    function addNewLength() {
+        $("#frmMain").attr("onsubmit", "");
+        var msg = "<table><tr><td valign='top'><table><tr>";
+        msg += "<td><b>COLOUR</b></td>";
+        msg += "<td style='width:20px'></td>";
+        msg += "<td><select name='ipNewColour' id='ipNewColour'>";
+        msg += "<option value=''></option>";
+        for (var i = 0; i < $("#rowsCnt").val(); i++) {
+            var cval = $("#cR" + i.toString() + "C0").val();
+            msg += "<option value='"+cval+"'>"+cval+"</option>";
+        }
+        msg += "</select></td></tr>";
+
+        if ($("#frmName").val() == "Lattice") {
+            msg += "<tr><td><b>HEIGHT</b></td><td></td><td><input name='ipNewHeight' id='ipNewHeight' onkeyup='CellIsPosInt(\"ipNewHeight\")' value='' /></td></tr>";
+        }
+
+        msg += "<tr><td><b>LENGTH</b></td><td></td><td><input name='ipNewLength' id='ipNewLength' onkeyup='CellIsPosInt(\"ipNewLength\")' value='' /></td></tr>";
+        msg += "<tr><td><b>QTY</b></td><td></td><td><input name='ipNewQty' id='ipNewQty' value='' onkeyup='CellIsPosInt(\"ipNewQty\")'/></td></tr></table></td><td>&nbsp;&nbsp;</td><td valign='top' style='text-align: left;width:100%'><font style='color:red;font-size:16px;'>This item needs to be ordered.<br>Leadingtime: 5-10 working days?<br>Contact Office if required earlier.</font></td></tr><tr><td colspan='2'><font style='color:red;font-size:16px;'>* Length Input must between 100 to 3100.</font></td><td><td></tr><table>";
+
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-info-sign"></i> ADD SPECIAL LENGTH</font>',
+            message: "<font style='font-size:25px;'>" + msg + "</font>",
+            buttons: [{
+                label: 'ADD',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    var ctrlC = $("#ipNewColour");
+                    var ctrlH = null;
+
+                    if ($("#ipNewHeight").length)
+                        ctrlH = $("#ipNewHeight");
+
+                    var ctrlL = $("#ipNewLength");
+                    var ctrlQ = $("#ipNewQty");
+                    var errMsg = "";
+                    var confMsg = "";
+
+                    if (ctrlC.val().replace(/ /g, "") == "")
+                        errMsg += "* Colour Input is null.<br/>";
+
+                    if ($("#ipNewHeight").length) {
+                        if (ctrlH.val().replace(/ /g, "") == "") {
+                            errMsg += "* Height Input is null.<br/>";
+                        }
+                        else {
+                            if (isPosInteger(ctrlH.val()) == false) {
+                                errMsg += "* Height Input is not valid.<br/>";
+                            }
+                            else {
+                                if ((parseInt(ctrlH.val()) < 100) || (parseInt(ctrlH.val()) > 1200)) {
+                                    errMsg += "* Height Input must between 100 to 1200.<br/>";
+                                }
+                            }
+                        }
+                    }
+
+                    if (ctrlL.val().replace(/ /g, "") == "") {
+                        errMsg += "* Length Input is null.<br/>";
+                    }
+                    else {
+                        if (isPosInteger(ctrlL.val()) == false) {
+                            errMsg += "* Length Input is not valid.<br/>";
+                        }
+                        else {
+                            if ((parseInt(ctrlL.val()) < 100) || (parseInt(ctrlL.val()) > 3100)) {
+                                errMsg += "* Length Input must between 100 to 3100.<br/>";
+                            }
+                        }
+                    }
+
+
+
+                    if (ctrlQ.val().replace(/ /g, "") == "") {
+                        errMsg += "* Qty Input is null.<br/>";
+                    }
+                    else {
+                        if (isPosInteger(ctrlQ.val()) == false) {
+                            errMsg += "* Qty Input is not valid.<br/>";
+                        }
+                        else {
+                            var warnQty = 999;
+                            if ($("#frmName").val() == "Screws") {
+                                warnQty = 9999;
+                            }
+
+
+                            if ($("#MenuExpandings").val().indexOf("m3.0") > -1) {
+                                warnQty = 99;
+                            }
+
+
+                            if (parseInt(ctrlQ.val()) >= warnQty) {
+                                confMsg = "How many did you order?<br><table>";
+                                confMsg += "<tr><td>&nbsp;&nbsp;&nbsp;QTY&nbsp;" + ctrlQ.val() + "</td><td>&nbsp;&nbsp;<input type='checkbox' style='vertical-align:middle; display:bloack;' id='ipConfCheck1' name='ipConfCheck1'onchange='$(\"#ipConfCheck2\").prop(\"checked\",false);'/></td></tr>";
+                                confMsg += "<tr><td colspan='2' style='text-align:center;'>&nbsp;&nbsp;&nbsp;OR</td><td></td></tr>";
+                                confMsg += "<tr><td>&nbsp;&nbsp;&nbsp;QTY&nbsp;" + ctrlQ.val().substring(0, ctrlQ.val().length - 1) + "</td><td>&nbsp;&nbsp;<input type='checkbox' style='vertical-align:middle; display:bloack;' id='ipConfCheck2' name='pConfCheck2' onchange='$(\"#ipConfCheck1\").prop(\"checked\",false);'/></td></tr></table>";
+                            }
+                        }
+                    }
+
+                    if (confMsg == "") {
+                        if (errMsg != "") {
+                            showWarning("Error: <br/>" + errMsg);
+                        }
+                        else {
+                            $("#newColour").val($("#ipNewColour").val());
+
+                            if ($("#ipNewHeight").length) {
+                                $("#newLength").val($("#ipNewHeight").val()+"x"+ $("#ipNewLength").val());
+                            }
+                            else {
+                                $("#newLength").val($("#ipNewLength").val());
+                            }
+                            $("#newQty").val($("#ipNewQty").val());
+                            $("#byClick").val("1");
+                            $("#frmMain").attr('action', '@Url.Action("AddNewLength", "Order")#');
+                            $("#frmMain").submit();
+                            dialogItself.close();
+                        }
+                    }
+                    else {
+                        BootstrapDialog.show({
+                            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+                            message: "<font style='font-size:25px;'>" + confMsg + "</font>",
+                            buttons: [{
+                                label: 'CANCEL',
+                                cssClass: 'btn-dialog',
+                                action: function (dialogItself2) {
+                                    ctrlQ.val("");
+                                    dialogItself2.close();
+
+                                }
+                            }, {
+                                label: 'YES',
+                                cssClass: 'btn-dialog',
+                                action: function (dialogItself2) {
+                                    var allowClose = 1;
+                                    if ($("#ipConfCheck1").length) {
+                                        if (!$("#ipConfCheck1").prop('checked') && !$("#ipConfCheck2").prop('checked')) {
+                                            allowClose = 0;
+                                            showWarning("Please tick one of the check box.");
+                                        }
+                                        else {
+                                            if ($("#ipConfCheck2").prop('checked')) {
+                                                $("#ipNewQty").val($("#ipNewQty").val().substring(0, $("#ipNewQty").val().length - 1));
+                                            }
+                                        }
+                                    }
+
+                                    if (allowClose == 1) {
+                                        dialogItself.close();
+                                        $("#newColour").val($("#ipNewColour").val());
+                                        $("#newLength").val($("#ipNewLength").val());
+                                        $("#newQty").val($("#ipNewQty").val());
+                                        $("#byClick").val("1");
+                                        $("#frmMain").attr('action', '@Url.Action("AddNewLength", "Order")#');
+                                        $("#frmMain").submit();
+                                        dialogItself2.close();
+                                    }
+                                }
+                            }]
+                        });
+                    }
+                }
+            }]
+        });
+    }
+
+    function SaveAndPrint() {
+        $("#byClick").val("1");
+        $("actReq").val("printorder");
+    }
+
+    function PrintElem(orderId, status, reNew) {
+
+        status = status.replace("2. ", "");
+
+        $("#frmMain").attr("onsubmit", "");
+       //if ($("#printHead").length) {
+        var mywindow = window.open('', 'PRINT', 'height=400,width=700');
+           mywindow.document.write('<html><head><title>ORDER PRINT PREVIEW (Print By:@loginUserName)</title>');
+           mywindow.document.write('<style type="text/css">');
+           mywindow.document.write('.editor-label {font-size:12px;}');
+           mywindow.document.write('.tableWithGridBorder {');
+           mywindow.document.write('border-collapse: collapse;');
+           mywindow.document.write('width: 100 %;}');
+           mywindow.document.write('.tableWithGridBorder td, th {');
+           mywindow.document.write('border: 1px solid #808080;');
+           mywindow.document.write('padding: 8px;}');
+           mywindow.document.write('</style>');
+           mywindow.document.write('</head><body >');
+
+           var orderHead = "<div><fieldset>";
+           orderHead += "<table>";
+
+           orderHead += "<tr>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "Request Order Id:";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-field' style='vertical-align:top;'>";
+           orderHead += "<font style='color:black; font-size:16px;'>";
+
+           if (orderId != "0") {
+               orderHead += orderId + " (" + status + ")";
+           }
+
+           orderHead += "</font>";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td style='width:50px;'></td>";
+           orderHead += "<td>";
+
+           var ServerSEQNO = "@ServerSEQNO";
+
+           if (ServerSEQNO != "") {
+               orderHead += "<font style='color:black; font-size:16px;'>";
+               orderHead += "Order Id:";
+               orderHead += "</font>";
+           }
+           orderHead += "</td>";
+           orderHead += "<td>";
+           if (ServerSEQNO != "") {
+               orderHead += "<font style='color:black; font-size:16px;'>";
+               orderHead += ServerSEQNO;
+               orderHead += "</font>";
+           }
+           orderHead += "</td>";
+           orderHead += "</tr>";
+           orderHead += "<tr>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "Company:<span>&nbsp;&nbsp;</span>";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td style='text-align:left;' valign='top'>";
+           orderHead += "<font style='color:black; font-size:16px;'>" + $("#Company").val()+"</font>";
+           orderHead += "</td>";
+           orderHead += "<td style='width:50px;'></td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "Request&nbsp;For&nbsp;Delivery:<span>&nbsp;&nbsp;</span>";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+
+           if ($("#RequestForDelivery").prop("checked")) {
+               orderHead += "<font style='color: black; font-size:16px;'>YES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date:&nbsp;" + $("#DispatchDate").val() +"</font >";
+           }
+           else {
+               if ($("#PickupBy").val() != "") {
+                   orderHead += "<font style='color:black; font-size:16px;'>NO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pickup&nbsp;By:&nbsp;" + $("#PickupBy").val() + "</font >";
+               }
+               else {
+                   orderHead += "<font style='color:black; font-size:16px;'>NO</font >";
+               }
+           }
+
+           orderHead += "</td>";
+           orderHead += "</tr>";
+           orderHead += "<tr>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "Order By:";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-field' style='vertical-align:top;'>";
+           orderHead += "<font style='color:black; font-size:16px;'>";
+           orderHead += $("#OrderBy").val() + "     @CreatedDate";
+           orderHead += "</font>";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td style='width:50px;'></td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "Customer PO No:";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<font style='color:black; font-size:16px;'>";
+           orderHead += $("#CustomerOrderNo").val();
+           orderHead += "</font>";
+           orderHead += "</td>";
+           orderHead += "</tr>";
+           orderHead += "<tr>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "Mobile:";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-field' style='vertical-align:top;'>";
+           orderHead += "<font style='color:black; font-size:16px;'>";
+           orderHead += $("#Mobile").val();
+           orderHead += "</font>";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td style='width:50px;'></td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "Reference:";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<font style='color:black; font-size:16px;'>";
+           orderHead += $("#Reference").val();
+           orderHead += "</font>";
+           orderHead += "</td>";
+           orderHead += "</tr>";
+           orderHead += "<tr>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "Driver License:";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-field' style='vertical-align:top;'>";
+           orderHead += "<font style='color:black; font-size:16px;'>";
+           orderHead += $("#DriverLic").val();
+           orderHead += "</font>";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td style='width:50px;'></td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "ABN:";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<font style='color:black; font-size:16px;'>";
+           orderHead += $("#ABN").val();
+           orderHead += "</font>";
+           orderHead += "</td>";
+           orderHead += "</tr>";
+
+           orderHead += "<tr>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>";
+           orderHead += "Email:";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-field' style='vertical-align:top;'>";
+           orderHead += "<font style='color:black; font-size:16px;'>";
+           orderHead += $("#Email").val();
+           orderHead += "</font>";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td style='width:50px;'></td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<div class='editor-label'>"
+           orderHead += "Print Date:";
+           orderHead += "</div>";
+           orderHead += "</td>";
+           orderHead += "<td valign='top'>";
+           orderHead += "<font style='color:black; font-size:16px;'>";
+           orderHead += $("#SubmitDate").val();
+           orderHead += "</font>";
+           orderHead += "</td>";
+           orderHead += "</tr>";
+
+           @*if (("@ReadyToSubmitDate" != "") || ("@SubmitDate" != "")) {
+               orderHead += "<tr>";
+               orderHead += "<td valign='top'>";
+               orderHead += "<div class='editor-label'>";
+               orderHead += "Read To Submit Date:";
+               orderHead += "</div>";
+               orderHead += "</td>";
+               orderHead += "<td valign='top'>";
+               orderHead += "<div class='editor-field' style='vertical-align:top;'>";
+               orderHead += "<font style='color:black; font-size:16px;'>";
+               orderHead += "@ReadyToSubmitDate";
+               orderHead += "</font>";
+               orderHead += "</div>";
+               orderHead += "</td>";
+               orderHead += "<td style='width:50px;'></td>";
+               orderHead += "<td valign='top'>";
+               orderHead += "<div class='editor-label'>"
+               orderHead += "Submit Date:";
+               orderHead += "</div>";
+               orderHead += "</td>";
+               orderHead += "<td valign='top'>";
+               orderHead += "<font style='color:black; font-size:16px;'>";
+               orderHead += "@SubmitDate";
+               orderHead += "</font>";
+               orderHead += "</td>";
+               orderHead += "</tr>";
+
+           }*@
+
+           var submittedBy = "@SubmittedBy";
+           var handleBy = "@HandleBy";
+
+           if (submittedBy != "")
+           {
+
+               orderHead += "<tr>";
+               orderHead += "<td valign='top'>";
+               orderHead += "<div class='editor-label'>";
+               orderHead += "Submitted By:";
+               orderHead += "</div>";
+               orderHead += "</td>";
+               orderHead += "<td valign='top'>";
+               orderHead += "<div class='editor-field' style='vertical-align:top;'>";
+               orderHead += "<font style='color:black; font-size:16px;'>";
+
+               orderHead += submittedBy + " " + "@ReadyToSubmitDate";
+
+               orderHead += "</font>";
+               orderHead += "</div>";
+               orderHead += "</td>";
+               orderHead += "<td style='width:50px;'></td>";
+               orderHead += "<td valign='top'>";
+               orderHead += "<div class='editor-label'>"
+               orderHead += "Handle By:";
+               orderHead += "</div>";
+               orderHead += "</td>";
+               orderHead += "<td valign='top'>";
+               orderHead += "<font style='color:black; font-size:16px;'>";
+
+               if (handleBy != "") {
+                   orderHead += handleBy +" "+"@SubmitDate";
+               }
+               orderHead += "</font>";
+               orderHead += "</td>";
+               orderHead += "</tr>";
+           }
+
+          if ($("#RequestForDelivery").prop("checked")) {
+              orderHead += "<tr>";
+              orderHead += "<td valign='top'>";
+              orderHead += "<div class='editor-label'>";
+              orderHead += "Delivery Address:";
+              orderHead += "</div>";
+              orderHead += "</td>";
+              orderHead += "<td valign='top' colspan='4'>";
+              orderHead += "<font style='color:black; font-size:16px;'>";
+              orderHead += $("#Address").val() + " " + $("#City").val() + " " + $("#State").val() + " " + $("#Postcode").val() + " " + $("#Country").val();
+              orderHead += "</font>";
+              orderHead += "</td>";
+              orderHead += "<tr>";
+          }
+
+           if ($("#Comment").text().replace(/ /g, "") != "") {
+               orderHead += "<tr>";
+               orderHead += "<td valign='top'>";
+               orderHead += "<div class='editor-label'>";
+               orderHead += "Comment:";
+               orderHead += "</div>";
+               orderHead += "</td>";
+               orderHead += "<td valign='top' colspan='4'>";
+               orderHead += "<font style='color:black; font-size:16px;'>";
+               orderHead += $("#Comment").text().replace("\n","<br/>");
+               orderHead += "</font>";
+               orderHead += "</td>";
+               orderHead += "<tr>";
+           }
+
+           orderHead += "</table>";
+           orderHead += "</fieldset>";
+           orderHead += "</div>";
+
+           if (status != "Quotation") {
+               mywindow.document.write(orderHead.replace(/16px/g, "12px") + "<br/><br/>" + $("#printBody").html()
+                   .replace(/16px/g, "12px")
+                   .replace(/600px/g, "480px")
+                   .replace(/150px/g, "60px")
+                   .replace(/width:101px/g, "display:none")
+                   .replace(/width: 101px/g, "display:none"));
+           }
+           else {
+               mywindow.document.write(orderHead.replace(/16px/g, "12px") + "<br/><br/>" + $("#printBody").html()
+                   .replace(/16px/g, "12px")
+                   .replace(/600px/g, "480px")
+                   .replace(/150px/g, "60px")
+                   .replace(/width:101px/g, "display:none")
+                   .replace(/width: 101px/g, "display:none")
+                   .replace("<span style=\"display: none;\">TOTAL PRICE (EX GST):", "<span>TOTAL PRICE (EX GST):")
+                   .replace(/width: 130px; text-align: center; font-weight: bold; display: none;/g, "width: 130px; text-align: center; font-weight: bold;")
+                   .replace(/width: 130px; text-align: center; font-size: 15px; display: none;/g, "width: 130px; text-align: center; font-size: 15px;"));
+           }
+
+
+           mywindow.document.write('</body></html>');
+           mywindow.document.close();
+           mywindow.focus();
+           mywindow.print();
+           mywindow.close();
+
+           if ($("#isFront").val() == 1) {
+               showInfo("@orderOrQuoteID", orderId,"Please keep in mind your @orderOrQuoteID: <b>" + orderId + "</b>. <br/>@orderOrQuoteMsg<br/>Thank you.", "", "Logout", "Home");
+           }
+           else {
+               if (reNew == 1) {
+                   $("#byClick").val("1");
+                   var url = '@Url.Action("-1", "-2")';
+
+
+                   if ($("#aebn").val() != "1") {
+                       url = url.replace("-1", "NewOrder").replace("-2", "Order");
+
+                       $("#frmMain").attr('action', url);
+                       $("#frmMain").submit();
+
+                   }
+                   //else {
+                   //    var wnd = window.open("exo://saleorder", "_blank");
+                   //    setTimeout(function () {
+                   //        wnd.close();
+                   //        setByClick();
+                   //        // window.open('', '_self');
+                   //        window.close();
+                   //    }, 2000);
+                   //}
+                   //else {
+                      //  url = 'Url.Action("-1", "-2", new { OrderIds= "-3" })';
+                      //  url = url.replace("-1", "OpenExo").replace("-2", "Home").replace("-3", orderId);
+                     //  url = url.replace("-1", "Logout").replace("-2", "Home");
+                   //}
+
+               }
+           }
+
+           return true;
+      // }
+    }
+
+    if ($('#rowsCnt').length) {
+        fillAllCellsBkColor();
+    }
+
+    function setHightLight(id, cid) {
+        $('#currRowId').val(id);
+        $('#currColId').val(cid);
+
+        for (var i = 0; i < $("#rowsCnt").val(); i++) {
+            $("#tr" + i.toString()).css("display", "");
+        }
+
+        var bcolor = "#B7CEEC";
+        $("#tr-1").css("display", "");
+        $("#tr-1").css("background-color", bcolor);
+
+        if ($("#inValid").val() == "") {
+            $("#tr" + id).css("display", "none");
+            $("#LR-1C0").html($("#LR" + id.toString() + "C0").html());
+            $("#cR-1C0").val($("#cR" + id.toString() + "C0").val());
+            $('[name="notAv"]').remove();
+
+            for (var j = 1; j < $("#colsCnt").val(); j++) {
+
+                if (($("#frmName").val() == "Fasteners") && ($("#cR-1" + "C0").val().indexOf("POP RIVETS 3.5 X13 mm each") > -1)) {
+                    $("#selColour").css("display","");
+                }
+                else {
+                    $("#selColour").css("display", "none");
+                }
+
+                if ($('#forceBlock').val().indexOf($("#cR-1C0").val() + " " + $("#head" + j.toString()).attr("data")) > -1) {
+                    $("#cR-1" + "C" + j.toString()).css("background-color", "#000");
+                    $("#cR-1" + "C" + j.toString()).css("display", "none");
+                    $("#tdR-1" + "C" + j.toString()).append("<div name='notAv' style='width:100%;height:100%;background:#000;text-align:center;color:yellow;' onclick='showInfo2(\"This Item is not available.\","+j+")' >N/A</div>");
+                   // $("#tdR-1" + "C" + j.toString()).css("background-color", "#000");
+                    $("#cR-1" + "C" + j.toString()).val("");
+                    $("#cR-1" + "C" + j.toString()).prop('readonly', true);
+                    $("#cR-1" + "C" + j.toString()).removeAttr("onclick");
+                    $("#cR-1" + "C" + j.toString()).attr("onclick", "showInfo2('This Item is not available.',"+j+")");
+                }
+                else {
+                    $("#cR-1" + "C" + j.toString()).removeAttr("onclick");
+                    $("#cR-1" + "C" + j.toString()).css("display", "");
+                    $("#cR-1" + "C" + j.toString()).css("background-color", bcolor);
+                    $("#cR-1" + "C" + j.toString()).prop('readonly', false);
+                    $("#cR-1" + "C" + j.toString()).val($("#cR" + id + "C" + j.toString()).val());
+
+                    if (j == 1) {
+                        if ($("#selColour").length) {
+                            if ($("#cR" + id + "C" + j.toString()).val() != "") {
+                                var selcolor = $("#cR-1" + "C" + j.toString()).val();
+                                $("#selColour").val(selcolor);
+                            }
+                            else {
+                                $("#selColour").val("");
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if ($("#specailColShow").length) {
+                for (var j = 1; j < $("#colsCnt").val(); j++) {
+                    $("#tdR-1C" + j.toString()).show();
+                }
+
+                if ($("#specailColShow").val() == "Chp") {
+                    for (var j = 6; j < $("#colsCnt").val(); j++) {
+                        $("#tdR-1C" + j.toString()).hide();
+                    }
+                }
+
+                if ($("#specailColShow").val() == "Rai") {
+                    for (var j = 1; j < 6; j++) {
+                        $("#tdR-1C" + j.toString()).hide();
+                    }
+
+                    for (var j = 8; j < $("#colsCnt").val(); j++) {
+                        $("#tdR-1C" + j.toString()).hide();
+                    }
+                }
+
+                if ($("#specailColShow").val() == "Sma") {
+                    for (var j = 1; j < 8; j++) {
+                        $("#tdR-1C" + j.toString()).hide();
+                    }
+                }
+            }
+
+            window.scrollTo(window.scrollX, 0);
+            if (cid == "0") {
+                $("#cR-1C1").focus();
+            }
+            else {
+                if ($('#forceBlock').val().indexOf($("#cR-1C0").val() + " " + $("#head" + $("#currColId").val()).attr("data")) > -1) {
+                    $("#cR-1C" + (parseInt(cid) - 1).toString()).focus();
+                }
+                else {
+                    $("#cR-1C" + cid).focus();
+                }
+            }
+        }
+        else {
+            $("#" + $("#inValid").val()).focus();
+            $("#inValid").val("");
+        }
+    }
+
+    function highLightRow(rid, cid) {
+        var errMsg = checkSpecicalPage();
+        if (errMsg != "") {
+            if (errMsg.indexOf("Error") > -1) {
+                showWarning(errMsg);
+            }
+            else {
+                BootstrapDialog.show({
+                    title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+                    message: "<font style='font-size:25px;'>" + errMsg + "</font>",
+                    buttons: [{
+                        label: 'NO',
+                        cssClass: 'btn-dialog',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+
+                        }
+                    }, {
+                        label: 'YES',
+                        cssClass: 'btn-dialog',
+                        action: function (dialogItself) {
+                            setValueBack2(1);
+                            setHightLight(rid, cid);
+                            dialogItself.close();
+                        }
+                    }]
+                });
+            }
+        }
+        else {
+            setValueBack2(1);
+            setHightLight(rid, cid);
+        }
+    }
+
+    function reloadOrder(id) {
+        $("#actReq").val("c");
+        $("#byClick").val("1");
+
+        var link = '@Url.Action("ReloadOrder", "Order", new {id = "-1" })';
+        link = link.replace("-1", id);
+        location.href = link;
+    }
+
+
+    function CancelOrder(id) {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+            message: "<font style='font-size:25px;'>Are you sure to cancel Id "+id+"?</font>",
+            buttons: [{
+                label: 'NO',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+
+                }
+            }, {
+                label: 'YES',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    $("#actReq").val("c");
+                    $("#byClick").val("1");
+
+                    var link = '@Url.Action("CancelOrder", "Order", new {id = "-1" })';
+                    link = link.replace("-1", id);
+                    location.href = link;
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+
+    function resetUserActive(id, user, active) {
+          BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+            message: "<font style='font-size:25px;'>Are you sure to set User " + user+" to "+active+"?</font>",
+            buttons: [{
+                label: 'NO',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+
+                }
+            }, {
+                label: 'YES',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    $("#actReq").val("c");
+                    $("#byClick").val("1");
+                    var link = '@Url.Action("ResetUserActive", "Home", new {id = "-1" })';
+                    link = link.replace("-1", id);
+                    location.href = link;
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+    function cellKeyUp(keyCode, id, cid, shw, setHL, hlId, hlCid, pageName) {
+        var isQtyValid = 1;
+        var itemType = "";
+        var sameColourForm = "";
+        //if (pageName == "SameColour_GramSlat") {
+        //    alert("ss");
+        //    pageName = "";
+        //    sameColourForm = "GramSlat";
+        //    $("#frmName").val("GramSlat")
+        //}
+
+        if (id.indexOf("_") > -1) {
+            itemType = id.split("_")[0] + "_";
+        }
+
+        $("#" + id).val($("#" + id).val().replace(/ /g, ""));
+        if (($("#" + id).val() == "") || ($("#" + id).val().replace(/0/g, "") == "")) {
+            $("#" + id).val("");
+            if ($("#allCuts").length) {
+                var allCuts = $("#allCuts").text();
+                if ((allCuts != "") && ($("#" + id).val() == "")) {
+                    allCuts = "";
+                    var allcutsArr = $("#allCuts").text().split("|_|");
+                    for (var i = 0; i < allcutsArr.length - 1; i++) {
+                        var cutArr = allcutsArr[i].split("|~|");
+                        if ((cutArr[0] != $("#currColour").val()) && (cutArr[1] != $("#headCutCol" + cid).val())) {
+                            allCuts += allcutsArr[i] + "|_|";
+                        }
+                    }
+
+                    $("#allCuts").text(allCuts);
+                }
+            }
+        }
+
+        if ((keyCode == 13) || ($("#" + id).val() != ""))
+        {
+            if ($("#" + id).val() != "") {
+                var flag = isPosInteger($("#" + id).val());
+                if (!flag) {
+                    isQtyValid = 0;
+                    $("#" + id).val($("#" + id).val().replace(/\D/g, ''));
+
+                    if ($("#" + id).val() == "0")
+                        $("#" + id).val("");
+
+                    $("#" + id).focus();
+                   // $("#" + id).prop('disabled', true);
+                    showWarningWithId("Error: Input is not a postive interger.", id);
+                }
+            }
+
+            if (isQtyValid == 1) {
+                var colour = $("#currColour").val();
+                var showedItem = ";" + colour + "-" + cid.toString();
+                var fmsg = "";
+                var showed = 0;
+                var qty = $("#" + id).val();
+
+                if ($("#" + itemType+"head" + cid.toString()).attr("title").indexOf("!!") > -1) {
+                    fmsg = $("#" + itemType+"head" + cid.toString()).attr("title").replace(/   /g,"<br/>");
+                }
+
+                if ($("#showed").val().indexOf(showedItem) > -1) {
+                    showed = 1;
+                }
+
+                if ((fmsg != "") && (parseInt(qty) < 21)) {
+                    fmsg = "";
+                    $("#showed").val($("#showed").val().replace(showedItem, ""));
+                }
+                else {
+                    if ((fmsg != "") && (parseInt(qty) > 20) && (showed == 1)) {
+                        fmsg = "";
+                    }
+
+                    if ((fmsg != "") && (parseInt(qty) > 20) && (showed == 0)) {
+                        $("#showed").val($("#showed").val() + showedItem);
+                    }
+                }
+
+
+                var warnQty = 999;
+                if ($("#frmName").val() == "Screws") {
+                    if ((id.replace("Screws_", "") == "cR-1C1") || (id.replace("Screws_", "") == "cR-1C3") || (id.replace("Screws_", "")=="cR-1C5")){
+                        if ($("#" + id).val().length >= 4){
+                            $("#" + id).val($("#" + id).val().substring(0,3));
+                            return;
+                       }
+                    }
+                    else  {
+                           warnQty = 9;
+                   }
+                }
+
+                if (($("#MenuExpandings").val().indexOf("m3.0") > -1) ||
+                    ($("#frmName").val() == "SmartStile") ||
+                    ($("#frmName").val() == "SmartStileDP") ||
+                    ($("#frmName").val() == "WeldedGateStile")) {
+                    warnQty = 99;
+                }
+
+
+                var SizeDetect = 0;
+                if ($("#frmName").val() == "SmartSlat") {
+                    if (($("#currColId").val() == "2") ||
+                        ($("#currColId").val() == "4") ||
+                        ($("#currColId").val() == "7") ||
+                        ($("#currColId").val() == "9") ||
+                        ($("#currColId").val() == "12") ||
+                        ($("#currColId").val() == "14")) {
+                        SizeDetect = 1;
+                    }
+                }
+
+                if ($("#frmName").val() == "SmartSlatAng") {
+                    if (($("#currColId").val() == "2") ||
+                        ($("#currColId").val() == "4") ||
+                        ($("#currColId").val() == "6") ||
+                        ($("#currColId").val() == "8") ||
+                        ($("#currColId").val() == "10") ||
+                        ($("#currColId").val() == "12") ||
+                        ($("#currColId").val() == "14") ||
+                        ($("#currColId").val() == "16") ||
+                        ($("#currColId").val() == "18")) {
+                        SizeDetect = 1;
+
+                        if (parseInt($("#" + id).val()) > 4000) {
+                            showWarning("LENGTH CAN NOT MORE THAN 4000 MM.");
+                            $("#" + id).val(4000);
+                        }
+                    }
+                }
+
+                if ($("#frmName").val() == "SmartSlatLBSO") {
+                    if (($("#currColId").val() == "2") ||
+                        ($("#currColId").val() == "4")) {
+                        SizeDetect = 1;
+                        if (parseInt($("#" + id).val()) > 4000) {
+                            showWarning("LENGTH CAN NOT MORE THAN 4000 MM.");
+                            $("#" + id).val(4000);
+                        }
+                    }
+                }
+
+                if (($("#" + id).val() != "") && (SizeDetect == 0) && ((parseInt($("#" + id).val()) > warnQty) || (fmsg != ""))) {
+
+
+                    var dispMsg = "";
+
+                   // if (SizeDetect == 0) {
+
+
+                        if ((parseInt($("#" + id).val()) > warnQty) && (fmsg == "")) {
+                            dispMsg = "How many did you order?<br><table>";
+                        }
+
+                        if ((parseInt($("#" + id).val()) > warnQty) && (fmsg != "")) {
+                            dispMsg = fmsg + "<br/><br/>How many did you order?<br><table>";
+                        }
+
+
+                        var QtyOrLen = "QTY";
+                        if ($("#frmName").val() == "Roofing") {
+                            if (id.indexOf("C1") > 0) {
+                                dispMsg = "What length did you order?<br><table>";
+                                QtyOrLen = "LENGTH";
+                            }
+                        }
+
+
+                        dispMsg += "<tr><td>&nbsp;&nbsp;&nbsp;" + QtyOrLen+"&nbsp;" + $("#" + id).val() + "</td><td>&nbsp;&nbsp;<input type='checkbox' style='vertical-align:middle; display:bloack;' id='pConfCheck1' name='pConfCheck1'onchange='$(\"#pConfCheck2\").prop(\"checked\",false);'/></td></tr>";
+                        dispMsg += "<tr><td colspan='2' style='text-align:center;'>&nbsp;&nbsp;&nbsp;OR</td><td></td></tr>";
+                        dispMsg += "<tr><td>&nbsp;&nbsp;&nbsp;" + QtyOrLen+"&nbsp;" + $("#" + id).val().substring(0, $("#" + id).val().length - 1) + "</td><td>&nbsp;&nbsp;<input type='checkbox' style='vertical-align:middle; display:bloack;' id='pConfCheck2' name='pConfCheck2' onchange='$(\"#pConfCheck1\").prop(\"checked\",false);'/></td></tr></table>";
+                  //  }
+                    //else {
+                    //    if ((parseInt($("#" + id).val()) > warnQty) && (fmsg == "")) {
+                    //        dispMsg = "What Size did you order?<br><table>";
+                    //    }
+
+                    //    if ((parseInt($("#" + id).val()) > warnQty) && (fmsg != "")) {
+                    //        dispMsg = fmsg + "<br/><br/>What Size did you order?<br><table>";
+                    //    }
+
+                    //    dispMsg += "<tr><td>&nbsp;&nbsp;&nbsp;SIZE&nbsp;" + $("#" + id).val() + "</td><td>&nbsp;&nbsp;<input type='checkbox' style='vertical-align:middle; display:bloack;' id='pConfCheck1' name='pConfCheck1'onchange='$(\"#pConfCheck2\").prop(\"checked\",false);'/></td></tr>";
+                    //    dispMsg += "<tr><td colspan='2' style='text-align:center;'>&nbsp;&nbsp;&nbsp;OR</td><td></td></tr>";
+                    //    dispMsg += "<tr><td>&nbsp;&nbsp;&nbsp;SIZE&nbsp;" + $("#" + id).val().substring(0, $("#" + id).val().length - 1) + "</td><td>&nbsp;&nbsp;<input type='checkbox' style='vertical-align:middle; display:bloack;' id='pConfCheck2' name='pConfCheck2' onchange='$(\"#pConfCheck1\").prop(\"checked\",false);'/></td></tr></table>";
+                    //}
+
+                    if ((parseInt($("#" + id).val()) <= warnQty) && (fmsg != "")) {
+                        dispMsg = fmsg;
+                    }
+
+                   // $("#" + id).prop('disabled', true);
+                    BootstrapDialog.show({
+                        title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-question-sign"></i> Confimation</font>',
+                        message: "<font style='font-size:25px;'>" + dispMsg + "</font>",
+                        buttons: [{
+                            label: 'CANCEL',
+                            cssClass: 'btn-dialog',
+                            action: function (dialogItself) {
+                                $("#" + id).val("");
+                             //   $("#" + id).prop('disabled', false);
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: 'YES',
+                            cssClass: 'btn-dialog',
+                            action: function (dialogItself) {
+                                var allowClose = 1;
+                                if ($("#pConfCheck1").length) {
+                                    if (!$("#pConfCheck1").prop('checked') && !$("#pConfCheck2").prop('checked')) {
+                                        allowClose = 0;
+                                        showWarning("Please tick one of the check box.");
+                                    }
+                                    else {
+                                        if ($("#pConfCheck2").prop('checked')) {
+                                            $("#" + id).val($("#" + id).val().substring(0, $("#" + id).val().length-1));
+                                        }
+                                    }
+                                }
+
+                                if (keyCode == 13) {
+                                    setValueBack(1);
+                                }
+                                if (setHL == 1) {
+                                    setHightLight(hlId, hlCid);
+                                }
+                                if (pageName != "") {
+                                    gotoPage(pageName, 'Order', '');
+                                }
+                               // $("#" + id).prop('disabled', false);
+
+                                if (allowClose == 1) {
+                                    dialogItself.close();
+                                }
+                            }
+                        }]
+                    });
+                }
+                else {
+
+                    if ($("#frmName").val() == "SmartSlat") {
+                        if (($("#currColId").val() == "2") ||
+                            ($("#currColId").val() == "4")) {
+
+                            if (parseInt($("#" + id).val()) > 3100) {
+                                showWarning("Max size input is 3100");
+                                $("#" + id).val(3100);
+                            }
+                        }
+                    }
+
+                    if (pageName != "") {
+                        gotoPage(pageName, 'Order', '');
+                    }
+
+                    if (keyCode == 13) {
+                        setValueBack(1);
+                    }
+
+                    if (setHL == 1) {
+                        setHightLight(hlId, hlCid);
+                    }
+                }
+            }
+        }
+
+    }
+
+    function cellOnfocus(id, rid, cid) {
+        $('#currFieldId').val(id);
+        $('#currColour').val($('#LR-1C0').html());
+        //$('#currRowId').val(rid);
+        $('#currColId').val(cid);
+        var bcolor = "#B7CEEC";
+        $("#" + id).css("background-color", bcolor);
+        $("#" + id.replace("cR", "tdR")).css("background-color", bcolor);
+    }
+
+    function CellIsPosInt(id) {
+        $("#inValid").val("");
+        $("#" + id).val($("#" + id).val().replace(/ /g, ""));
+        if ($("#" + id).val() != "") {
+            var flag = isPosInteger($("#" + id).val());
+            if (!flag) {
+                $("#" + id).val($("#" + id).val().replace(/\D/g, ''));
+                showWarning("Error: Input is not a postive interger.");
+                $("#inValid").val(id);
+            }
+        }
+    }
+
+    if ($("#sevErr").find('span').text() != "") {
+        showWarning($("#sevErr").find('span').text());
+    }
+
+</script>

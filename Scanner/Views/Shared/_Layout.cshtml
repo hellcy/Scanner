@@ -1,16 +1,108 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using Scanner.Models
+@using System.Web.Configuration;
+@{
+    var loginAs = "";
+    var role = "";
+    if (Request.IsAuthenticated)
+    {
+        if (Session["User"] != null)
+        {
+            loginAs = ((Scanner.Models.User)Session["User"]).UserName;
+            role = ((Scanner.Models.User)Session["User"]).Role;
+        }
+
+        if (Request.Url.AbsoluteUri.IndexOf("/CheckOut") > -1)
+        {
+            Session["CurrForm"] = "CheckOut";
+            ViewBag.Title = "CHECK OUT";
+        }
+    }
+
+    var pubDir2 = WebConfigurationManager.AppSettings["pubDir2"].ToString();
+
+    var ctrlName = "";
+    var actName = "";
+    var formId = "";
+    var formClass = "";
+
+    if (ViewBag.Title == "Scanner Page")
+    {
+        ctrlName = "Scanner";
+        actName = "Index";
+        formId = "frmMain";
+        formClass = "";
+    }
+}
+
+
+<!DOCTYPE html>
+@*<link rel="icon" type="image/png" href="~/Content/Gram/images/favicon.png" />*@
+<!--[if IE 6]>
+
+<html id="ie6" lang="en-US">
+
+<![endif]-->
+<!--[if IE 7]>
+
+<html id="ie7" lang="en-US">
+
+<![endif]-->
+<!--[if IE 8]>
+
+<html id="ie8" lang="en-US">
+
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html lang="en-US">
+<!--<![endif]-->
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title - Gram Scanner</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Gram Management Report </title>
+    @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+
+    <script src="~/Scripts/jquery-2.1.4/jquery-2.1.4.js"></script>
+    <link href="~/Content/3.3.5/bootstrap.css" rel="stylesheet" />
+    @*<link href="~/Content/3.3.5/bootstrap-responsive.css" rel="stylesheet" />
+        <link href="~/Content/3.3.5/docs.css" rel="stylesheet" />
+        <link href="~/Content/3.3.5/prettify.css" rel="stylesheet" />*@
+
+    <script src="~/Scripts/boostrap-3.3.5/bootstrap.js"></script>
+    <script src="~/Scripts/boostrap-3.3.5/run_prettify.min.js"></script>
+    <link href="~/Content/3.3.5/bootstrap-dialog.css" rel="stylesheet" />
+    <script src="~/Scripts/boostrap-3.3.5/bootstrap-dialog.js"></script>
+    @*<script src="~/Scripts/boostrap-3.3.5/bootstrap-tooltip.js"></script>
+        <script src="~/Scripts/boostrap-3.3.5/bootstrap-confirmation.js"></script>*@
+
+    <script src="~/Scripts/Gram/Global.js"></script>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @*<link rel="stylesheet" type="text/css" media="all" href="http://www.gram.com.au/wp-content/themes/twentyeleven/style.css" />*@
+    <link rel="stylesheet" type="text/css" media="all" href="~/Content/Gram/Style.css" />
 
+    <!--[if lt IE 9]>
+    <![endif]-->
+    <style type='text/css'>
+        img#wpstats {
+            display: none
+        }
+    </style>
+    @*<link rel="stylesheet" href="http://www.gram.com.au/wp-content/plugins/jquery-vertical-mega-menu/skin.php?widget_id=2&amp;skin=blue" type="text/css" media="screen" />*@
+    <meta name="description" itemprop="description" content="Gramline is the #1 fencing supplier and contractor in Australia, provide fencing services in Sydney, Melbourne, Perth and Brisbane." />
+    <meta name="keywords" itemprop="keywords" content="Fencing supplies Melbourne; Fencing supplies Sydney, Fencing contractors Sydney, Fencing contractors Brisbane, Fencing supplies Brisbane, Fencing contractors Perth, Fencing contractors Melbourne" />
+    <meta name="google-site-verification" content="z_ydDaOJ7CFSIyEizTzpnAxejccnOlqZ9BnnxR4ZqP0" />
+
+    <style type="text/css" media="screen">
+        body {
+            position: relative
+        }
+    </style>
     <style type="text/css" id="custom-background-css">
         body.custom-background {
             background-color: #eaf6ff;
         }
+
         #table-wrapper {
             position: relative;
         }
@@ -41,34 +133,139 @@
             width: 35%;
         }
     </style>
+
+
+
+    <script type="text/javascript" language="javascript">
+        var needRefresh = 0;
+        var timeloops = 0;
+
+
+        function startTime() {
+            var today = new Date();
+            var d = today.getDate();
+            var mo = today.getMonth() + 1;
+            var y = today.getFullYear();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            var s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+
+            if ($("#OrderDate").length) {
+                $("#OrderDate").val(d + "/" + mo + "/" + y + " " + h + ":" + m + ":" + s);
+            }
+
+            var t = setTimeout(startTime, 500);
+        }
+
+        function checkTime(i) {
+            if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+            return i;
+        }
+
+        function displayNoImage(img) {
+            //img.src = "../../Images/no-image.jpg";
+            $("#titleImage").hide();
+        }
+
+
+    </script>
 </head>
-<body style="width:100% !important;">
-
-    <div class="wrapper2" style="width:100% !important;">
-        <div id="page" class="hfeed" style="width:100% !important;">
-            <header id="branding" role="banner" style="width:100% !important;">
-                @*<hgroup>*@
-                <div style="width:100%; height:100px; float:left; margin-top:17px; margin-left:17px;">
-                    <img border="0" src="http://www.gram.com.au/wp-content/themes/twentyeleven/images/logo1.jpg" width="290" height="100" alt="Gramline" title="GramLine" />
-                    <div id="urgentMes"></div>
-                    <div style="position:absolute; width:315px;  right:176px; top:15px;">
-                        <span class="glyphicon glyphicon-home" style="color:#fff"></span><span class="glyphicon glyphicon-home" style="color:#fff"></span>
-                        &nbsp;&nbsp;<span style="font-size:17px; color:#fff;">MARKETING</span>
+<body onload="startTime()" style="width:100% !important;">
+    @using (Html.BeginForm(actName, ctrlName, FormMethod.Post, new { @id = formId, @class = formClass }))
+    {
+        <input type="hidden" name="pubDir2" id="pubDir2" value="@pubDir2" />
+        <table style="width:100%">
+            <tr>
+                <td>
+                    <div class="wrapper2" style="width:100% !important;">
+                        <div id="page" class="hfeed" style="width:100% !important;">
+                            <header id="branding" role="banner" style="width:100% !important;">
+                                @*<hgroup>*@
+                                <div style="width:100%; height:100px; float:left; margin-top:17px;">
+                                    <table style="margin-left:auto;margin-right:auto;width:1200px;">
+                                        <tr>
+                                            <td>
+                                                <img border="0" src="http://www.gram.com.au/wp-content/themes/twentyeleven/images/logo1.jpg" width="290" height="100" alt="Gramline" title="GramLine" />
+                                            </td>
+                                            <td>
+                                                <table style="height:100%;">
+                                                    <tr>
+                                                        <td>
+                                                            <div id="urgentMes"></div>
+                                                            <div style="position:absolute; width:315px;  right:176px; top:15px;">
+                                                                <span class="glyphicon glyphicon-home" style="color:#fff"></span><span class="glyphicon glyphicon-home" style="color:#fff"></span>
+                                                                &nbsp;&nbsp;<span style="font-size:17px; color:#fff;">MANAGEMENT REPORT</span>
+                                                                @if (Session["User"] != null)
+                                                                {
+                                                                    <br /><span style="font-size:17px; color:#fff;">Login&nbsp;as:&nbsp;@loginAs</span>
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="bottom">
+                                                            @if (Session["User"] != null)
+                                                            {
+                                                                <div style="width:800px;">
+                                                                    @Html.Partial("_TopMenuPanel")
+                                                                </div>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                @*</hgroup>*@
+                            </header>
+                        </div>
                     </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:5%"><input type="hidden" name="byClick" id="byClick" value="" /></td>
+                            <td style="width:95%">@RenderBody()</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <br /><br /><br />
+                                <footer style="width:100%">
+                                    <div style="text-align:center;"><hr style="width:400px;" /><p>&copy; @DateTime.Now.Year - Gram Engineering Pty Ltd</p></div>
+                                </footer>
+                                <br /><br /><br />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    }
 
-                </div>
-                @*</hgroup>*@
-            </header>
-        </div>
-    </div>
-    <div style="width:100%">@RenderBody()</div>
-    <div class="col-md-12">
-        <footer style="width:100%">
-            <div style="text-align:center;"><hr style="width:400px;" /><p>&copy; @DateTime.Now.Year - Gram Engineering Pty Ltd</p></div>
-        </footer>
-    </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
 </body>
 </html>
+<script type="text/javascript" language="javascript">
+    function gotoPage(pageName, ctrl, cons) {
+        var act = '@Url.Action("pageName", "Ctrl")';
+        act = act.replace("pageName", pageName);
+        act = act.replace("Ctrl", ctrl);
+
+        if (cons != "")
+        {
+            act += "?"+cons;
+        }
+
+        $("#frmMain").attr('action', act);
+        $("#frmMain").submit();
+    }
+
+
+</script>

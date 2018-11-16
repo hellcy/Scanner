@@ -223,6 +223,7 @@
     <Compile Include="Models\BranchLoc.cs" />
     <Compile Include="Models\Bridge.cs" />
     <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\Despatch.cs" />
     <Compile Include="Models\Fence.cs" />
     <Compile Include="Models\FolderFile.cs" />
     <Compile Include="Models\FolderFiles.cs" />
@@ -239,6 +240,8 @@
     <Compile Include="Models\OrderHead.cs" />
     <Compile Include="Models\OrderHead2.cs" />
     <Compile Include="Models\OrderHeads.cs" />
+    <Compile Include="Models\Outstanding.cs" />
+    <Compile Include="Models\Outstandings.cs" />
     <Compile Include="Models\PasswordReq.cs" />
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\Quote1.cs" />
@@ -322,18 +325,26 @@
     <Content Include="Views\Home\OpenExo.cshtml" />
     <Content Include="Views\Home\Registration2.cshtml" />
     <Content Include="Views\Home\Registration.cshtml" />
+    <Content Include="Views\Home\Registration_w.cshtml" />
+    <Content Include="Views\Home\ReqNewLogin.cshtml" />
+    <Content Include="Views\Home\Users.cshtml" />
+    <Content Include="Views\Home\VVBGAKUISJDIULAOSD.cshtml" />
+    <Content Include="Views\Internal\Folders.cshtml" />
+    <Content Include="Views\Internal\Index.cshtml" />
+    <Content Include="Views\Internal\Uploads.cshtml" />
+    <Content Include="Views\Return\Index.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Shared\_Adverts.cshtml" />
+    <Content Include="Views\Shared\_BottomPanel.cshtml" />
+    <Content Include="Views\Shared\_Layout2.cshtml" />
+    <Content Include="Views\Shared\_PageTitlePanel.cshtml" />
+    <Content Include="Views\Shared\_SideMenuPanel.cshtml" />
+    <Content Include="Views\Shared\_TopMenuPanel.cshtml" />
+    <Content Include="Views\Home\Despatch.cshtml" />
+    <Content Include="Views\Home\Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Base\" />
-    <Folder Include="Views\FileUpId\" />
-    <Folder Include="Views\Internal\" />
-    <Folder Include="Views\Map\" />
-    <Folder Include="Views\Message\" />
-    <Folder Include="Views\OrderListBoard\" />
-    <Folder Include="Views\OrderSetHandle\" />
-    <Folder Include="Views\Order\" />
-    <Folder Include="Views\Return\" />
     <Folder Include="Views\User\" />
     <Folder Include="Views\Values\" />
   </ItemGroup>

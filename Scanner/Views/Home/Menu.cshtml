@@ -1,0 +1,23 @@
+﻿@using Scanner.Models
+@{
+    ViewBag.Title = "Order Menu";
+    var user = (User)Session["User"];
+}
+
+<div class="row" style="width:100%;margin-top:250px;">
+    <div class="col-md-4" style="width:100%">
+        <fieldset>
+            <table style="margin-left:auto;margin-right:auto;width:400px;">
+                <tr>
+                    <td style="padding-right:20px"><input type="button" value="BRANCH MAP" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("BranchMap", "Home")'" /></td>
+                    <td style="padding-right:20px"></td>
+                    <td style="padding-right:20px"></td>
+                    <td style="padding-right:20px"></td>
+                    <td></td>
+                </tr>
+            </table>
+            @*@Html.ValidationSummary(true, "Login failed. Check your login details.");*@
+        </fieldset>
+    </div>
+</div>
+

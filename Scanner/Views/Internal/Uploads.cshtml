@@ -1,0 +1,47 @@
+﻿@{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <link href="~/Scripts/dropzone/dropzone.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    @using (Html.BeginForm("SaveUploadedFile", "Internal", FormMethod.Post, new { enctype = "multipart/form-data", @class = "dropzone", id = "dropzoneForm" }))
+    {
+        @section scripts{
+            <script type="text/javascript">
+                Dropzone.options.dropzoneForm = {
+                    init: function () {
+                        var myDropzone = this;
+                        this.on("complete", function (data) {
+                            var res = JSON.parse(data.xhr.responseText);
+                            console.log(res.Message);
+                        });
+                    }
+                  };
+            </script>
+        }
+    }
+    <input type="hidden" name="maxFileCnt" id="maxFileCnt" value="4" />
+    <input type="hidden" name="uploadedFilesTxt" id="uploadedFilesTxt" value="@ViewBag.ExistingFiles" />
+    <input type="hidden" name="uploadGuid" id="uploadGuid" value="@ViewBag.uploadGuid" />
+
+
+
+    <script src="~/Scripts/jquery-2.1.4/jquery-2.1.4.js"></script>
+    <script src="~/Scripts/jquery-2.1.4/jquery-ui.js"></script>
+    <script src="~/Scripts/dropzone/dropzone.js"></script>
+
+    @*@RenderSection("scripts", required: false)*@
+</body>
+</html>

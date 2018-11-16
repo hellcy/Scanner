@@ -24,7 +24,7 @@
                 $('#Save2').val($('#Save').val());
                 $('#data').find("tr:gt(0)").remove(); //remove all table rows except the headings
                 $('#uploadFlag').val("UPLOAD");
-                $("#tableData").submit(function () {
+                $("#frmMain").submit(function () {
                     $('#Save').val('');
                 });
             });
@@ -32,7 +32,7 @@
             $('#ID').keydown(function (event) {
                 if (event.keyCode == 9) {
                     $('#Save').val($('#Save').val() + $('#ID').val());
-                    $("#tableData").submit();
+                    $("#frmMain").submit();
                 }
             });
 
@@ -49,7 +49,7 @@
 <html>
 <body>
 
-    <form id="tableData" action="Index" method="post">
+ 
         <div class="col-md-6">
             <div style="font-size:25px;" class="editor-label">
                 CoilID Scanned
@@ -182,11 +182,12 @@
                     </div>
                 </div>
                 </div>
-                <div class="col-md-12">
-                    <input type="submit" id="clear" value="clear" style="font-size:25px; width:150px; height:100px;" />
-                    <input type="submit" id="uploadButton" value="update" style="font-size:25px; width:150px; height:100px; float:right;" />
-                </div>
-</form>
+        <div class="col-md-12">
+            <input type="submit" id="clear" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" />
+            <input type="button" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="$('#byClick').val('1');window.location='/Home';" />&nbsp;&nbsp;
+            <input type="submit" id="uploadButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" />
+        </div>
+
 
 </body>
 </html>

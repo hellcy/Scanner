@@ -18,6 +18,7 @@ namespace Scanner.Controllers
 
         public ActionResult Index()
         {
+            CoilDetail details = new CoilDetail();
             return View(details);
         }
 
@@ -27,7 +28,10 @@ namespace Scanner.Controllers
             string ConnStr = ConfigurationManager.ConnectionStrings["GramLineConn"].ToString();
 
             string input;
-
+            if (model.CoilDetails == null)
+            {
+                return View(model);
+            }
             if (model.CoilDetails[0].Flag == "UPLOAD")
                 input = model.CoilDetails[0].Save2;
             else

@@ -1,0 +1,351 @@
+﻿@model Scanner.Models.Users
+@using Scanner.Models
+@{
+    Session["AddSpLength"] = null;
+    var user = (User)Session["User"];
+}
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px; vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td style="width:20px;"></td>
+        <td style="width:100%" valign="top">
+            <div class="jumbotron">
+                <table style="width:100%">
+                    <tr>
+                        <td><font class="subPagetitle">@ViewBag.Title</font></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div style="margin-left:10px;">
+                <table>
+                    <tr>
+                        <td><b>Search Text:</b></td>
+                        <td>&nbsp;</td>
+                        <td>@Html.TextBoxFor(o => o.whereStr)</td>
+                        <td>&nbsp;</td>
+                        <td><input type="button" class="btn btn-primary" onclick="submitNavpage(1)" value="Submit" style="width:80px;" /></td>
+                        <td>&nbsp;<input type="button" class="btn btn-primary" onclick="gotoPage('Registration', 'Home','id=-1')" value="New User" style="width:80px;" /><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
+                    </tr>
+                </table>
+                <div class="TwrapOverFlow">
+                    <span style="float:right; font-weight:bold">Total Users : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
+                    <table class="head">
+                        <tr>
+                            @if (Model.sortCol == "Id")
+                            {
+                                <td style="width:65px;font-weight:bold;"><a onclick="orderToggle('Id','Number')">Id<span id="Id_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:65px;font-weight:bold;"><a onclick="orderToggle('Id','Number')">Id<span id="Id_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+
+                            @if (Model.sortCol == "UserName")
+                            {
+                                <td style="width:200px;font-weight:bold;"><a onclick="orderToggle('UserName','String')">User Name<span id="UserName_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:200px;font-weight:bold;"><a onclick="orderToggle('UserName','String')">User Name<span id="UserName_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+
+
+                            @if (Model.sortCol == "Email")
+                            {
+                                <td style="width:200px;font-weight:bold;"><a onclick="orderToggle('Email','String')">Email<span id="Email_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:200px;font-weight:bold;"><a onclick="orderToggle('Email','String')">Email<span id="Email_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+
+
+                            @if (Model.sortCol == "CompanyName")
+                            {
+                                <td style="font-weight:bold;width:250px;"><a onclick="orderToggle('CompanyName','String')">Company<span id="CompanyName_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="font-weight:bold;width:250px;"><a onclick="orderToggle('CompanyName','String')">Company<span id="CompanyName_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+
+
+                            @if (Model.sortCol == "ACCNO")
+                            {
+                                <td style="width:100px;font-weight:bold;"><a onclick="orderToggle('ACCNO','String')">ACCNO<span id="ACCNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:100px;font-weight:bold;"><a onclick="orderToggle('ACCNO','String')">ACCNO<span id="ACCNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+
+
+                            @if (Model.sortCol == "Active")
+                            {
+                                <td style="width:80px;font-weight:bold;"><a onclick="orderToggle('isActive','String')">Active<span id="Reference_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:80px;font-weight:bold;"><a onclick="orderToggle('isActive','String')">Active<span id="Reference_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+
+                            @if (Model.sortCol == "Trial")
+                            {
+                                <td style="width:80px;font-weight:bold;"><a onclick="orderToggle('isTrial','String')">Trial<span id="isTrial_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:80px;font-weight:bold;"><a onclick="orderToggle('isTrial','String')">Trial<span id="isTrial_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+
+                            @if (Model.sortCol == "CreatedDate")
+                            {
+                                <td style="width:100px;font-weight:bold;"><a onclick="orderToggle('CreatedDate','Date')">Submitted<span id="Created_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:100px;font-weight:bold;"><a onclick="orderToggle('CreatedDate','Date')">Submitted<span id="Created_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+
+
+                            @if (user.Role.IndexOf("Gram") > -1)
+                            {
+                                <td style="width:100px;font-weight:bold;">Set</td>
+                            }
+
+                        </tr>
+                    </table>
+                    <div class="inner_table" style="width:1520px;">
+                        @if (Model.errMsg == "")
+                        {
+                            <table>
+                                @for (int i = 0; i < Model.users.Count; i++)
+                                {
+                                    var bid = "can" + i.ToString();
+                                    var bkColour = "";
+                                    var CreatedDate = (Model.users[i].CreatedDate != null) ? ((DateTime)Model.users[i].CreatedDate).ToShortDateString() : "";
+                                    <tr style="background-color:@bkColour">
+                                        <td style="width:65px;">
+                                            @Html.ActionLink(Model.users[i].Id.ToString(), "Registration", "Home", new { id = Model.users[i].Id }, new { onClick = "setByClick();" })
+                                        </td>
+                                        <td style="width:200px;text-align:left;">@Model.users[i].UserName</td>
+                                        <td style="width:200px;text-align:left;">@Model.users[i].UserEmail</td>
+                                        <td style="text-align:left;width:250px;"><div style="overflow: hidden;height:20px;" title="@Model.users[i].CompanyName">@Model.users[i].CompanyName</div></td>
+                                        <td style="width:100px;">@Model.users[i].ACCNO</td>
+                                        <td style="width:80px;">@Model.users[i].isActive.ToString()</td>
+                                        <td style="width:80px;">@Model.users[i].isTrial.ToString()</td>
+                                        <td style="width:100px;">@CreatedDate</td>
+                                        @if (user.Role.IndexOf("Gram") > -1)
+                                        {
+                                            var bName = "INACTIVE";
+                                            if (!Model.users[i].isActive)
+                                            {
+                                                bName = "ACTIVE";
+                                            }
+
+                                            <td style="width:100px;">
+                                                <div class="btn-group-sm">
+                                                    <input type="button" name="@bid" id="@bid" class="btn btn-primary" onclick="resetUserActive('@Model.users[i].Id','@Model.users[i].UserName','@bName')" value="@bName" />
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        }
+                    </div>
+                    @{
+                        var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
+                        var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
+                        var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
+                        var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
+                        var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
+                        var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
+
+                    }
+                    <br />
+                    <span style="float:right; font-weight:bold">
+                        @Html.TextBoxFor(o => o.totalPages, new { style = "display:none;" })Total Pages: @Model.totalPages.ToString(), Records per Page:
+                        <select name="rowsPerPage" id="rowsPerPage" onchange="reloadUsers()" style="height:28px;font-size:14px;">
+                            <option value=15 @sel15>15</option>
+                            <option value=30 @sel30>30</option>
+                            <option value=50 @sel50>50</option>
+                            <option value=100 @sel100>100</option>
+                            <option value=150 @sel150>150</option>
+                            <option value=200 @sel200>200</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <a onclick="backNavpage()"><span class="glyphicon glyphicon-backward"></span></a>&nbsp;
+                        @Html.TextBoxFor(o => o.pageNum, new { style = "width:30px;font-size:14px;font-weight:bold;border:solid 1px #666; height:28px;font-color:black;", onkeyup = "goNavpage(event.keyCode)" })
+                        &nbsp;<a onclick="forwardNavpage()"><span class="glyphicon glyphicon-forward"></span></a>
+                    </span>
+                    <input type="hidden" name="rows" id="rowsCnt" value="" />
+                    <input type="hidden" name="cols" id="colsCnt" value="" />
+                    @Html.TextBoxFor(o => o.sortCol, new { style = "display:none" })
+                    @Html.TextBoxFor(o => o.sortColType, new { style = "display:none" })
+                    @Html.TextBoxFor(o => o.orderBy, new { style = "display:none" })
+                </div>
+            </div>
+            <br />
+            @Html.Partial("_BottomPanel")
+        </td>
+    </tr>
+</table>
+
+<script language="javascript">
+    var loadErrMsg = '@Html.Raw(Model.errMsg)';
+
+    if (loadErrMsg != "") {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+            message: "<font style='font-size:25px;'>" + loadErrMsg+ "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+    function submitNavpage(ini) {
+        if (ini == 0) {
+            if ($("#pageNum").val().replace(/ /g, "") == "") {
+                $("#pageNum").val("1");
+            }
+        }
+        else {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+            $("#pageNum").val($("#pageNum").val().replace(/\D/g, ''));
+
+            if ($("#pageNum").val() == "0") {
+                $("#pageNum").val("1");
+            }
+        }
+        else {
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+                $("#pageNum").val($("#totalPages").val());
+            }
+
+            $("#byClick").val("1");
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "Users").replace("-2", "Home");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+    function goNavpage(keyCode) {
+        if (keyCode == 13) {
+            submitNavpage(0);
+        }
+    }
+
+    function forwardNavpage() {
+        if ($("#pageNum").val().replace(/ /g, "") == "") {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+        }
+        else {
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+               $("#pageNum").val($("#totalPages").val());
+            }
+
+            if (parseInt($("#pageNum").val()) < parseInt($("#totalPages").val())) {
+                $("#pageNum").val(parseInt($("#pageNum").val()) + 1);
+            }
+            $("#byClick").val("1");
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "Users").replace("-2", "Home");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+
+    function backNavpage() {
+        if ($("#pageNum").val().replace(/ /g, "") == "") {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+        }
+        else {
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+               $("#pageNum").val($("#totalPages").val());
+            }
+
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > 1) {
+                $("#pageNum").val(parseInt($("#pageNum").val()) - 1);
+            }
+
+            $("#byClick").val("1");
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "Users").replace("-2", "Home");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+
+
+    function reloadUsers() {
+        $("#byClick").val("1");
+        var url = '@Url.Action("-1", "-2")';
+        url = url.replace("-1", "Users").replace("-2", "Home");
+        $("#frmMain").attr('action', url);
+        $("#frmMain").submit();
+    }
+
+    function orderToggle(Id, sortType) {
+        if (Id == $("#sortCol").val()) {
+            if ($("#orderBy").val() == "glyphicon glyphicon-arrow-down") {
+                $("#orderBy").val("glyphicon glyphicon-arrow-up");
+            }
+            else {
+                $("#orderBy").val("glyphicon glyphicon-arrow-down");
+            }
+        }
+        else {
+            $("#sortCol").val(Id);
+            $("#orderBy").val("glyphicon glyphicon-arrow-up");
+        }
+
+        $("#sortColType").val(sortType);
+
+        $("#byClick").val("1");
+        var url = '@Url.Action("-1", "-2")';
+        url = url.replace("-1", "Users").replace("-2", "Home");
+        $("#frmMain").attr('action', url);
+        $("#frmMain").submit();
+    }
+</script>

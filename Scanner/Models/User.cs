@@ -29,9 +29,9 @@ namespace Scanner.Models
         [Display(Name = "Password Re-input")]
         public string RePassword { get; set; }
 
-        [Required(ErrorMessage = "* Email is null")]
-        [StringLength(50, MinimumLength = 1, ErrorMessage = "* Email Input (Max 50 letters)")]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "* Login Email is null")]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "* Login Email Input (Max 50 letters)")]
+        [Display(Name = "Login Email")]
         public string UserEmail { get; set; }
 
         [Required(ErrorMessage = "* First Name is null")]
@@ -39,7 +39,7 @@ namespace Scanner.Models
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "* Last Name is null")]
+
         [StringLength(50, MinimumLength = 1, ErrorMessage = "* Last Name Input (Max 50 letters)")]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
@@ -79,12 +79,11 @@ namespace Scanner.Models
         [Display(Name = "ABN")]
         public string ABN { get; set; }
 
-        [Required(ErrorMessage = "* Address is null")]
-        [StringLength(30, MinimumLength = 1, ErrorMessage = "* Address Input (Max 30 letters)")]
-        [Display(Name = "Address")]
+        [Required(ErrorMessage = "* Address1 is null")]
+        [StringLength(30, MinimumLength = 1, ErrorMessage = "* Address1 Input (Max 30 letters)")]
+        [Display(Name = "Address1")]
         public string Address1 { get; set; }
 
-        [Required(ErrorMessage = "* Suburb/City is null")]
         [StringLength(30, MinimumLength = 1, ErrorMessage = "* Suburb/City Input (Max 30 letters)")]
         [Display(Name = "Suburb/City")]
         public string Address2 { get; set; }
@@ -98,12 +97,11 @@ namespace Scanner.Models
         [Display(Name = "Postcode")]
         public string Postcode { get; set; }
 
-
-        public string allowReturn { get; set; }
-
         [Required(ErrorMessage = "* Country is null")]
         [StringLength(30, MinimumLength = 1, ErrorMessage = "* Country Input (Max 30 letters)")]
         [Display(Name = "Country")]
+
+
         public string Country { get; set; }
 
         public bool Approved { get; set; }

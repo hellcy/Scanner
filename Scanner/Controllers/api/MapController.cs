@@ -47,8 +47,8 @@ namespace Scanner.Controllers.api
             int Id = -1;
             using (var context = new DbContext(Global.ConnStr))
             {
-                object[] parameters = { values[0], values[1], values[2] };
-                IList<int> data = context.Database.SqlQuery<int>("proc_AddBranchLoc {0},{1},{2}", parameters).ToList<int>();
+                object[] parameters = { values[0], values[1], values[2], values[3] };
+                IList<int> data = context.Database.SqlQuery<int>("proc_AddBranchLoc {0},{1},{2},{3}", parameters).ToList<int>();
 
 
                 if (data != null)

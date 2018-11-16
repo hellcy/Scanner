@@ -1,0 +1,131 @@
+﻿@using Scanner.Models
+@{
+                /**/
+
+                ViewBag.Title = "Order Menu";
+                IList<SideMenu> menu = ((List<SideMenu>)Session["SideMenu"]);
+                var user = (User)Session["User"];
+                var clnCnt = 0;
+
+                int isFront = 0;
+                if (Session["TradeType"] != null)
+                {
+                    if (Convert.ToUInt32(Session["TradeType"]) > 0)
+                    {
+                        isFront = 1;
+                    }
+                }
+
+}
+@*<div class="jumbotron">
+        <h1>@ViewBag.Title</h1>
+    </div>*@
+
+
+<div class="row" style="width:100%;margin-top:250px;">
+    <div class="col-md-4" style="width:100%">
+        <fieldset>
+            <table style="margin-left:auto;margin-right:auto;width:400px;">
+                @foreach (var cat in menu)
+                {
+                    string display = "";
+
+                    if ((user.Role.IndexOf("Gram") < 0) && (cat.OnlyFor != ""))
+                    {
+                        if (cat.OnlyFor.IndexOf("|" + user.Id.ToString() + "|") < 0)
+                        {
+                            display = "none";
+                        }
+                    }
+
+                    if ((isFront == 1) && (cat.SideMenuId == "ma15"))
+                    {
+                        display = "none";
+                    }
+
+
+                    if (!string.IsNullOrEmpty(cat.lv1))
+                    {
+                        var catName = cat.lv1.Split('!')[0];
+                        var actName = cat.lv1.Split('!')[1];
+                        if (actName != "#")
+                        {
+                            if (clnCnt == 0)
+                            {
+                                @:<tr>
+                                }
+                                <td style="padding-right:20px;padding-bottom:20px;display:@display">
+                                    <button class="btn btn-primary btn-lg" style="width:200px;height:100px;white-space: normal;" onclick="gotoPage('Index','Category','catId=@cat.SideMenuId');"><b>@</b></button>
+                                </td>
+                                clnCnt++;
+                                if (clnCnt == 4)
+                                {
+                                @:</tr>
+                                clnCnt = 0;
+                            }
+                        }
+                    }
+                }
+
+                @*<tr>
+                        <td style="padding-right:20px;padding-bottom:20px"><input type="button" value="GRAMLINE" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("GramLine", "Order")'"/></td>
+                        <td style="padding-right:20px;padding-bottom:20px"><input type="button" value="COLORLINE" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("ColorLine", "Order")'"/></td>
+                        <td style="padding-right:20px;padding-bottom:20px"><input type="button" value="RAILS & POSTS" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("RailsPosts", "Order")'"/></td>
+                        <td style="padding-bottom:20px"><input type="button" value="SQUARE POSTS" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("SquarePosts", "Order")'"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right:20px;padding-bottom:20px"><input type="button" value="LATTICE" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("Lattice", "Order")'"/></td>
+                        <td style="padding-right:20px;padding-bottom:20px"><input type="button" value="SMARTSLAT" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("SmartSlat", "Order")'"/></td>
+                        <td style="padding-right:20px;padding-bottom:20px"><button value="" class="btn btn-primary btn-lg" style="width:200px;height:100px" onclick="location.href='@Url.Action("SmartSlatAng", "Order")'" ><b>SMARTSLAT<br>ANGLESTRIP &<br>FLAT COVER STRIP</b></button></td>
+                        <td style="padding-bottom:20px"><input type="button" value="PLINTHS" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("Plinths", "Order")'"/></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right:20px;padding-bottom:20px"><input type="button" value="SCREWS" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("Screws", "Order")'" /></td>
+                        <td style="padding-right:20px;padding-bottom:20px"><button class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("SheetEdgeCover", "Order")'" >SHEET EDGE <br> COVER</button></td>
+                        <td style="padding-right:20px;padding-bottom:20px"><button class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("SmartStile", "Order")'">SMART STILE</button></td>
+                        <td style="padding-bottom:20px"><button class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("SmartStileDP", "Order")'">SMART STILE <br>DOUBLE PUNCH</button></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right:20px;padding-bottom:20px"><button value="" class="btn btn-primary btn-lg" style="width:200px;height:100px" onclick="location.href='@Url.Action("WeldedGateStile", "Order")'"><b>WELDED GATE STILE</b></button></td>
+                        <td style="padding-right:20px;padding-bottom:20px"></td>
+                        <td style="padding-right:20px;padding-bottom:20px"></td>
+                        <td style="padding-bottom:20px"></td>
+                    </tr>*@
+
+                @*<tr>
+                        <td style="padding-right:20px"><input type="button" value="GHARDEN FENCING" class="btn btn-primary btn-lg" style="width:200px;height:100px"></td>
+                        <td style="padding-right:20px"><input type="button" value="POOL FENCING" class="btn btn-primary btn-lg" style="width:200px;height:100px"></td>
+                        <td style="padding-right:20px"><input type="button" value="HARDWARE" class="btn btn-primary btn-lg" style="width:200px;height:100px"></td>
+                        <td style="padding-right:20px"><input type="button" value="MISCELLANEOUS" class="btn btn-primary btn-lg" style="width:200px;height:100px;font-weight:bold;" onclick="location.href='@Url.Action("Miscellaneous", "Order")#'"/></td>
+                        <td></td>
+                    </tr>*@
+            </table>
+            @*@Html.ValidationSummary(true, "Login failed. Check your login details.");*@
+        </fieldset>
+    </div>
+</div>
+
+@{
+    if (Session["errorMessage"] != null)
+    {
+        <script language="javascript">
+
+            var rmsg = "@Html.Raw(Session["errorMessage"].ToString())";
+            BootstrapDialog.show({
+                //size: BootstrapDialog.SIZE_WIDE,
+                title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+                message: "<font style='font-size:25px;'><div style='max-height:600px;overflow:auto;'>" + rmsg + "</div></font>",
+                buttons: [{
+                    label: 'OK',
+                    cssClass: 'btn-dialog',
+                    action: function (dialogItself) {
+                        dialogItself.close();
+                    }
+                }]
+            });
+
+        </script>
+        Session["errorMessage"] = null;
+    }
+
+}

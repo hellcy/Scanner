@@ -1,0 +1,85 @@
+﻿@model Scanner.Models.LoginUser
+@{
+
+    //if (Request.IsAuthenticated)
+    //{
+    //    Response.Redirect(Url.Action("Index", "Order"));
+    //}
+
+    ViewBag.Title = "Internal Management Page";
+}
+
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px; vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td style="width:20px;"></td>
+        <td style="width:100%" valign="top">
+            <div class="jumbotron">
+                <table style="width:100%">
+                    <tr>
+                        <td><font class="subPagetitle">@ViewBag.Title</font></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div style="margin-left:10px; margin-top:20px;margin-bottom:200px;">
+                <table>
+                    <tr>
+                        <td valign="top">
+                            <table style="width:100%;">
+                                <tr>
+                                    <td style="padding-right:20px;padding-bottom:20px">
+                                        <button value="" class="btn btn-primary btn-lg" style="width:200px;height:100px;white-space: normal;" onclick="gotoPage('Folders','Internal','');"><b>Folders</b></button>
+                                    </td>
+                                    <td style="padding-right:20px;padding-bottom:20px">
+                                        <input type="button" value="Internal Email" class="btn btn-primary btn-lg" style="width:200px;height:100px;white-space: normal;font-weight:bold;" onclick="newOpenPage('https://gramexch01/owa/auth/logon.aspx');" />
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        @Html.Partial("_BottomPanel")
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td valign="top">
+                            @Html.Partial("_Adverts")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <input type="hidden" name="rows" id="rowsCnt" value="0" />
+            <input type="hidden" name="cols" id="colsCnt" value="0" />
+        </td>
+    </tr>
+</table>
+
+<script language="javascript">
+    function displayNoImage(img) {
+        //img.src = "../../Images/no-image.jpg";
+        $("#titleImage").hide();
+    }
+</script>
