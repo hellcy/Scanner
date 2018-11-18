@@ -16,14 +16,14 @@ namespace Scanner.Controllers
 
         // GET: /Scanner/ 
 
-        public ActionResult Index()
+        public ActionResult Coil()
         {
             CoilDetail details = new CoilDetail();
             return View(details);
         }
 
         [HttpPost]
-        public ActionResult Index(CoilDetail model)
+        public ActionResult Coil(CoilDetail model)
         {
             string ConnStr = ConfigurationManager.ConnectionStrings["GramLineConn"].ToString();
 

@@ -342,6 +342,7 @@
     <Content Include="Views\Shared\_TopMenuPanel.cshtml" />
     <Content Include="Views\Home\Despatch.cshtml" />
     <Content Include="Views\Home\Menu.cshtml" />
+    <Content Include="Views\Scanner\Coil.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

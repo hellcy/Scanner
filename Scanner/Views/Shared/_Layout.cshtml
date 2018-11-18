@@ -1,10 +1,21 @@
 ﻿@using Scanner.Models
 @using System.Web.Configuration;
 @{
+
     var loginAs = "";
     var role = "";
-    if (Request.IsAuthenticated)
+    var dispHeading = "";
+
+    if (ViewBag.Title != null)
     {
+        if (ViewBag.Title == "Order List Board")
+        {
+            dispHeading = "none";
+        }
+    }
+
+    //if (Request.IsAuthenticated)
+    //{
         if (Session["User"] != null)
         {
             loginAs = ((Scanner.Models.User)Session["User"]).UserName;
@@ -16,7 +27,8 @@
             Session["CurrForm"] = "CheckOut";
             ViewBag.Title = "CHECK OUT";
         }
-    }
+    //}
+
 
     var pubDir2 = WebConfigurationManager.AppSettings["pubDir2"].ToString();
 
@@ -28,14 +40,16 @@
     if (ViewBag.Title == "Scanner Page")
     {
         ctrlName = "Scanner";
-        actName = "Index";
+        actName = "Coil";
         formId = "frmMain";
         formClass = "";
     }
+
 }
-
-
 <!DOCTYPE html>
+
+
+
 @*<link rel="icon" type="image/png" href="~/Content/Gram/images/favicon.png" />*@
 <!--[if IE 6]>
 
@@ -59,11 +73,16 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Gram Management Report </title>
+    <title>@ViewBag.Title - Gram Engineering </title>
     @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+
+    <script src="~/Scripts/Gram/Global.js"></script>
 
     <script src="~/Scripts/jquery-2.1.4/jquery-2.1.4.js"></script>
     <link href="~/Content/3.3.5/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-slider.css" rel="stylesheet" />
+
+
     @*<link href="~/Content/3.3.5/bootstrap-responsive.css" rel="stylesheet" />
         <link href="~/Content/3.3.5/docs.css" rel="stylesheet" />
         <link href="~/Content/3.3.5/prettify.css" rel="stylesheet" />*@
@@ -72,10 +91,14 @@
     <script src="~/Scripts/boostrap-3.3.5/run_prettify.min.js"></script>
     <link href="~/Content/3.3.5/bootstrap-dialog.css" rel="stylesheet" />
     <script src="~/Scripts/boostrap-3.3.5/bootstrap-dialog.js"></script>
+    <script src="~/Content/bootstrap-slider.js"></script>
+
+
     @*<script src="~/Scripts/boostrap-3.3.5/bootstrap-tooltip.js"></script>
         <script src="~/Scripts/boostrap-3.3.5/bootstrap-confirmation.js"></script>*@
 
     <script src="~/Scripts/Gram/Global.js"></script>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @*<link rel="stylesheet" type="text/css" media="all" href="http://www.gram.com.au/wp-content/themes/twentyeleven/style.css" />*@
@@ -98,49 +121,23 @@
             position: relative
         }
     </style>
-    <style type="text/css" id="custom-background-css">
-        body.custom-background {
-            background-color: #eaf6ff;
-        }
-
-        #table-wrapper {
-            position: relative;
-        }
-
-        #table-scroll {
-            height: 400px;
-            overflow: auto;
-            margin-top: 20px;
-        }
-
-        #table-wrapper table {
-            width: 100%;
-        }
-
-        td {
-            padding: 3px;
-        }
-
-        table {
-            margin: 2px;
-        }
-
-        #table-wrapper table thead th .text {
-            position: absolute;
-            top: -20px;
-            z-index: 2;
-            height: 20px;
-            width: 35%;
-        }
-    </style>
-
-
+    
 
     <script type="text/javascript" language="javascript">
+
+  /*      top.window.moveTo(0,0);
+        if (document.all) {
+             top.window.resizeTo(screen.availWidth,screen.availHeight);
+        }
+        else if (document.layers||document.getElementById) {
+             if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+                top.window.outerHeight = screen.availHeight;
+                top.window.outerWidth = screen.availWidth;
+            }
+        }*/
+
         var needRefresh = 0;
         var timeloops = 0;
-
-
         function startTime() {
             var today = new Date();
             var d = today.getDate();
@@ -152,11 +149,63 @@
             m = checkTime(m);
             s = checkTime(s);
 
-            if ($("#OrderDate").length) {
-                $("#OrderDate").val(d + "/" + mo + "/" + y + " " + h + ":" + m + ":" + s);
+            if ($("#SubmitDate").length) {
+                $("#SubmitDate").val(d + "/" + mo + "/" + y + " " + h + ":" + m + ":" + s);
             }
 
-            var t = setTimeout(startTime, 500);
+            //if (timeloops == 10) {
+            //    if ($("#urgentMes").length) {
+            //        var dir = "pubDir2";
+            //        $.ajax({
+            //            url: dir+"api/Message",
+            //            type: "Get",
+            //            success: function (data) {
+            //                if (data.length > 0) {
+            //                    if ($('#urgentMes').html() != data[0]) {
+            //                        if ($('#tbLogin').length) {
+            //                            if (data[0] == "") {
+            //                                $('#tbLogin').css("display", "");
+            //                            }
+            //                            else {
+            //                                $('#tbLogin').css("display", "none");
+            //                            }
+            //                        }
+            //                        $('#urgentMes').html(data[0]);
+            //                    }
+            //                }
+            //            },
+            //            error: function (msg) {
+            //                showWarning(msg);
+            //            }
+            //        });
+            //    }
+            //    timeloops = 0;
+            //}
+            //timeloops++;
+
+
+            //if (window.location.toString().indexOf("OrderListBoard") > -1)
+            //{
+            //     if (timeloops == 10) {
+            //        $.ajax({
+            //            url: "../../api/OrderListBoard",
+            //            type: "Get",
+            //            success: function (data) {
+            //                //if (data.length > 0) {
+            //                alert(data[0].);
+            //               // }
+            //            },
+            //            error: function (msg) {
+            //                showWarning(msg);
+            //            }
+            //        });
+
+            //        timeloops = 0;
+            //    }
+            //    timeloops++;
+            //}
+
+            //var t = setTimeout(startTime, 500);
         }
 
         function checkTime(i) {
@@ -164,20 +213,798 @@
             return i;
         }
 
+        window.onhashchange = function () {
+            alert(document.location);
+            updateHistory(document.location);
+        }
+
+        function updateHistory(curr) {
+            window.location.lasthash.push(window.location.hash);
+            window.location.hash = curr;
+        }
+
+        //window.onbeforeunload = function () {
+        //    if ($("#byClick").length) {
+        //        if ($("#byClick").val() == "") {
+        //            return "!! Warning: Once the Back Button clicked to leave the current page will losing the input data while placing the order.\nPlease use the page links or navigation buttons.";
+        //        }
+        //    }
+        //};
+
+        //window.history.go = function () {
+        //}
+
+        //history.go(1);
+        // if (document.URL.indexOf("#") >-1) {
+        //  history.go(1);
+        //   }
+
+        //function disableBackButton() {
+        //     window.history.forward();
+        //}
+        //disableBackButton();
+        //window.onload = disableBackButton();
+        //window.onpageshow = function (evt) { if (evt.persisted) disableBackButton() }
+        //window.onunload = function () { void (0) }
+
         function displayNoImage(img) {
             //img.src = "../../Images/no-image.jpg";
             $("#titleImage").hide();
         }
 
+        function setByClick() {
+            if ($("#byClick").length) {
+                $("#byClick").val("1");
+            }
+        }
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+
+        //function googleTranslateElementInit() {
+        //    new google.translate.TranslateElement({
+        //        pageLanguage: 'en', includedLanguages: 'en,zh-CN,zh-TW', layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        //    }, 'google_translate_element');
+        //}
+
+
+
+
+
+        function sendFileToServer(formData, status) {
+            var dir = $("#pubDir2").val();
+
+            //var uploadURL = "/Internal/Upload"; //Upload URL
+
+            //var object = {};
+            //formData.forEach(function (value, key) {
+            //    object[key] = value;
+            //});
+            //var json = JSON.stringify(object);
+
+
+            var uploadURL = dir+"Internal/Upload"; //Upload URL
+            var extraData = {}; //Extra Data.
+            var jqXHR = $.ajax({
+                xhr: function () {
+                    var xhrobj = $.ajaxSettings.xhr();
+                    if (xhrobj.upload) {
+                        xhrobj.upload.addEventListener('progress', function (event) {
+                            var percent = 0;
+                            var position = event.loaded || event.position;
+                            var total = event.total;
+                            if (event.lengthComputable) {
+                                percent = Math.ceil(position / total * 100);
+                            }
+                            //Set progress
+                            status.setProgress(percent);
+                        }, false);
+                    }
+                    return xhrobj;
+                },
+                url: uploadURL,
+                type: "POST",
+                async: false,
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: "formData",
+                success: function (data) {
+                    status.setProgress(100);
+
+                    $("#status1").append("File upload Done<br>");
+                },
+               error: function (xhr, error, status) {
+                    //console.log(error, status);
+                    alert(error);
+                }
+            });
+
+            status.setAbort(jqXHR);
+
+
+             //var uploadURL = "/Internal/Upload"; //Upload URL
+             //var dir = $("#pubDir2").val();
+             //var uploadURL = dir + "api/Order"; //Upload URL
+
+
+            var dir = $("#pubDir2").val();
+            var uploadURL = dir + "api/FileUpld"; //Upload URL
+
+
+            // $.ajax({
+            //     url: uploadURL,
+            //     type: "Post",
+            //     data: "formData",
+            //     dataType: 'text',
+            //     success: function (data) {
+            //         alert("ok " + data);
+            //     },
+            //     error: function (msg) {
+            //         alert(msg);
+            //     }
+            //});
+
+
+            //var extraData = {}; //Extra Data.
+            //var jqXHR = $.ajax({
+            //    xhr: function () {
+            //        var xhrobj = $.ajaxSettings.xhr();
+            //        if (xhrobj.upload) {
+            //            xhrobj.upload.addEventListener('progress', function (event) {
+            //                var percent = 0;
+            //                var position = event.loaded || event.position;
+            //                var total = event.total;
+            //                if (event.lengthComputable) {
+            //                    percent = Math.ceil(position / total * 100);
+            //                }
+            //                //Set progress
+            //                status.setProgress(percent);
+            //            }, false);
+            //        }
+            //        return xhrobj;
+            //    },
+            //    url: uploadURL,
+            //    type: "Post",
+            //    //contentType: false,
+            //    processData: false,
+            //    cache: false,
+            //    data: { FormData: formData},
+            //    dataType: 'json',
+            //    success: function (data) {
+            //        alert("ok");
+            //        status.setProgress(100);
+            //        $("#status1").append("File upload Done<br>");
+            //    },
+            //    error: function (xhr, error, status) {
+            //        //console.log(error, status);
+            //        alert(error);
+            //    }
+
+
+            //});
+
+            //status.setAbort(jqXHR);
+        }
+
+        var rowCount = 0;
+        function createStatusbar(obj) {
+            rowCount++;
+            var row = "odd";
+            if (rowCount % 2 == 0) row = "even";
+            this.statusbar = $("<div class='statusbar " + row + "'></div>");
+            this.filename = $("<div class='filename'></div>").appendTo(this.statusbar);
+            this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
+            this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(this.statusbar);
+            this.abort = $("<div class='abort'>Abort</div>").appendTo(this.statusbar);
+            obj.after(this.statusbar);
+
+            this.setFileNameSize = function (name, size) {
+                var sizeStr = "";
+                var sizeKB = size / 1024;
+                if (parseInt(sizeKB) > 1024) {
+                    var sizeMB = sizeKB / 1024;
+                    sizeStr = sizeMB.toFixed(2) + " MB";
+                }
+                else {
+                    sizeStr = sizeKB.toFixed(2) + " KB";
+                }
+
+                this.filename.html(name);
+                this.size.html(sizeStr);
+            }
+            this.setProgress = function (progress) {
+                var progressBarWidth = progress * this.progressBar.width() / 100;
+                this.progressBar.find('div').animate({ width: progressBarWidth }, 10).html(progress + "% ");
+                if (parseInt(progress) >= 100) {
+                    this.abort.hide();
+                }
+            }
+            this.setAbort = function (jqxhr) {
+                var sb = this.statusbar;
+                this.abort.click(function () {
+                    jqxhr.abort();
+                    sb.hide();
+                });
+            }
+        }
+        function handleFileUpload(files, obj) {
+            for (var i = 0; i < files.length; i++) {
+                var fd = new FormData();
+                fd.append('file', files[i]);
+
+                var status = new createStatusbar(obj); //Using this we can set progress.
+                status.setFileNameSize(files[i].name, files[i].size);
+
+            //    alert(files[0].mozFullPath);
+                sendFileToServer(fd, status);
+
+            }
+        }
+        $(document).ready(function () {
+            var obj = $("#dragandrophandler");
+            obj.on('dragenter', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                $(this).css('border', '2px solid #0B85A1');
+            });
+            obj.on('dragover', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            });
+            obj.on('drop', function (e) {
+
+                $(this).css('border', '2px dotted #0B85A1');
+                e.preventDefault();
+                var files = e.originalEvent.dataTransfer.files;
+
+                //We need to send dropped files to Server
+                handleFileUpload(files, obj);
+            });
+            $(document).on('dragenter', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            });
+            $(document).on('dragover', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                obj.css('border', '2px dotted #0B85A1');
+            });
+            $(document).on('drop', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            });
+
+        });
+
+
+        if ($("#goToOrderTrack").length) {
+         gotoPage("OrderTrack","Order","")
+    }
+
+    function gotoPage(pageName, ctrl, cons) {
+        if (pageName != "#") {
+            $("#frmMain").attr("onsubmit", "");
+            var errMsg = checkSpecicalPage();
+            if (errMsg != "") {
+                showWarning(errMsg);
+            } else {
+                setValueBack2(0);
+
+                var act = '@Url.Action("pageName", "Ctrl")';
+                act = act.replace("pageName", pageName);
+                act = act.replace("Ctrl", ctrl);
+
+                if (cons != "") {
+                    act += "?" + cons;
+                }
+
+                $("#frmMain").attr('action', act);
+                $("#byClick").val("1");
+                if ($("#actReq").length) {
+                    $("#actReq").val("f");
+                }
+                $("#frmMain").submit();
+            }
+        }
+        else {
+            showInfo3("GRAMLINE WILL NOT BE TAKING ANY SMARTSLAT <br/>ORDERS AS OF THE 3RD SEPTEMBER 2018, <br/>DUE TO MACHINE BREAK DOWNS THAT REQUIRES <br/>REPAIRING, AN UPGRADE AND SERVICING.  <br/><br/>GRAM WILL RE-COMMENCE TAKING SMARTSLAT </br/>ORDERS ON THE 1ST OCTOBER 2018.");
+        }
+    }
+
+     function checkSpecicalPage() {
+         var errMsg = "";
+         if ($("#frmName").length) {
+             if (($("#frmName").val() == "SmartSlat") || ($("#frmName").val() == "Roofing")) {
+                 for (var j = 1; j < $("#colsCnt").val(); j++) {
+                     if ((j == 1) || (j == 3) || (j == 6) || (j == 8) || (j == 11) || (j == 13)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j + 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j + 1).toString()).css("background-color", "red");
+                             $("#tdR-1C" + (j + 1).toString()).css("background-color", "red");
+                         }
+                     }
+
+                     if ((j == 2) || (j == 4) || (j == 7) || (j == 9) || (j == 12) || (j == 14)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j - 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j - 1).toString()).css("background-color", "red");
+                             $("#tdR-1C" + (j - 1).toString()).css("background-color", "red");
+                         }
+                     }
+                 }
+             }
+
+             if (($("#frmName").val() == "SmartSlat") &&  (errMsg =="")) {
+                 if (($("#cR-1C2").val() != "") && ($("#cR-1C4").val() != "")) {
+                     if (($("#cR-1C1").val() != $("#cR-1C3").val()) || ($("#cR-1C2").val() != $("#cR-1C4").val())) {
+                         errMsg = " Are you sure 40mm Base and Cover in different Qty or Size?"
+                     }
+                 }
+
+                 if (($("#cR-1C7").val() != "") && ($("#cR-1C9").val() != "")) {
+                     if (($("#cR-1C6").val() != $("#cR-1C8").val()) || ($("#cR-1C7").val() != $("#cR-1C9").val())) {
+                         errMsg = " Are you sure 55mm Base and Cover in different Qty or Size?"
+                     }
+                 }
+
+                 if (($("#cR-1C12").val() != "") && ($("#cR-1C14").val() != "")) {
+                     if (($("#cR-1C11").val() != $("#cR-1C13").val()) || ($("#cR-1C12").val() != $("#cR-1C14").val())) {
+                         errMsg = " Are you sure 80mm Base and Cover in different Qty or Size?"
+                     }
+                 }
+
+             }
+
+             if ($("#frmName").val() == "SmartSlatAng") {
+                 for (var j = 1; j < $("#colsCnt").val(); j++) {
+                     if ((j == 1) || (j == 3) || (j == 5) || (j == 7) || (j == 9) || (j == 11) || (j == 13) || (j == 15) || (j == 17)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j + 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j + 1).toString()).css("background-color", "red");
+                             $("#td-1C" + (j + 1).toString()).css("background-color", "red");
+                         }
+                     }
+
+                     if ((j == 2) || (j == 4) || (j == 6) || (j == 8) || (j == 10) || (j == 12) || (j == 14) || (j == 16) || (j == 18)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j - 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j - 1).toString()).css("background-color", "red");
+                             $("#tdR-1C" + (j - 1).toString()).css("background-color", "red");
+                         }
+                     }
+                 }
+             }
+
+
+             if ($("#frmName").val() == "SmartSlatLBSO") {
+                 for (var j = 1; j < $("#colsCnt").val(); j++) {
+                     if ((j == 1) || (j == 3)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j + 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j + 1).toString()).css("background-color", "red");
+                             $("#td-1C" + (j + 1).toString()).css("background-color", "red");
+                         }
+                     }
+
+                     if ((j == 2) || (j == 4)) {
+                         if (($("#cR-1C" + j.toString()).val() != "") &&
+                             ($("#cR-1C" + (j - 1).toString()).val() == "")) {
+                             errMsg = "Error:<br/>* No value in red cells."
+                             $("#cR-1C" + (j - 1).toString()).css("background-color", "red");
+                             $("#tdR-1C" + (j - 1).toString()).css("background-color", "red");
+                         }
+                     }
+                 }
+             }
+
+         }
+
+
+         if ($("#frmName").val() == "Fasteners") {
+             if ($("#selColour").length) {
+                 $("#selColour").css("background-color", "white");
+                 if ($("#selColour").css("display") != "none") {
+                     if (($("#cR-1C1").val() != "") && ($("#cR-1C2").val() == "")) {
+                         errMsg = "Error:<br/>* No value in red cells."
+                         $("#cR-1C2").css("background-color", "red");
+                     }
+
+                     if (($("#cR-1C1").val() == "") && ($("#cR-1C2").val() != "")) {
+                         errMsg = "Error:<br/>* No value in red cells."
+                         $("#selColour").css("background-color", "red");
+                     }
+                 }
+             }
+         }
+
+         if ($("#frmName").val() == "GramSlat") {
+             if ((($("#cR-1C1").val() != "") && ($("#cR-1C2").val() == "")) ||
+                 (($("#cR-1C1").val() == "") && ($("#cR-1C2").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#cR-1C1").css("background-color", "red");
+                 $("#cR-1C2").css("background-color", "red");
+             }
+
+             if ((($("#cR-1C3").val() != "") && ($("#cR-1C4").val() == "")) ||
+                 (($("#cR-1C3").val() == "") && ($("#cR-1C4").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#cR-1C3").css("background-color", "red");
+                 $("#cR-1C4").css("background-color", "red");
+             }
+
+             if ((($("#cR-1C5").val() != "") && ($("#cR-1C6").val() == "")) ||
+                 (($("#cR-1C5").val() == "") && ($("#cR-1C6").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#cR-1C5").css("background-color", "red");
+                 $("#cR-1C6").css("background-color", "red");
+             }
+
+             if ((($("#cR-1C7").val() != "") && ($("#cR-1C8").val() == "")) ||
+                 (($("#cR-1C7").val() == "") && ($("#cR-1C8").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#cR-1C7").css("background-color", "red");
+                 $("#cR-1C8").css("background-color", "red");
+             }
+
+             if ((($("#cR-1C9").val() != "") && ($("#cR-1C10").val() == "")) ||
+                 (($("#cR-1C9").val() == "") && ($("#cR-1C10").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#cR-1C9").css("background-color", "red");
+                 $("#cR-1C10").css("background-color", "red");
+             }
+
+             if ((($("#cR-1C11").val() != "") && ($("#cR-1C12").val() == "")) ||
+                 (($("#cR-1C11").val() == "") && ($("#cR-1C12").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#cR-1C11").css("background-color", "red");
+                 $("#cR-1C12").css("background-color", "red");
+             }
+         }
+
+
+
+
+         if ($("#frmName").val() == "SameColourItemOrdering") {
+             if ((($("#GramSlat_cR-1C1").val() != "") && ($("#GramSlat_cR-1C2").val() == "")) ||
+                 (($("#GramSlat_cR-1C1").val() == "") && ($("#GramSlat_cR-1C2").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#GramSlat_cR-1C1").css("background-color", "red");
+                 $("#GramSlat_cR-1C2").css("background-color", "red");
+             }
+
+             if ((($("#GramSlat_cR-1C3").val() != "") && ($("#GramSlat_cR-1C4").val() == "")) ||
+                 (($("#GramSlat_cR-1C3").val() == "") && ($("#GramSlat_cR-1C4").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#GramSlat_cR-1C3").css("background-color", "red");
+                 $("#GramSlat_cR-1C4").css("background-color", "red");
+             }
+
+             if ((($("#GramSlat_cR-1C5").val() != "") && ($("#GramSlat_cR-1C6").val() == "")) ||
+                 (($("#GramSlat_cR-1C5").val() == "") && ($("#GramSlat_cR-1C6").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#GramSlat_cR-1C5").css("background-color", "red");
+                 $("#GramSlat_cR-1C6").css("background-color", "red");
+             }
+
+             if ((($("#GramSlat_cR-1C7").val() != "") && ($("#GramSlat_cR-1C8").val() == "")) ||
+                 (($("#GramSlat_cR-1C7").val() == "") && ($("#GramSlat_cR-1C8").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#GramSlat_cR-1C7").css("background-color", "red");
+                 $("#GramSlat_cR-1C8").css("background-color", "red");
+             }
+
+             if ((($("#GramSlat_cR-1C9").val() != "") && ($("#GramSlat_cR-1C10").val() == "")) ||
+                 (($("#GramSlat_cR-1C9").val() == "") && ($("#GramSlat_cR-1C10").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#GramSlat_cR-1C9").css("background-color", "red");
+                 $("#GramSlat_cR-1C10").css("background-color", "red");
+             }
+
+             if ((($("#GramSlat_cR-1C11").val() != "") && ($("#GramSlat_cR-1C12").val() == "")) ||
+                 (($("#GramSlat_cR-1C11").val() == "") && ($("#GramSlat_cR-1C12").val() != ""))) {
+                 errMsg = "Error:<br/>* Value set in red is missing one input."
+                 $("#GramSlat_cR-1C11").css("background-color", "red");
+                 $("#GramSlat_cR-1C12").css("background-color", "red");
+             }
+         }
+
+
+         if ($("#frmName").val() == "EnterMeterage") {
+             errMsg = "";
+             $("#meterage").val($("#meterage").val().replace(/ /g, ""));
+             if ($("#meterage").val() == "") {
+                 errMsg += "* Meterage is null<br/>";
+             }
+             else {
+                 if (isNaN($("#meterage").val())) {
+                     errMsg += "* Meterage is not a number<br/>";
+                 }
+             }
+
+             if ($("#sheetType").val() == "") {
+                 errMsg += "* Sheet Type is null<br/>";
+             }
+
+             if ($("#panelColour").val() == "") {
+                 errMsg += "* Panel Colour is null<br/>";
+             }
+
+             if ($("#railColour").val() == "") {
+                 errMsg += "* Rail Colour is null<br/>";
+             }
+
+             if ($("#postColour").val() == "") {
+                 errMsg += "* Post Colour is null<br/>";
+             }
+
+
+             if ($("#panelHeight").val() == "") {
+                 errMsg += "* Height is null<br/>";
+             }
+
+
+             if ($("#postType").val() == "") {
+                 errMsg += "* Post Type is null<br/>";
+             }
+             else {
+                 if ($("#postType").val() == "CHANNEL POST") {
+                     if ($("#chHeight").val() == "") {
+                         errMsg += "* Channel Post Height is null<br/>";
+                     }
+                 }
+                 else {
+                     if ($("#smHeight").val() == "") {
+                         errMsg += "* SMART Post Height is null<br/>";
+                     }
+                 }
+             }
+
+             if (errMsg != "") {
+                 errMsg = "Error:<br/>" + errMsg;
+             }
+
+             if (($("#meterage").val() == "") &&
+                 ($("#sheetType").val() == "") &&
+                 ($("#panelColour").val() == "") &&
+                 ($("#panelHeight").val() == "") &&
+                 ($("#postType").val() == "") &&
+                 ($("#chHeight").val() == "") &&
+                 ($("#smHeight").val() == "")) {
+                 errMsg = "";
+             }
+
+         }
+
+
+         if ($("#frmName").val() == "EnterNoOfPanels") {
+             errMsg = "";
+             $("#panel2370").val($("#panel2370").val().replace(/ /g, ""));
+             if ($("panel2370").val() == "") {
+                 errMsg += "* 2370 PANEL is null<br/>";
+             }
+             else {
+                 if (isNaN($("#panel2370").val())) {
+                     errMsg += "* 2370 PANEL is not a number<br/>";
+                 }
+             }
+
+             if ($("#sheetType").val() == "") {
+                 errMsg += "* Sheet Type is null<br/>";
+             }
+
+             if ($("#panelColour").val() == "") {
+                 errMsg += "* Panel Colour is null<br/>";
+             }
+
+             if ($("#frameColour").val() == "") {
+                 errMsg += "* Frame Colour is null<br/>";
+             }
+
+
+             if ($("#panelHeight").val() == "") {
+                 errMsg += "* Height is null<br/>";
+             }
+
+             if ($("#postType").val() == "") {
+                 errMsg += "* Post Type is null<br/>";
+             }
+             else {
+                 if ($("#postType").val() == "CHANNEL POST") {
+                     if ($("#chHeight").val() == "") {
+                         errMsg += "* Channel Post Height is null<br/>";
+                     }
+                 }
+                 else {
+                     if ($("#smHeight").val() == "") {
+                         errMsg += "* SMART Post Height is null<br/>";
+                     }
+                 }
+             }
+
+             if (errMsg != "") {
+                 errMsg = "Error:<br/>" + errMsg;
+             }
+
+             if (($("#panel2370").val() == "") &&
+                 ($("#sheetType").val() == "") &&
+                 ($("#panelColour").val() == "") &&
+                 ($("#panelHeight").val() == "") &&
+                 ($("#postType").val() == "") &&
+                 ($("#chHeight").val() == "") &&
+                 ($("#smHeight").val() == "")) {
+                 errMsg = "";
+             }
+
+         }
+
+
+         if ($("#frmName").val() == "SpecialOrder") {
+             var upcnt = $("#uploadFrame").contents().find('#maxFileCnt');
+             $("#uploadedFiles").val($("#uploadFrame").contents().find('#uploadedFilesTxt').val());
+
+             if ((upcnt.val() == 4) && ($("#cR-1C1").val() != "")) {
+                 $("#cR-1C1").val("");
+                 errMsg = "No files Uploaded.";
+             }
+         }
+
+
+         //if ($("#frmName").val() == "SameColourItemOrdering") {
+         //    if ($("#itemColour").val() == "") {
+         //        errMsg = "No Colour selected.";
+         //    }
+         //}
+
+         return errMsg;
+    }
+
+     function setValueBack2(shw) {
+         if ($("#LR-1C0").length) {
+             var rid = $('#currRowId').val();
+             if (rid != "") {
+                 if (shw == 1) {
+                     $("#tr" + rid).css("display", "");
+                 }
+
+                 for (var j = 1; j < $("#colsCnt").val(); j++) {
+                     if ($("#cR-1" + "C" + j.toString()).length) {
+                         $("#cR" + rid + "C" + j.toString()).val($("#cR-1" + "C" + j.toString()).val());
+
+                         if (($("#frmName").val() == "GramSlat") && (j % 2 == 0)) {
+                             var gColor = "";
+                             switch ($("#cR" + rid + "C" + j.toString()).val()) {
+                                 case "0":
+                                     gColor = "BIRCH";
+                                     break;
+                                 case "1":
+                                     gColor = "BLACK";
+                                     break;
+                                 case "2":
+                                     gColor = "COKE";
+                                     break;
+                                 case "3":
+                                     gColor = "GREY";
+                                     break;
+                                 case "4":
+                                     gColor = "MERINO";
+                                     break;
+                                 case "5":
+                                     gColor = "MIST GREEN";
+                                     break;
+                                 case "6":
+                                     gColor = "PRIMROSE";
+                                     break;
+                                 case "7":
+                                     gColor = "SLATE GREY";
+                                     break;
+                                 case "":
+                                     gColor = "";
+                             }
+
+                             $("#GCR" + rid + "C" + j.toString()).html(gColor);
+                         }
+
+
+
+                         $("#cR-1" + "C" + j.toString()).val("");
+                         if ($("#cR" + rid + "C" + j.toString()).val() != "") {
+                             $("#cR" + rid + "C" + j.toString()).css("background-color", "wheat");
+                             $("#tdR" + rid + "C" + j.toString()).css("background-color", "wheat");
+                         }
+                         else {
+
+                             if ($('#forceBlock').val().indexOf($("#cR" + rid + "C0").val() + " " + $("#head" + j.toString()).attr("data")) > -1) {
+                                 $("#cR" + rid + "C" + j.toString()).css("background-color", "#000");
+                                 $("#tdR" + rid + "C" + j.toString()).css("background-color", "#000");
+                             }
+                             else {
+                                 $("#cR" + rid + "C" + j.toString()).css("background-color", "white");
+                                 $("#tdR" + rid + "C" + j.toString()).css("background-color", "white");
+                             }
+                         }
+                     }
+                 }
+
+                 //var prevColorInput = $("#currColour").val();
+                 //$("#tr-1").css("display", "none");
+                 //for (var i = 0; i < $("#rowsCnt").val(); i++) {
+                 //    if (prevColorInput == $("#LR" + i + "C0").html()) {
+                 //        if (($("#inValid").val() == "") && (shw == 1)) {
+                 //            $("#tr" + i).css("display", "");
+                 //        }
+                 //        for (var j = 1; j < $("#colsCnt").val(); j++) {
+                 //            if ($("#cR-1" + "C" + j.toString()).length) {
+                 //                $("#cR" + i + "C" + j.toString()).val($("#cR-1" + "C" + j.toString()).val());
+                 //                if ($("#cR-1" + "C" + j.toString()).val() != "") {
+                 //                    $("#cR" + i.toString() + "C" + j.toString()).css("background-color", "wheat");
+                 //                    $("#tdR" + i.toString() + "C" + j.toString()).css("background-color", "wheat");
+                 //                }
+                 //                else {
+                 //                    $("#cR" + i.toString() + "C" + j.toString()).css("background-color", "white");
+                 //                    $("#tdR" + i.toString() + "C" + j.toString()).css("background-color", "white");
+                 //                }
+                 //            }
+                 //        }
+                 //    }
+                 //}
+             }
+         }
+     }
+
+     function setValueBack(shw) {
+         var errMsg = checkSpecicalPage();
+         if (errMsg != "") {
+             showWarning(errMsg);
+         }
+         else {
+             setValueBack2(shw)
+         }
+        }
+
+
+
+        function showInfo3(msg) {
+            BootstrapDialog.show({
+                title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-info-sign"></i> Information</font>',
+                message: "<font style='font-size:25px;'>" + msg + "</font>",
+                buttons: [{
+                    label: 'OK',
+                    cssClass: 'btn-dialog',
+                    action: function (dialogItself) {
+                        dialogItself.close();
+                    }
+                }]
+            });
+        }
 
     </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
+
 <body onload="startTime()" style="width:100% !important;">
     @using (Html.BeginForm(actName, ctrlName, FormMethod.Post, new { @id = formId, @class = formClass }))
     {
+        @*<div class="wrapper2"  style="width:100%">
+            <div id="page" class="hfeed">
+                <header id="branding" role="banner">*@
+
+        if (dispHeading != "none")
+        {
+            <div id="google_translate_element"></div>
+        }
         <input type="hidden" name="pubDir2" id="pubDir2" value="@pubDir2" />
+
         <table style="width:100%">
-            <tr>
+            <tr style="display:@dispHeading">
                 <td>
                     <div class="wrapper2" style="width:100% !important;">
                         <div id="page" class="hfeed" style="width:100% !important;">
@@ -187,16 +1014,20 @@
                                     <table style="margin-left:auto;margin-right:auto;width:1200px;">
                                         <tr>
                                             <td>
-                                                <img border="0" src="http://www.gram.com.au/wp-content/themes/twentyeleven/images/logo1.jpg" width="290" height="100" alt="Gramline" title="GramLine" />
+                                                <img border="0" src="~/Content/Gram/images/logo1.jpg" width="290" height="100" alt="Gramline" title="GramLine" />
+
+                                                @*<img border="0" src="http://www.gram.com.au/wp-content/themes/twentyeleven/images/logo1.jpg" width="290" height="100" alt="Gramline" title="GramLine" />*@
                                             </td>
                                             <td>
                                                 <table style="height:100%;">
                                                     <tr>
                                                         <td>
-                                                            <div id="urgentMes"></div>
+                                                            <div id="urgentMes">
+                                                            </div>
                                                             <div style="position:absolute; width:315px;  right:176px; top:15px;">
-                                                                <span class="glyphicon glyphicon-home" style="color:#fff"></span><span class="glyphicon glyphicon-home" style="color:#fff"></span>
-                                                                &nbsp;&nbsp;<span style="font-size:17px; color:#fff;">MANAGEMENT REPORT</span>
+                                                                @*<img height="16" width="16" style="display:inline-block; margin-right:8px;" src="http://www.gram.com.au/wp-content/themes/twentyeleven/images/phone.png">*@
+                                                                <img height="16" width="16" style="display:inline-block; margin-right:8px;" src="~/Content/Gram/images/phone.png" />
+                                                                <span style="font-size:17px; color:#fff;">1800GRAMLINE</span>
                                                                 @if (Session["User"] != null)
                                                                 {
                                                                     <br /><span style="font-size:17px; color:#fff;">Login&nbsp;as:&nbsp;@loginAs</span>
@@ -208,7 +1039,7 @@
                                                         <td valign="bottom">
                                                             @if (Session["User"] != null)
                                                             {
-                                                                <div style="width:800px;">
+                                                                <div style="width:900px;">
                                                                     @Html.Partial("_TopMenuPanel")
                                                                 </div>
                                                             }
@@ -223,6 +1054,7 @@
                             </header>
                         </div>
                     </div>
+
                 </td>
             </tr>
             <tr>
@@ -247,25 +1079,27 @@
             </tr>
         </table>
     }
-
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
     @RenderSection("scripts", required: false)
-
+    @*<div class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" >
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                        <h4 class="modal-title">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>One fine body…</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->*@
 </body>
 </html>
-<script type="text/javascript" language="javascript">
-    function gotoPage(pageName, ctrl, cons) {
-        var act = '@Url.Action("pageName", "Ctrl")';
-        act = act.replace("pageName", pageName);
-        act = act.replace("Ctrl", ctrl);
-
-        if (cons != "")
-        {
-            act += "?"+cons;
-        }
-
-        $("#frmMain").attr('action', act);
-        $("#frmMain").submit();
-    }
-
-
-</script>
