@@ -12,9 +12,17 @@ namespace Scanner.Controllers
 {
     public class ScannerController : Controller
     {
+
         CoilDetail details = new CoilDetail();
 
         // GET: /Scanner/ 
+
+        public ActionResult Index()
+        {
+
+            return View();
+        }
+
 
         public ActionResult Coil()
         {

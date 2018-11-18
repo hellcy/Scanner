@@ -64,7 +64,7 @@ namespace Scanner.Controllers
                                 }
                             }
                             Session["IP"] = GetIPAddress();
-                            return RedirectToAction("Coil", "Scanner");
+                            return RedirectToAction("Index", "Scanner");
                         }
                     }
                 }
@@ -341,7 +341,7 @@ namespace Scanner.Controllers
 
                     if (((User)Session["User"]).Role.IndexOf("Gram") > -1)
                     {
-                        return RedirectToAction("Coil", "Scanner");
+                        return RedirectToAction("Index", "Scanner");
                     }
 
                     if (user.UserName == "quotation")
