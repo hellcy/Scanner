@@ -1,6 +1,10 @@
 ﻿@using Scanner.Models
 @{
-    var CurrForm = Session["CurrForm"].ToString();
+    var CurrForm = "";
+    if (Session["CurrForm"] != null)
+    {
+        CurrForm = Session["CurrForm"].ToString();
+    }
     IList<SideMenu> menu = ((List<SideMenu>)Session["SideMenu"]);
     var user = (User)Session["User"];
     var rqCatId = (Request.QueryString["catId"] != null) ? Request.QueryString["catId"].ToString() : "";

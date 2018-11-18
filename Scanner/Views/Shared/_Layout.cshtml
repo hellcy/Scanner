@@ -16,17 +16,17 @@
 
     //if (Request.IsAuthenticated)
     //{
-        if (Session["User"] != null)
-        {
-            loginAs = ((Scanner.Models.User)Session["User"]).UserName;
-            role = ((Scanner.Models.User)Session["User"]).Role;
-        }
+    if (Session["User"] != null)
+    {
+        loginAs = ((Scanner.Models.User)Session["User"]).UserName;
+        role = ((Scanner.Models.User)Session["User"]).Role;
+    }
 
-        if (Request.Url.AbsoluteUri.IndexOf("/CheckOut") > -1)
-        {
-            Session["CurrForm"] = "CheckOut";
-            ViewBag.Title = "CHECK OUT";
-        }
+    if (Request.Url.AbsoluteUri.IndexOf("/CheckOut") > -1)
+    {
+        Session["CurrForm"] = "CheckOut";
+        ViewBag.Title = "CHECK OUT";
+    }
     //}
 
 
@@ -36,11 +36,18 @@
     var actName = "";
     var formId = "";
     var formClass = "";
+    if (ViewBag.Title == "Coil Page")
+    {
+        ctrlName = "Scanner";
+        actName = "Coil";
+        formId = "frmMain";
+        formClass = "";
+    }
 
     if (ViewBag.Title == "Scanner Page")
     {
         ctrlName = "Scanner";
-        actName = "Coil";
+        actName = "Index";
         formId = "frmMain";
         formClass = "";
     }
@@ -125,17 +132,6 @@
 
     <script type="text/javascript" language="javascript">
 
-  /*      top.window.moveTo(0,0);
-        if (document.all) {
-             top.window.resizeTo(screen.availWidth,screen.availHeight);
-        }
-        else if (document.layers||document.getElementById) {
-             if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
-                top.window.outerHeight = screen.availHeight;
-                top.window.outerWidth = screen.availWidth;
-            }
-        }*/
-
         var needRefresh = 0;
         var timeloops = 0;
         function startTime() {
@@ -152,60 +148,6 @@
             if ($("#SubmitDate").length) {
                 $("#SubmitDate").val(d + "/" + mo + "/" + y + " " + h + ":" + m + ":" + s);
             }
-
-            //if (timeloops == 10) {
-            //    if ($("#urgentMes").length) {
-            //        var dir = "pubDir2";
-            //        $.ajax({
-            //            url: dir+"api/Message",
-            //            type: "Get",
-            //            success: function (data) {
-            //                if (data.length > 0) {
-            //                    if ($('#urgentMes').html() != data[0]) {
-            //                        if ($('#tbLogin').length) {
-            //                            if (data[0] == "") {
-            //                                $('#tbLogin').css("display", "");
-            //                            }
-            //                            else {
-            //                                $('#tbLogin').css("display", "none");
-            //                            }
-            //                        }
-            //                        $('#urgentMes').html(data[0]);
-            //                    }
-            //                }
-            //            },
-            //            error: function (msg) {
-            //                showWarning(msg);
-            //            }
-            //        });
-            //    }
-            //    timeloops = 0;
-            //}
-            //timeloops++;
-
-
-            //if (window.location.toString().indexOf("OrderListBoard") > -1)
-            //{
-            //     if (timeloops == 10) {
-            //        $.ajax({
-            //            url: "../../api/OrderListBoard",
-            //            type: "Get",
-            //            success: function (data) {
-            //                //if (data.length > 0) {
-            //                alert(data[0].);
-            //               // }
-            //            },
-            //            error: function (msg) {
-            //                showWarning(msg);
-            //            }
-            //        });
-
-            //        timeloops = 0;
-            //    }
-            //    timeloops++;
-            //}
-
-            //var t = setTimeout(startTime, 500);
         }
 
         function checkTime(i) {
@@ -222,30 +164,6 @@
             window.location.lasthash.push(window.location.hash);
             window.location.hash = curr;
         }
-
-        //window.onbeforeunload = function () {
-        //    if ($("#byClick").length) {
-        //        if ($("#byClick").val() == "") {
-        //            return "!! Warning: Once the Back Button clicked to leave the current page will losing the input data while placing the order.\nPlease use the page links or navigation buttons.";
-        //        }
-        //    }
-        //};
-
-        //window.history.go = function () {
-        //}
-
-        //history.go(1);
-        // if (document.URL.indexOf("#") >-1) {
-        //  history.go(1);
-        //   }
-
-        //function disableBackButton() {
-        //     window.history.forward();
-        //}
-        //disableBackButton();
-        //window.onload = disableBackButton();
-        //window.onpageshow = function (evt) { if (evt.persisted) disableBackButton() }
-        //window.onunload = function () { void (0) }
 
         function displayNoImage(img) {
             //img.src = "../../Images/no-image.jpg";
@@ -264,26 +182,8 @@
             }, 'google_translate_element');
         }
 
-        //function googleTranslateElementInit() {
-        //    new google.translate.TranslateElement({
-        //        pageLanguage: 'en', includedLanguages: 'en,zh-CN,zh-TW', layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-        //    }, 'google_translate_element');
-        //}
-
-
-
-
-
         function sendFileToServer(formData, status) {
             var dir = $("#pubDir2").val();
-
-            //var uploadURL = "/Internal/Upload"; //Upload URL
-
-            //var object = {};
-            //formData.forEach(function (value, key) {
-            //    object[key] = value;
-            //});
-            //var json = JSON.stringify(object);
 
 
             var uploadURL = dir+"Internal/Upload"; //Upload URL
@@ -325,69 +225,9 @@
 
             status.setAbort(jqXHR);
 
-
-             //var uploadURL = "/Internal/Upload"; //Upload URL
-             //var dir = $("#pubDir2").val();
-             //var uploadURL = dir + "api/Order"; //Upload URL
-
-
             var dir = $("#pubDir2").val();
             var uploadURL = dir + "api/FileUpld"; //Upload URL
 
-
-            // $.ajax({
-            //     url: uploadURL,
-            //     type: "Post",
-            //     data: "formData",
-            //     dataType: 'text',
-            //     success: function (data) {
-            //         alert("ok " + data);
-            //     },
-            //     error: function (msg) {
-            //         alert(msg);
-            //     }
-            //});
-
-
-            //var extraData = {}; //Extra Data.
-            //var jqXHR = $.ajax({
-            //    xhr: function () {
-            //        var xhrobj = $.ajaxSettings.xhr();
-            //        if (xhrobj.upload) {
-            //            xhrobj.upload.addEventListener('progress', function (event) {
-            //                var percent = 0;
-            //                var position = event.loaded || event.position;
-            //                var total = event.total;
-            //                if (event.lengthComputable) {
-            //                    percent = Math.ceil(position / total * 100);
-            //                }
-            //                //Set progress
-            //                status.setProgress(percent);
-            //            }, false);
-            //        }
-            //        return xhrobj;
-            //    },
-            //    url: uploadURL,
-            //    type: "Post",
-            //    //contentType: false,
-            //    processData: false,
-            //    cache: false,
-            //    data: { FormData: formData},
-            //    dataType: 'json',
-            //    success: function (data) {
-            //        alert("ok");
-            //        status.setProgress(100);
-            //        $("#status1").append("File upload Done<br>");
-            //    },
-            //    error: function (xhr, error, status) {
-            //        //console.log(error, status);
-            //        alert(error);
-            //    }
-
-
-            //});
-
-            //status.setAbort(jqXHR);
         }
 
         var rowCount = 0;
@@ -485,7 +325,7 @@
          gotoPage("OrderTrack","Order","")
     }
 
-    function gotoPage(pageName, ctrl, cons) {
+        function gotoPage(pageName, ctrl, cons) {
         if (pageName != "#") {
             $("#frmMain").attr("onsubmit", "");
             var errMsg = checkSpecicalPage();
@@ -1049,6 +889,14 @@
                                             </td>
                                         </tr>
                                     </table>
+                                    <div class="col-md-3">
+                                        @if (Session["User"] != null)
+                                        {
+                                            <div>
+                                                @Html.Partial("_SideMenuPanel")
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                                 @*</hgroup>*@
                             </header>
@@ -1068,9 +916,7 @@
                             <td></td>
                             <td>
                                 <br /><br /><br />
-                                <footer style="width:100%">
-                                    <div style="text-align:center;"><hr style="width:400px;" /><p>&copy; @DateTime.Now.Year - Gram Engineering Pty Ltd</p></div>
-                                </footer>
+
                                 <br /><br /><br />
                             </td>
                         </tr>
@@ -1101,5 +947,8 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->*@
+    <footer style="width:100%">
+        <div style="text-align:center;"><hr style="width:400px;" /><p>&copy; @DateTime.Now.Year - Gram Engineering Pty Ltd</p></div>
+    </footer>
 </body>
 </html>

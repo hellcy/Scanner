@@ -3,21 +3,15 @@
     ViewBag.Title = "Scanner Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<!DOCTYPE html>
-<html>
-<body>
-    <div class="col-md-12">
-        <div style="font-size:50px;" class="editor-label">
-            Go to Coil Page
-            <input class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" type="button" value="Coil Page" id="coil" onclick="gotoCoil();" />
-        </div>
+
+    <div style="text-align: center;" class="editor-label">
+       <input class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" type="button" value="Coil Page" id="coil" onclick="gotoCoil();" />
     </div>
-</body>
-</html>
+
 
 <script language="javascript">
-            function gotoCoil() {
-        var url = '@Url.Action("Coil", "Scanner", new { id = "__id__" })';
-        window.location.href = url.replace('__id__', "");
+        function gotoCoil() {
+            var url = '@Url.Action("Coil", "Scanner", new { id = "__id__" })';
+            window.location.href = url.replace('__id__', "");
         }
 </script>
