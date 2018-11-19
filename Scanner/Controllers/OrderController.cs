@@ -801,10 +801,6 @@ namespace Scanner.Controllers
             return View();
         }
 
-
-
-
-
         [SessionExpire]
         [Authorize]
         public ActionResult WeldedGateStileL300()
@@ -2480,16 +2476,13 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
-        [Authorize]
         public ActionResult SmartSlatQuotation()
         {
             updateMenuClickCount("SmartSlatQuotation");
             return View();
         }
 
-
         [SessionExpire]
-        [Authorize]
         public ActionResult EnterMeterage()
         {
             ViewBag.Title = "Enter Meterage";
@@ -2523,7 +2516,6 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
-        [Authorize]
         public ActionResult EnterNoOfPanels()
         {
             ViewBag.Title = "Enter No Of Panels";
@@ -5063,5 +5055,123 @@ namespace Scanner.Controllers
 
 
         }
+
+        [SessionExpire]
+        public ActionResult Option_1()
+        {
+            ViewBag.Title = "Enter Meterage";
+            Session["CurrForm"] = "EnterMeterage";
+            IList<string> colours = new List<string>();
+            IList<string> heights = new List<string>();
+            IList<string> chHeights = new List<string>();
+            IList<string> smHeights = new List<string>();
+
+            var sql = "select Colour from [dbo].[TB_COLOUR] where ItemTypeId = 1 order by pos";
+            var sql2 = "select Standard + case when IsNorm = 0 then ' *' else '' end as Standard from [dbo].[TB_STANDARD] where ItemTypeId = 1 order by pos";
+            var sql3 = "select ActStandard + case when IsNorm = 0 then ' *' else '' end as ActStandard from [dbo].[TB_STANDARD] where ItemTypeId = 10 and Standard like '%CHANNEL POST%' order by pos";
+            var sql4 = "select ActStandard + case when IsNorm = 0 then ' *' else '' end as ActStandard from [dbo].[TB_STANDARD] where ItemTypeId = 10 and Standard like '%SMART POST%' order by pos";
+            using (var context = new DbContext(Global.ConnStr))
+            {
+                colours = context.Database.SqlQuery<string>(sql).ToList<string>();
+                heights = context.Database.SqlQuery<string>(sql2).ToList<string>();
+                chHeights = context.Database.SqlQuery<string>(sql3).ToList<string>();
+                smHeights = context.Database.SqlQuery<string>(sql4).ToList<string>();
+            }
+
+            //fillCurrTable(Request.Form["frmName"].ToString(), -1);
+
+            ViewBag.Colours = colours;
+            ViewBag.Heights = heights;
+            ViewBag.chHeights = chHeights;
+            ViewBag.smHeights = smHeights;
+
+            updateMenuClickCount(Session["CurrForm"].ToString());
+            return View();
+        }
+
+        [SessionExpire]
+        public ActionResult Option_2()
+        {
+            ViewBag.Title = "Option_2";
+            Session["CurrForm"] = "Option_2";
+            return View();
+        }
+
+        [SessionExpire]
+        public ActionResult Option_3()
+        {
+            ViewBag.Title = "Option_3";
+            Session["CurrForm"] = "Option_3";
+            return View();
+        }
+
+        [SessionExpire]
+        public ActionResult Option_4()
+        {
+            ViewBag.Title = "Option_4";
+            Session["CurrForm"] = "Option_4";
+            return View();
+        }
+
+        [SessionExpire]
+        public ActionResult Option_5()
+        {
+            ViewBag.Title = "Option_5";
+            Session["CurrForm"] = "Option_5";
+            return View();
+        }
+        public ActionResult Option_6()
+        {
+            ViewBag.Title = "Option_6";
+            Session["CurrForm"] = "Option_6";
+            return View();
+        }
+
+        [SessionExpire]
+        public ActionResult Option_7()
+        {
+            ViewBag.Title = "Option_7";
+            Session["CurrForm"] = "Option_7";
+            return View();
+        }
+
+        [SessionExpire]
+        public ActionResult Option_8()
+        {
+            ViewBag.Title = "Option_8";
+            Session["CurrForm"] = "Option_8";
+            return View();
+        }
+
+        [SessionExpire]
+        public ActionResult Option_9()
+        {
+            ViewBag.Title = "Option_9";
+            Session["CurrForm"] = "Option_9";
+            return View();
+        }
+
+        [SessionExpire]
+        public ActionResult Option_10_1()
+        {
+            ViewBag.Title = "Option_10_1";
+            Session["CurrForm"] = "Option_10_1";
+            return View();
+        }
+        [SessionExpire]
+        public ActionResult Option_10_2()
+        {
+            ViewBag.Title = "Option_10_2";
+            Session["CurrForm"] = "Option_10_2";
+            return View();
+        }
+        [SessionExpire]
+        public ActionResult Option_10_3()
+        {
+            ViewBag.Title = "Option_10_3";
+            Session["CurrForm"] = "Option_10_3";
+            return View();
+        }
+
     }
 }

@@ -55,7 +55,7 @@ namespace Scanner.Controllers
                             {
                                 try
                                 {
-                                    sideMenus = context.Database.SqlQuery<SideMenu>("proc_GetSideMenu_v1").ToList<SideMenu>();
+                                    sideMenus = context.Database.SqlQuery<SideMenu>("proc_GetSideMenu_v2").ToList<SideMenu>();
                                     Session["SideMenu"] = sideMenus;
                                 }
                                 catch (Exception e)
@@ -266,7 +266,7 @@ namespace Scanner.Controllers
                                 {
                                     try
                                     {
-                                        sideMenus = context.Database.SqlQuery<SideMenu>("proc_GetSideMenu_v1").ToList<SideMenu>();
+                                        sideMenus = context.Database.SqlQuery<SideMenu>("proc_GetSideMenu_v2").ToList<SideMenu>();
                                         Session["SideMenu"] = sideMenus;
                                     }
                                     catch (Exception e)
@@ -330,7 +330,7 @@ namespace Scanner.Controllers
                     {
                         try
                         {
-                            sideMenus = context.Database.SqlQuery<SideMenu>("proc_GetSideMenu_v1").ToList<SideMenu>();
+                            sideMenus = context.Database.SqlQuery<SideMenu>("proc_GetSideMenu_v2").ToList<SideMenu>();
                             Session["SideMenu"] = sideMenus;
                         }
                         catch (Exception e)
@@ -451,7 +451,7 @@ namespace Scanner.Controllers
                     {
                         try
                         {
-                            sideMenus = context.Database.SqlQuery<SideMenu>("proc_GetSideMenu_v1").ToList<SideMenu>();
+                            sideMenus = context.Database.SqlQuery<SideMenu>("proc_GetSideMenu_v2").ToList<SideMenu>();
                             Session["SideMenu"] = sideMenus;
                         }
                         catch (Exception e)

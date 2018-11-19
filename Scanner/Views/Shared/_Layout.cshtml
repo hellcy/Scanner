@@ -867,6 +867,12 @@
                                             </td>
                                         </tr>
                                     </table>
+                                    @if (Session["User"] != null)
+                                    {
+                                        <div class="sideMenuDiv">
+                                            @Html.Partial("_SideMenuPanel")
+                                        </div>
+                                    }
                                 </div>
                                 @*</hgroup>*@
                             </header>
@@ -879,14 +885,6 @@
                 <td>
                     <table style="width:100%">
                         <tr>
-                            @if (Session["User"] != null)
-                            {
-                                <td class="col-md-1">
-                                    <div>
-                                        @Html.Partial("_SideMenuPanel")
-                                    </div>
-                                </td>
-                            }
                             <td style="width:5%"><input type="hidden" name="byClick" id="byClick" value="" /></td>
                             <td style="width:95%">@RenderBody()</td>
                         </tr>
