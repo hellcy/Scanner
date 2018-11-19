@@ -1,6 +1,6 @@
 ﻿@model Scanner.Models.CoilDetail
 @{
-    ViewBag.Title = "Product_2";
+    ViewBag.Title = "Product2";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -48,52 +48,48 @@
     body.custom-background {
         background-color: #eaf6ff;
     }
-    /*#table-wrapper {
-            position: relative;
-        }*/
 
-    #table-scroll2 {
-        height: 300px;
-        overflow: auto;
-        margin-top: 20px;
+    #table-wrapper {
+        position: relative;
     }
 
-    #table-wrapper2 table {
+    #table-scroll {
+        height: 300px;
+        overflow: auto;
+    }
+
+    #table-wrapper table {
         width: 100%;
     }
 
-    td {
-        padding: 3px;
+    #table-wrapper th {
+        padding-bottom: 5px;
     }
 
-    table {
-        margin: 2px;
-    }
 
-    #table-wrapper2 table thead th .text {
+    #table-wrapper table thead th .text {
         position: absolute;
         top: -20px;
         z-index: 2;
         height: 20px;
-        width: 35%;
     }
 </style>
-<table style="margin-left:300px;" class="bodyTable">
+<table style="margin-left:200px;" class="bodyTable">
     <tr>
         <td>
             <div class="col-md-6">
                 <div style="font-size:25px;" class="editor-label">
-                    CoilID Scanned
+                    Coil ID Scanned
                 </div>
                 <div class="editor-field">
-                    @Html.TextAreaFor(model => model.CoilDetails[0].Input, new { id = "ID", style = "width: 520px; height:250px; border: 2px solid #ccc;" })
+                    @Html.TextAreaFor(model => model.CoilDetails[0].Input, new { id = "ID", style = "width: 500px; height:250px; border: 2px solid #ccc;" })
                     @Html.TextBoxFor(model => model.CoilDetails[0].Save, new { id = "Save", type = "hidden" })
                     @Html.TextBoxFor(model => model.CoilDetails[0].Save2, new { id = "Save2", type = "hidden" })
-                    <h3>Please press Tab button to display data</h3>
+                    <div style="font-size:30px;">Please press Tab button to display data</div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div style="width:300px; text-align:center;">
+                <div style="width:300px; text-align:center; font-size:30px;">
                     <img src="C:/Scanner/Upload-QRcode.png" alt="QRcode for upload data" height="300" width="300" />
                     Upload Data
                 </div>
@@ -104,9 +100,9 @@
             </div>
             <div class="col-md-12">
                 <div style="color:red; font-size:40px">@ViewBag.Error @ViewBag.Upload</div>
-                <div id="table-wrapper2">
-                    <div id="table-scroll2">
-                        <table id="data" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <div id="table-wrapper">
+                    <div id="table-scroll">
+                        <table id="data" style="font-size:15px;">
                             <thead>
                                 <tr>
                                     <th>
@@ -189,13 +185,13 @@
                                                     @Html.TextBoxFor(model => model.CoilDetails[i + 1].Month_recd, new { @id = "Month_recd_" + i, style = "width:100px" })
                                                 </td>
                                                 <td>
-                                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].Date_inwh, new { @id = "Date_inwh_" + i })
+                                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].Date_inwh, new { @id = "Date_inwh_" + i, style = "width:180px" })
                                                 </td>
                                                 <td>
-                                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].Date_transfer, new { @id = "Date_transfer_" + i })
+                                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].Date_transfer, new { @id = "Date_transfer_" + i, style = "width:180px" })
                                                 </td>
                                                 <td>
-                                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].Last_stocktake_date, new { @id = "Last_stocktake_date_" + i })
+                                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].Last_stocktake_date, new { @id = "Last_stocktake_date_" + i, style = "width:180px" })
                                                 </td>
                                                 <td>
                                                     @Html.TextBoxFor(model => model.CoilDetails[i + 1].Status, new { @id = "Status_" + i, style = "width:50px" })

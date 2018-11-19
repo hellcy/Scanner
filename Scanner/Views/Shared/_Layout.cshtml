@@ -14,20 +14,20 @@
         }
     }
 
-    //if (Request.IsAuthenticated)
-    //{
-    if (Session["User"] != null)
+    if (Request.IsAuthenticated)
     {
-        loginAs = ((Scanner.Models.User)Session["User"]).UserName;
-        role = ((Scanner.Models.User)Session["User"]).Role;
-    }
+        if (Session["User"] != null)
+        {
+            loginAs = ((Scanner.Models.User)Session["User"]).UserName;
+            role = ((Scanner.Models.User)Session["User"]).Role;
+        }
 
-    if (Request.Url.AbsoluteUri.IndexOf("/CheckOut") > -1)
-    {
-        Session["CurrForm"] = "CheckOut";
-        ViewBag.Title = "CHECK OUT";
+        if (Request.Url.AbsoluteUri.IndexOf("/CheckOut") > -1)
+        {
+            Session["CurrForm"] = "CheckOut";
+            ViewBag.Title = "CHECK OUT";
+        }
     }
-    //}
 
 
     var pubDir2 = WebConfigurationManager.AppSettings["pubDir2"].ToString();
@@ -869,6 +869,7 @@
                                     </table>
                                     @if (Session["User"] != null)
                                     {
+                                        <br />
                                         <div class="sideMenuDiv">
                                             @Html.Partial("_SideMenuPanel")
                                         </div>
@@ -891,9 +892,9 @@
                         <tr>
                             <td></td>
                             <td>
-                                <br /><br /><br />
-
-                                <br /><br /><br />
+                                <footer style="width:100%; padding-bottom:50px;">
+                                    <div style="text-align:center;"><hr style="width:400px;" /><p>&copy; @DateTime.Now.Year - Gram Engineering Pty Ltd</p></div>
+                                </footer>
                             </td>
                         </tr>
                     </table>
@@ -923,8 +924,5 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->*@
-    <footer style="width:100%">
-        <div style="text-align:center;"><hr style="width:400px;" /><p>&copy; @DateTime.Now.Year - Gram Engineering Pty Ltd</p></div>
-    </footer>
 </body>
 </html>
