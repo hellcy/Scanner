@@ -5,13 +5,5 @@
 }
 
     <div style="text-align: center;" class="editor-label">
-       <input class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" type="button" value="Coil Page" id="coil" onclick="gotoCoil();" />
+       <input class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" type="button" value="Coil Page" id="coil" onclick="gotoPage('Coil','Scanner','');" />
     </div>
-
-
-<script language="javascript">
-        function gotoCoil() {
-            var url = '@Url.Action("Coil", "Scanner", new { id = "__id__" })';
-            window.location.href = url.replace('__id__', "");
-        }
-</script>

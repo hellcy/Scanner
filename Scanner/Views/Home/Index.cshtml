@@ -50,7 +50,7 @@
                 <tr>
                     <td style="padding:10px"></td>
                     <td>
-                        <input class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" type="button" value="Scanner" id="scanner" onclick="gotoScanner();" />
+                        <input class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" type="button" value="Scanner" id="scanner" onclick="gotoPage('Index','Scanner','');" />
 
                         <button value="" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Home','');"><b>SUBMIT</b></button>
                     </td>
@@ -63,9 +63,3 @@
         </fieldset>
     </div>
 </div>
-<script language="javascript">
-            function gotoScanner() {
-        var url = '@Url.Action("Index", "Scanner", new { id = "__id__" })';
-        window.location.href = url.replace('__id__', "");
-        }
-</script>

@@ -1,6 +1,6 @@
 ﻿@model Scanner.Models.CoilDetail
 @{
-    ViewBag.Title = "Coil Page";
+    ViewBag.Title = "Coil";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -42,11 +42,6 @@
                 }
             });
         });
-
-        function gotoScanner() {
-            var url = '@Url.Action("Index", "Scanner", new { id = "__id__" })';
-            window.location.href = url.replace('__id__', "");
-        }
     </script>
 }
 <style type="text/css" id="custom-background-css">

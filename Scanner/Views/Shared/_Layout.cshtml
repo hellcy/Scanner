@@ -32,11 +32,12 @@
 
     var pubDir2 = WebConfigurationManager.AppSettings["pubDir2"].ToString();
 
-    var ctrlName = "";
+    var ctrlName = "Scanner";
     var actName = "";
-    var formId = "";
+    var formId = "frmMain";
     var formClass = "";
-    if (ViewBag.Title == "Coil Page")
+
+    if (ViewBag.Title == "Coil")
     {
         ctrlName = "Scanner";
         actName = "Coil";
@@ -773,29 +774,6 @@
                          }
                      }
                  }
-
-                 //var prevColorInput = $("#currColour").val();
-                 //$("#tr-1").css("display", "none");
-                 //for (var i = 0; i < $("#rowsCnt").val(); i++) {
-                 //    if (prevColorInput == $("#LR" + i + "C0").html()) {
-                 //        if (($("#inValid").val() == "") && (shw == 1)) {
-                 //            $("#tr" + i).css("display", "");
-                 //        }
-                 //        for (var j = 1; j < $("#colsCnt").val(); j++) {
-                 //            if ($("#cR-1" + "C" + j.toString()).length) {
-                 //                $("#cR" + i + "C" + j.toString()).val($("#cR-1" + "C" + j.toString()).val());
-                 //                if ($("#cR-1" + "C" + j.toString()).val() != "") {
-                 //                    $("#cR" + i.toString() + "C" + j.toString()).css("background-color", "wheat");
-                 //                    $("#tdR" + i.toString() + "C" + j.toString()).css("background-color", "wheat");
-                 //                }
-                 //                else {
-                 //                    $("#cR" + i.toString() + "C" + j.toString()).css("background-color", "white");
-                 //                    $("#tdR" + i.toString() + "C" + j.toString()).css("background-color", "white");
-                 //                }
-                 //            }
-                 //        }
-                 //    }
-                 //}
              }
          }
      }
@@ -889,14 +867,6 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <div class="col-md-3">
-                                        @if (Session["User"] != null)
-                                        {
-                                            <div>
-                                                @Html.Partial("_SideMenuPanel")
-                                            </div>
-                                        }
-                                    </div>
                                 </div>
                                 @*</hgroup>*@
                             </header>
@@ -909,6 +879,14 @@
                 <td>
                     <table style="width:100%">
                         <tr>
+                            @if (Session["User"] != null)
+                            {
+                                <td class="col-md-1">
+                                    <div>
+                                        @Html.Partial("_SideMenuPanel")
+                                    </div>
+                                </td>
+                            }
                             <td style="width:5%"><input type="hidden" name="byClick" id="byClick" value="" /></td>
                             <td style="width:95%">@RenderBody()</td>
                         </tr>

@@ -343,6 +343,9 @@
     <Content Include="Views\Home\Despatch.cshtml" />
     <Content Include="Views\Home\Menu.cshtml" />
     <Content Include="Views\Scanner\Coil.cshtml" />
+    <Content Include="Views\Scanner\Product1.cshtml" />
+    <Content Include="Views\Scanner\Product2.cshtml" />
+    <Content Include="Views\Scanner\Product3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

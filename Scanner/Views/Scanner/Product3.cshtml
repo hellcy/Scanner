@@ -1,0 +1,220 @@
+﻿@model Scanner.Models.CoilDetail
+@{
+    ViewBag.Title = "Product3";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts {
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ID').focus();
+            $('#ID').val('');
+            $('#uploadFlag').val('');
+
+            $('#clear').click(function () {
+                $('#data').find("tr:gt(0)").remove(); //remove all table rows except the headings
+                $('#ID').val('');
+                $('#Save').val('');
+                $('#Save2').val('');
+                $('#uploadFlag').val("");
+            });
+
+            $('#uploadButton').click(function () {
+                $('#Save2').val($('#Save').val());
+                $('#data').find("tr:gt(0)").remove(); //remove all table rows except the headings
+                $('#uploadFlag').val("UPLOAD");
+                $("#frmMain").submit(function () {
+                    $('#Save').val('');
+                });
+            });
+
+            $('#ID').keydown(function (event) {
+                if (event.keyCode == 9) {
+                    $('#Save').val($('#Save').val() + $('#ID').val());
+                    $("#frmMain").submit();
+                }
+            });
+
+            $('#ID').keypress(function (e) {
+                if (e.which == 13) {
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+<style type="text/css" id="custom-background-css">
+    body.custom-background {
+        background-color: #eaf6ff;
+    }
+    /*#table-wrapper {
+            position: relative;
+        }*/
+
+    #table-scroll2 {
+        height: 300px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+
+    #table-wrapper2 table {
+        width: 100%;
+    }
+
+    td {
+        padding: 3px;
+    }
+
+    table {
+        margin: 2px;
+    }
+
+    #table-wrapper2 table thead th .text {
+        position: absolute;
+        top: -20px;
+        z-index: 2;
+        height: 20px;
+        width: 35%;
+    }
+</style>
+<div class="col-md-12">
+    <h1 style="font-size:100px;">Product Three</h1>
+</div>
+<div class="col-md-6">
+    <div style="font-size:25px;" class="editor-label">
+        CoilID Scanned
+    </div>
+    <div class="editor-field">
+        @Html.TextAreaFor(model => model.CoilDetails[0].Input, new { id = "ID", style = "width: 520px; height:250px; border: 2px solid #ccc;" })
+        @Html.TextBoxFor(model => model.CoilDetails[0].Save, new { id = "Save" })
+        @Html.TextBoxFor(model => model.CoilDetails[0].Save2, new { id = "Save2" })
+        <h3>Please press Tab button to display data</h3>
+    </div>
+</div>
+<div class="col-md-6">
+    <div style="width:300px; text-align:center;">
+        <img src="C:/Scanner/Upload-QRcode.png" alt="QRcode for upload data" height="300" width="300" />
+        Upload Data
+    </div>
+
+    <div class="editor-field">
+        @Html.TextBoxFor(model => model.CoilDetails[0].Flag, new { id = "uploadFlag" })
+    </div>
+</div>
+<div class="col-md-12">
+    <div style="color:red; font-size:40px">@ViewBag.Error @ViewBag.Upload</div>
+    <div id="table-wrapper2">
+        <div id="table-scroll2">
+            <table id="data" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr>
+                        <th>
+                            <span class="text">ID</span>
+                        </th>
+                        <th>
+                            <span class="text">Type</span>
+                        </th>
+                        <th>
+                            <span class="text">Color</span>
+                        </th>
+                        <th>
+                            <span class="text">Weight</span>
+                        </th>
+                        <th>
+                            <span class="text">Gauge</span>
+                        </th>
+                        <th>
+                            <span class="text">Width</span>
+                        </th>
+                        <th>
+                            <span class="text">Order</span>
+                        </th>
+                        <th>
+                            <span class="text">P_order</span>
+                        </th>
+                        <th>
+                            <span class="text">Month_recd</span>
+                        </th>
+                        <th>
+                            <span class="text">Date_inwh</span>
+                        </th>
+                        <th>
+                            <span class="text">Date_transfer</span>
+                        </th>
+                        <th>
+                            <span class="text">Last_stocktake_date</span>
+                        </th>
+                        <th>
+                            <span class="text">Status</span>
+                        </th>
+                        <th>
+                            <span class="text">Clength</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int i = 0;
+                        if (Model != null && Model.CoilDetails != null)
+                        {
+                            foreach (var item in Model.CoilDetails.Skip(1).ToList())
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].ID, new { @id = "ID_" + i })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Type, new { @id = "Type_" + i, style = "width:50px" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Color, new { @id = "Color_" + i, style = "width:50px" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Weight, new { @id = "Weight_" + i, style = "width:50px" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Gauge, new { @id = "Gauge_" + i, style = "width:50px" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Width, new { @id = "Width_" + i, style = "width:50px" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Order, new { @id = "Order_" + i, style = "width:50px" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].P_order, new { @id = "P_order_" + i, style = "width:50px" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Month_recd, new { @id = "Month_recd_" + i })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Date_inwh, new { @id = "Date_inwh_" + i })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Date_transfer, new { @id = "Date_transfer_" + i })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Last_stocktake_date, new { @id = "Last_stocktake_date_" + i })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Status, new { @id = "Status_" + i, style = "width:50px" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.CoilDetails[i + 1].Clength, new { @id = "Clength_" + i, style = "width:50px" })
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <input type="submit" id="clear" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" />
+    <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />&nbsp;&nbsp;
+    <input type="submit" id="uploadButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" />
+</div>

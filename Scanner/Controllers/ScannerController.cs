@@ -23,6 +23,23 @@ namespace Scanner.Controllers
             return View();
         }
 
+        public ActionResult Product1()
+        {
+            CoilDetail details = new CoilDetail();
+            return View(details);
+        }
+
+        public ActionResult Product2()
+        {
+            CoilDetail details = new CoilDetail();
+            return View(details);
+        }
+
+        public ActionResult Product3()
+        {
+            CoilDetail details = new CoilDetail();
+            return View(details);
+        }
 
         public ActionResult Coil()
         {
