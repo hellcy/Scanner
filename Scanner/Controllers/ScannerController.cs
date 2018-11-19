@@ -15,6 +15,10 @@ namespace Scanner.Controllers
 
         CoilDetail details = new CoilDetail();
 
+        // change the lengths here for different products!
+        public const int CoilQRcodeLength = 33;
+        public const int CoilIDLength = 9;
+
         // GET: /Scanner/ 
 
         public ActionResult Index()
@@ -69,15 +73,15 @@ namespace Scanner.Controllers
 
             List<string> coilIDs = new List<string>();
 
-            int splitAt = 33; // change 9 with the size of strings you want.
+            int splitAt = CoilQRcodeLength; // change 9 with the size of strings you want.
             int coilIDCount = 0;
             for (int i = 0; i < input.Length; i = i + splitAt)
             {
                 coilIDCount++;
                 if (input.Length - i >= splitAt)
-                    coilIDs.Add(input.Substring(i, splitAt - 24));
-                else if (input.Length - i >= 9)
-                    coilIDs.Add(input.Substring(i, 9));
+                    coilIDs.Add(input.Substring(i, CoilIDLength));
+                else if (input.Length - i >= CoilIDLength)
+                    coilIDs.Add(input.Substring(i, CoilIDLength));
                 else
                     coilIDs.Add(input.Substring(i, ((input.Length - i))));
             }

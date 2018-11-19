@@ -85,8 +85,8 @@
         </div>
         <div class="editor-field">
             @Html.TextAreaFor(model => model.CoilDetails[0].Input, new { id = "ID", style = "width: 520px; height:250px; border: 2px solid #ccc;" })
-            @Html.TextBoxFor(model => model.CoilDetails[0].Save, new { id = "Save" })
-            @Html.TextBoxFor(model => model.CoilDetails[0].Save2, new { id = "Save2" })
+            @Html.TextBoxFor(model => model.CoilDetails[0].Save, new { id = "Save", type="hidden" })
+            @Html.TextBoxFor(model => model.CoilDetails[0].Save2, new { id = "Save2", type="hidden" })
             <h3>Please press Tab button to display data</h3>
         </div>
     </div>
@@ -96,8 +96,8 @@
             Upload Data
         </div>
 
-        <div class="editor-field">
-            @Html.TextBoxFor(model => model.CoilDetails[0].Flag, new { id = "uploadFlag" })
+        <div style="padding-top:50px" class="editor-field">
+            @Html.TextBoxFor(model => model.CoilDetails[0].Flag, new { id = "uploadFlag", type="hidden" })
         </div>
     </div>
     <div class="col-md-12">
@@ -160,7 +160,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            @Html.TextBoxFor(model => model.CoilDetails[i + 1].ID, new { @id = "ID_" + i })
+                                            @Html.TextBoxFor(model => model.CoilDetails[i + 1].ID, new { @id = "ID_" + i, style = "width:100px" })
                                         </td>
                                         <td>
                                             @Html.TextBoxFor(model => model.CoilDetails[i + 1].Type, new { @id = "Type_" + i, style = "width:50px" })
@@ -184,7 +184,7 @@
                                             @Html.TextBoxFor(model => model.CoilDetails[i + 1].P_order, new { @id = "P_order_" + i, style = "width:50px" })
                                         </td>
                                         <td>
-                                            @Html.TextBoxFor(model => model.CoilDetails[i + 1].Month_recd, new { @id = "Month_recd_" + i })
+                                            @Html.TextBoxFor(model => model.CoilDetails[i + 1].Month_recd, new { @id = "Month_recd_" + i, style = "width:100px" })
                                         </td>
                                         <td>
                                             @Html.TextBoxFor(model => model.CoilDetails[i + 1].Date_inwh, new { @id = "Date_inwh_" + i })
