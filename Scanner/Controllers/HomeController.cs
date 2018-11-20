@@ -90,7 +90,6 @@ namespace Scanner.Controllers
             {
             }
 
-            //changed!!!
             if (!ViewBag.isFront)
             {
                 string cookieName = FormsAuthentication.FormsCookieName; //Find cookie name
@@ -350,7 +349,7 @@ namespace Scanner.Controllers
                         Session["TradeType"] = "3";
                     }
 
-                    return RedirectToAction("Index", "Order");
+                    return RedirectToAction("Index","Order");
                 }
                 else
                 {
