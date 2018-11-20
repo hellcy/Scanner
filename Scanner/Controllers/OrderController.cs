@@ -18,7 +18,7 @@ namespace Scanner.Controllers
     public class OrderController : BaseController
     {
         [SessionExpire]
-        [Authorize]
+        //[Authorize]
         public ActionResult Index()
         {
             if (Session["UseSessionMenuExpandings"] == null)
@@ -5060,7 +5060,7 @@ namespace Scanner.Controllers
         public ActionResult Option_1()
         {
             ViewBag.Title = "Enter Meterage";
-            Session["CurrForm"] = "EnterMeterage";
+            Session["CurrForm"] = "Option_1";
             IList<string> colours = new List<string>();
             IList<string> heights = new List<string>();
             IList<string> chHeights = new List<string>();

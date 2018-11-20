@@ -40,8 +40,8 @@ namespace Scanner.Controllers
                         user = GetHandleUser(compName);
 
                         //LoginUser user = new LoginUser();
-                        //user.UserName = "charlesc@gram.com.au";
-                        //user.Password = "123";
+                        user.UserName = "charlesc@gram.com.au";
+                        user.Password = "123";
 
                         Session["User"] = user.IsValid(user.UserName, user.Password);
                         if (Session["User"] != null)
@@ -90,6 +90,7 @@ namespace Scanner.Controllers
             {
             }
 
+            //changed!!!
             if (!ViewBag.isFront)
             {
                 string cookieName = FormsAuthentication.FormsCookieName; //Find cookie name
@@ -275,7 +276,7 @@ namespace Scanner.Controllers
                                     }
                                 }
 
-                                return RedirectToAction("Index", "Order");
+                                return RedirectToAction("Index", "Scanner");
                             }
                             else
                             {

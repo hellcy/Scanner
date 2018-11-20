@@ -10,7 +10,7 @@ namespace Scanner.Controllers
     public class CategoryController : BaseController
     {
         [SessionExpire]
-        [Authorize]
+        //[Authorize]
         public ActionResult Index(string catId)
         {
 
@@ -43,7 +43,7 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
-        [Authorize]
+        //[Authorize]
         public ActionResult SubCat(string catId)
         {
             if ((Request.Form["actReq"] != null) && (Request.Form["actReq"].ToString() == "f"))

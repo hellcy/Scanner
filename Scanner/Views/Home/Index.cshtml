@@ -1,65 +1,236 @@
 ﻿@model Scanner.Models.LoginUser
+@using System.Web.Configuration
 @{
+    //if (Request.IsAuthenticated)
+    //{
+    //    Response.Redirect(Url.Action("Index", "Order"));
+    //}
+
+    int isFC = 0;
+    var loginDisp = "";
+    var startDisp = "none";
+    ViewBag.isFront = false; // check if the customer is at front counter, if it is, use phone number to login, No need to type in userName and passWord.
+
+    if (ViewBag.isFront)
+    {
+        isFC = 1;
+        if (ViewData.ModelState.IsValid)
+        {
+            loginDisp = "none";
+            startDisp = "";
+        }
+    }
+
+    var nor = "";
+    var pnor = "";
+    var phDisp = "none";
+
+    if (isFC == 1)
+    {
+        nor = "none";
+        if (string.IsNullOrEmpty(Model.Password))
+        {
+            pnor = "none";
+        }
+        phDisp = "";
+    }
 
     ViewBag.Title = "Home Page";
 }
 
 <div style="margin-top:200px;">
-
     <div class="col-md-4" style="width:100%;text-align:left">
         <fieldset>
-            <table id="tbLogin" style="border:solid; border-width:1px;margin-left:auto;margin-right:auto;width:400px;">
+            <table id="tbLogin" style="margin-left:auto;margin-right:auto;width:400px;display:@loginDisp">
                 <tr>
-                    <td colspan="2" style="padding:10px"><font style="font-size:30px; font-weight:bold;">Login:</font></td>
-                </tr>
-                <tr>
-                    <td style="font-size:20px;padding:10px">
-                        <div class="editor-label">
-                            @Html.LabelFor(u => u.UserName)
-                        </div>
-                    </td>
                     <td>
-                        <div class="editor-field" style="vertical-align:top;">
-                            @Html.TextBoxFor(u => u.UserName)<br />
-                            <font color="red">@Html.ValidationMessageFor(u => u.UserName)</font>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-size:20px; padding:10px">
-                        <div class="editor-label">
-                            @Html.LabelFor(u => u.Password)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editor-field">
-                            @Html.PasswordFor(u => u.Password, new { value = Model.Password })<br />
-                            <font color="red">@Html.ValidationMessageFor(u => u.Password)</font>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="display:none">
-                    <td style="font-size:20px; padding:10px"></td>
-                    <td>
-                        <div class="editor-label">
-                            @Html.CheckBoxFor(u => u.RememberMe)
-                            @Html.LabelFor(u => u.RememberMe)
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding:10px"></td>
-                    <td>
-                        <input class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" type="button" value="Scanner" id="scanner" onclick="gotoPage('Index','Scanner','');" />
+                        <table style="border:solid; border-width:1px;width:400px;">
+                            <tr>
+                                <td colspan="2" style="padding:10px"><font style="font-size:30px; font-weight:bold;">Login:</font></td>
+                            </tr>
+                            <tr id="userNameR" style="display:@nor">
+                                <td style="font-size:20px;padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.UserName)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field" style="vertical-align:top;">
+                                        @Html.TextBoxFor(u => u.UserName, new { onKeypress = "checkPassKeyPress(event.keyCode)" })<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.UserName)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            @if (isFC == 1)
+                            {
+                                <tr id="CompanyR" style="display:@phDisp">
+                                    <td style="font-size:20px;padding:10px">
+                                        <div class="editor-label">
+                                            @Html.LabelFor(u => u.Phone)
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="editor-field" style="vertical-align:top;">
+                                            @Html.TextBoxFor(u => u.Phone, new { list = "phList", onKeypress = "checkPassKeyPress(event.Keycode)" })<br />
+                                            <datalist id="phList" size="3">
+                                                @foreach (var phone in Model.PhoneList)
+                                                {
+                                                    string[] phoneArr = phone.Split(',');
+                                                    <option value="@phoneArr[0]" id="@phone" />
+                                                }
+                                            </datalist>
+                                            <font color="red">@Html.ValidationMessageFor(u => u.Phone)</font>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            <tr id="passwordR" style="display:@pnor">
+                                <td style="font-size:20px; padding:10px">
+                                    <div class="editor-label">
+                                        @Html.LabelFor(u => u.Password)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editor-field">
+                                        @Html.PasswordFor(u => u.Password, new { value = Model.Password, onKeypress = "checkPassKeyPress(event.keyCode)" })<br />
+                                        <font color="red">@Html.ValidationMessageFor(u => u.Password)</font>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr id="rememberR" style="display:@nor">
+                                <td style="font-size:20px; padding:10px"></td>
+                                <td>
+                                    <div class="editor-label">
+                                        @Html.CheckBoxFor(u => u.RememberMe)
+                                        @Html.LabelFor(u => u.RememberMe)
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px"></td>
+                                <td>
+                                    <input class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" type="button" value="Scanner" id="scanner" onclick="gotoPage('Index','Scanner','');" />
+                                    <input type="button" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:16px" onclick="CheckReqPass()" value="SUBMIT" />&nbsp;&nbsp;<input type="button" id="backBtn" name="backBtn" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:16px;display:@phDisp" onclick="$('#Password').val('');$('#passwordR').css('display', 'none');$('#Phone').val('');$('#tbStart').css('display', ''); $('#rememberR').css('display', 'none'); $('#tbLogin').css('display', 'none'); $('#backBtn').css('display', 'none');" />
+                                    @if (isFC == 0)
+                                    {
+                                        <div>
+                                            @Html.ActionLink("Forgot Password?", "ForgotPassword", "Home", new { Area = "" }, new { onClick = "setByClick();", @class = "req" })<br />
+                                            @Html.ActionLink("Request for new Login?", "ReqNewLogin", "Home", new { Area = "" }, new { onClick = "setByClick();", @class = "req" })
+                                        </div>
+                                    }
 
-                        <button value="" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Home','');"><b>SUBMIT</b></button>
+                                    @*@if (ViewBag.isFront)
+        {
+            <button value="" class="btn btn-primary btn-lg" style="height:40px; width: 100px;" onclick="gotoPage('Index','Home','newCustLogin=1');"><div style="font-size:12px;line-height:10px;text-align:center;"><b>NON MEMBER<br/>SUBMIT</b></div></button>
+        }*@
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="hidden" name="isFront" id="isFront" value="@isFC" /></td>
+                                <td><font color="red">@Html.ValidationSummary(true, "Login failed. Check your login details.")</font></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="display:none">&nbsp;&nbsp;&nbsp;</td>
+                    <td style="display:none"><input type="button" class="btn btn-primary btn-lg" style="height:150px; width: 300px; margin-bottom:10px;margin-top:10px;font-weight:bold;" onclick="quotation();" value="QUOTATION" /></td>
+                </tr>
+            </table>
+            <table id="tbStart" style="margin-left:auto;margin-right:auto;width:400px;display:@startDisp">
+                <tr>
+                    <td colspan="5" align="center">
+                        <table style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:25px; font-weight:bold; background-color:red; color:white;">
+                            <tr>
+                                <td style="color:yellow"><u>IMPORTANT NOTICE</u></td>
+                            </tr>
+                            <tr>
+                                <td>AS FROM THE 15<sup style="font-size:20px">TH</sup> MARCH 2018</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;&nbsp;THERE WILL BE A $10 SERVICE FEE PER ORDER&nbsp;&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>IF YOU REQUIRE ONE OF OUR SALES OFFICERS</td>
+                            </tr>
+                            <tr>
+                                <td>TO PUT YOUR ORDER THROUGH.</td>
+                            </tr>
+                        </table>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
                     </td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td><font color="red">@Html.ValidationSummary(true, "Login failed. Check your login details.")</font></td>
+                    <td>
+                        <div style="text-align:center">
+                            @*<input type="button" class="btn btn-primary btn-lg" style="height:150px; width: 300px; margin-bottom:10px;margin-top:10px;font-weight:bold;" onclick="displayLogin();"  value="START"/>*@
+                            @*<button class="btn btn-primary btn-lg" style="height:150px; width: 300px; margin-bottom:10px;margin-top:10px;font-weight:bold;" onclick="gotoPage('Index','Home','newCustLogin=1');" ><b>EXISTING CUSTOMER</b></button>*@
+                            <input type="button" class="btn btn-primary btn-lg" style="height:150px; width: 300px; margin-bottom:10px;margin-top:10px;font-weight:bold;" onclick="$('#Password').val('');$('#passwordR').css('display','none');$('#tbStart').css('display', 'none');$('#rememberR').css('display', 'none');$('#tbLogin').css('display', '');$('#backBtn').css('display', '');" value="EXISTING CUSTOMER" />
+                        </div>
+                    </td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td>
+                        <div style="text-align:center">
+                            <input type="button" class="btn btn-primary btn-lg" style="height:150px; width: 300px; margin-bottom:10px;margin-top:10px;font-weight:bold;" onclick="gotoPage('Index','Home','newCustLogin=2');" value="NEW CUSTOMER" />
+                        </div>
+                    </td>
+                    <td style="display:none">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td style="display:none">
+                        <div style="text-align:center">
+                            <input type="button" class="btn btn-primary btn-lg" style="height:150px; width: 300px; margin-bottom:10px;margin-top:10px;font-weight:bold;" onclick="quotation();" value="QUOTATION" />
+                        </div>
+                    </td>
                 </tr>
             </table>
         </fieldset>
     </div>
 </div>
+<script language="javascript">
+    function displayLogin() {
+        $("#tbStart").css("display", "none");
+        $("#tbLogin").css("display", "");
+    }
+
+    function quotation() {
+        $("#UserName").val("quotation");
+        $("#Password").val("quotation");
+        gotoPage('Index', 'Home', '');
+    }
+
+    function CheckReqPass() {
+        if ($("#Phone").length) {
+            $("#Phone").val($("#Phone").val().replace(/ /g, ""));
+            if ($("#Phone").val() != "") {
+                var options = $('#phList option');
+                var reqPass = $.map(options, function (option) {
+                    if (option.value == $("#Phone").val()) {
+                        return (option.id.indexOf("Y") > -1) ? 1 : 0;
+                    }
+                });
+
+                if (reqPass == 1) {
+                    if ($("#Password").val() == "") {
+                        $("#passwordR").css("display", "");
+                    }
+                    else {
+                        gotoPage('Index', 'Home', '');
+                    }
+                }
+                else {
+                    gotoPage('Index', 'Home', '');
+                }
+            }
+        }
+        else {
+            gotoPage('Index', 'Home', '');
+        }
+    }
+
+    function checkPassKeyPress(key) {
+        if (key == 13) {
+            gotoPage('Index', 'Home', '');
+        }
+    }
+</script>
