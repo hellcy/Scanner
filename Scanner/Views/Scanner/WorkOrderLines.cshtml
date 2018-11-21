@@ -1,0 +1,57 @@
+﻿@model Scanner.Models.WorkOrder_Lines
+@{
+    ViewBag.Title = "Work Order Lines";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<table class="bodyTable">
+    <tr>
+        <td style="width:250px;"></td>
+        <td valign="top">
+            <div class="jumbotron">
+                <table style="width:100%">
+                    <tr>
+                        <td><font class="subPagetitle">@ViewBag.Title</font></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="TwrapOverFlow">
+                <table class="head">
+                    <tr>
+                        <td style="width:50px;font-weight:bold;">Sequence No</td>
+                        <td style="width:100px;font-weight:bold;">BillCode</td>
+                        <td style="width:100px;font-weight:bold;">ProdCode</td>
+                        <td style="width:100px;font-weight:bold;">BatchCode</td>
+                        <td style="width:100px;font-weight:bold;">TransDate</td>
+                        <td style="width:100px;font-weight:bold;">ProdDate</td>
+                        <td style="width:100px;font-weight:bold;">DueDate</td>
+                        <td style="width:30px;font-weight:bold;">Order Status</td>
+                        <td style="width:50px;font-weight:bold;">SalesOrder No</td>
+                        <td style="width:100px;font-weight:bold;">Notes</td>
+                        <td style="width:30px;font-weight:bold;">Prod Qty</td>
+                        <td style="width:30px;font-weight:bold;">Actual Qty</td>
+                        <td style="width:30px;font-weight:bold;">Prod Loc No</td>
+                        <td style="width:100px;font-weight:bold;">Reference</td>
+                        <td style="width:30px;font-weight:bold;">Staff No</td>
+                        <td style="width:30px;font-weight:bold;">Component Loc No</td>
+                        <td style="width:100px;font-weight:bold;">Expiry Date</td>
+                        <td style="width:50px;font-weight:bold;">X_BR_Order</td>
+                        <td style="width:100px;font-weight:bold;">X_BR_AccNo</td>
+                        <td style="width:50px;font-weight:bold;">X_BR_InvNo</td>
+                        <td style="width:100px;font-weight:bold;">X_BR_Inv</td>
+                    </tr>
+                </table>
+                <div class="inner_table" style="width:1520px;">
+
+                        <table>
+                            <tr>
+                                <td>@Request.QueryString["ID"]</td>
+                                <td>@ViewBag.test</td>
+                            </tr>
+                        </table>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>

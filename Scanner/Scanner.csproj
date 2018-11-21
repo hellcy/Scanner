@@ -345,7 +345,7 @@
     <Content Include="Views\Home\Despatch.cshtml" />
     <Content Include="Views\Home\Menu.cshtml" />
     <Content Include="Views\Scanner\Coil.cshtml" />
-    <Content Include="Views\Scanner\WorkOrder.cshtml" />
+    <Content Include="Views\Scanner\WorkOrderHeaders.cshtml" />
     <Content Include="Views\Scanner\Product2.cshtml" />
     <Content Include="Views\Scanner\Product3.cshtml" />
     <Content Include="Views\Order\Option_1.cshtml" />
@@ -360,6 +360,7 @@
     <Content Include="Views\Order\Option_10_1.cshtml" />
     <Content Include="Views\Order\Option_10_2.cshtml" />
     <Content Include="Views\Order\Option_10_3.cshtml" />
+    <Content Include="Views\Scanner\WorkOrderLines.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

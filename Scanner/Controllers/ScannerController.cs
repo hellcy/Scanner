@@ -37,21 +37,38 @@ namespace Scanner.Controllers
         [HttpPost]
         public ActionResult WorkOrderLines(WorkOrder_Lines lines)
         {
+            ViewBag.Title = "Work Order Lines";
+            Session["CurrForm"] = "WorkOrderLines";
 
+            var sql = "exec dbo.proc_GetWorkOrders ";
+
+            string SeqNo = Request.QueryString["ID"] + "from controller";
+            ViewBag.test = SeqNo;
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    lines.workOrder_Lines = context.Database.SqlQuery<WorkOrder_Line>(sql).ToList<WorkOrder_Line>();
+                }
+            }
+            catch (Exception e)
+            {
+                lines.errMsg = "No Record Found.";
+            }
             return View(lines);
         }
 
-        public ActionResult WorkOrder()
+        public ActionResult WorkOrderHeaders()
         {
             WorkOrder_HDRs orders = new WorkOrder_HDRs();
             return View(orders);
         }
 
         [HttpPost]
-        public ActionResult WorkOrder(WorkOrder_HDRs orders)
+        public ActionResult WorkOrderHeaders(WorkOrder_HDRs orders)
         {
-            ViewBag.Title = "Work Order";
-            Session["CurrForm"] = "WorkOrder";
+            ViewBag.Title = "Work Order Headers";
+            Session["CurrForm"] = "WorkOrderHeaders";
 
             var sql = "exec dbo.proc_GetWorkOrders ";
 

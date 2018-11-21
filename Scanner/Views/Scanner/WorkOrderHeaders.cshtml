@@ -1,6 +1,6 @@
 ﻿@model Scanner.Models.WorkOrder_HDRs
 @{
-    ViewBag.Title = "Work Order";
+    ViewBag.Title = "Work Order Headers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <table class="bodyTable">
@@ -48,7 +48,7 @@
                         @for (int i = 0; i < Model.workOrder_HDRs.Count; i++)
                         {
                         <tr>
-                            <td style="width:50px;"><a onclick="gotoPage('','','')">@Model.workOrder_HDRs[i].SEQNO.ToString()</a></td>
+                            <td style="width:50px;"><a onclick="gotoPage('WorkOrderLines','Scanner','ID=@Model.workOrder_HDRs[i].SEQNO')">@Model.workOrder_HDRs[i].SEQNO.ToString()</a></td>
                             <td style="width:100px;">
                                 @if (@Model.workOrder_HDRs[i].BILLCODE != null)
                                 {@Model.workOrder_HDRs[i].BILLCODE.ToString()}
