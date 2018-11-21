@@ -16,12 +16,12 @@
                 $('#data').find("tr:gt(0)").remove(); //remove all table rows except the headings
                 $('#ID').val('');
                 $('#Save').val('');
-                $('#Save2').val('');
+                $('#SaveTable').val('');
                 $('#uploadFlag').val("");
             });
 
             $('#uploadButton').click(function () {
-                $('#Save2').val($('#Save').val());
+                $('#SaveTable').val($('#Save').val());
                 $('#data').find("tr:gt(0)").remove(); //remove all table rows except the headings
                 $('#uploadFlag').val("UPLOAD");
                 $("#frmMain").submit(function () {
@@ -84,7 +84,7 @@
                 <div class="editor-field">
                     @Html.TextAreaFor(model => model.CoilDetails[0].Input, new { id = "ID", style = "width: 500px; height:250px; border: 2px solid #ccc;" })
                     @Html.TextBoxFor(model => model.CoilDetails[0].Save, new { id = "Save", type = "hidden" })
-                    @Html.TextBoxFor(model => model.CoilDetails[0].Save2, new { id = "Save2", type = "hidden" })
+                    @Html.TextBoxFor(model => model.CoilDetails[0].SaveTable, new { id = "SaveTable", type = "hidden" })
                     <div style="font-size:30px;">Please press Tab button to display data</div>
                 </div>
             </div>

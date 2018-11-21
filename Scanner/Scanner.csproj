@@ -253,6 +253,8 @@
     <Compile Include="Models\Test.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Users.cs" />
+    <Compile Include="Models\WorkOrders.cs" />
+    <Compile Include="Models\WorkOrder_HDR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebGlobal.cs" />
   </ItemGroup>
@@ -343,7 +345,7 @@
     <Content Include="Views\Home\Despatch.cshtml" />
     <Content Include="Views\Home\Menu.cshtml" />
     <Content Include="Views\Scanner\Coil.cshtml" />
-    <Content Include="Views\Scanner\Product1.cshtml" />
+    <Content Include="Views\Scanner\WorkOrder.cshtml" />
     <Content Include="Views\Scanner\Product2.cshtml" />
     <Content Include="Views\Scanner\Product3.cshtml" />
     <Content Include="Views\Order\Option_1.cshtml" />

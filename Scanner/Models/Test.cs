@@ -5,8 +5,10 @@ using System.Web;
 
 namespace Scanner.Models
 {
+
+
     public class Test
     {
-        public int @ORDERNO { get; set; }
+        public IList<int> test { get; set; }
     }
 }

@@ -6,3 +6,281 @@
     <h1 style="text-align: center; font-size:100px;">Option_1</h1>
 </div>
 
+<table class="bodyTable">
+    <tr>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
+            <div class="Twrap" style="margin-left:0px;">
+                <table style="margin-left:10px;margin-right:10px; border-width:0px;">
+                    <tr>
+                        <td valign="top">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <table style="border:solid 1px;font-size:30px;background-color:coral;">
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px; width:300px;"><div style="margin-left:10px;margin-right:10px;">ENTER METERAGE</div></td>
+                                                <td style="border-bottom:solid 1px;width:150px;"><input type="text" name="meterage" id="meterage" value="" style="font-size:30px;width:150px;height:48px;background-color:yellow;color:black;" onkeyup="Calculator()" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">2370 PANEL</div></td>
+                                                <td style="border-bottom:solid 1px;"><input type="text" name="panel2370" id="panel2370" value="" style="font-size:30px;width:150px;height:48px;background-color:yellow;border:0px; background-color:coral;color:black;" readonly onclick="$('#meterage').focus()" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">1560 PANEL</div></td>
+                                                <td style="border-bottom:solid 1px;"><input type="text" name="panel1560" id="panel1560" value="" style="font-size:30px;width:150px;height:48px;background-color:yellow;border:0px;background-color:coral;color:black;" readonly onclick="$('#meterage').focus()" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;background-color:white;"><div style="margin-left:10px">max cover</div></td>
+                                                <td style="border-bottom:solid 1px;"><input type="text" name="maxcover" id="maxcover" value="" readonly style="font-size:30px;width:150px;height:48px;border:0px;background-color:white;color:black;" onclick="$('#meterage').focus()" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">METERAGE VALUES</div></td>
+                                                <td style="border-bottom:solid 1px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"></td>
+                                                <td style="border-bottom:solid 1px"><div style="margin-left:10px">QTY</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">SHEETS</div></td>
+                                                <td style="border-bottom:solid 1px"><input type="text" name="sheets" id="sheets" value="" readonly style="font-size:30px;width:150px;height:48px;background-color:coral;border:0px;color:black;" onclick="$('#meterage').focus()" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">POSTS</div></td>
+                                                <td style="border-bottom:solid 1px"><input type="text" name="posts" id="posts" value="" readonly style="font-size:30px;width:150px;height:48px;background-color:coral;border:0px;color:black;" onclick="$('#meterage').focus()" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">RAILS - 2370</div></td>
+                                                <td style="border-bottom:solid 1px"><input type="text" name="rail2370" id="rail2370" value="" readonly style="font-size:30px;width:150px;height:48px;background-color:coral;border:0px;color:black;" onclick="$('#meterage').focus()" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">RAILS - 3100</div></td>
+                                                <td style="border-bottom:solid 1px"><input type="text" name="rail3100" id="rail3100" value="" readonly style="font-size:30px;width:150px;height:48px;background-color:coral;border:0px;color:black;" onclick="$('#meterage').focus()" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-right:solid 1px;"><div style="margin-left:10px">SCREWS</div></td>
+                                                <td><input type="text" name="screws" id="screws" value="" readonly style="font-size:30px;width:150px;height:48px;background-color:coral;border:0px;color:black;" onclick="$('#meterage').focus()" /></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <td valign="top">
+                                        <table style="border:solid 1px;font-size:30px;background-color:coral">
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;width:250px;"><div style="margin-left:10px">SHEET TYPE</div></td>
+                                                <td style="border-bottom:solid 1px;">
+                                                    <select name="sheetType" id="sheetType" style="background-color:yellow;width:280px;height:48px;color:black;">
+                                                        <option value=""></option>
+                                                        <option value="GramLine">GramLine (ZIG ZAG)</option>
+                                                        <option value="ColorLine">ColorLine (5 RIB)</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">PANEL COLOUR</div></td>
+                                                <td style="border-bottom:solid 1px;">
+                                                    <select name="panelColour" id="panelColour" style="background-color:yellow;width:280px;height:48px;color:black;" onchange="setDefaultFrameColour()">
+                                                        <option value=""></option>
+                                                        @foreach (var colour in ViewBag.Colours)
+                                                        {
+                                                            <option value="@colour">@colour</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">FRAME COLOUR</div></td>
+                                                <td style="border-bottom:solid 1px;">
+                                                    <select name="frameColour" id="frameColour" style="background-color:yellow;width:280px;height:48px;color:black;">
+                                                        <option value=""></option>
+                                                        @foreach (var colour in ViewBag.Colours)
+                                                        {
+                                                            <option value="@colour">@colour</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-bottom:solid 1px;border-right:solid 1px;"><div style="margin-left:10px">HEIGHT</div></td>
+                                                <td style="border-bottom:solid 1px;">
+                                                    <select name="panelHeight" id="panelHeight" style="background-color:yellow;width:280px;height:48px;color:black;">
+                                                        <option value=""></option>
+                                                        @foreach (var height in ViewBag.Heights)
+                                                        {
+                                                            var reHeight = height.Replace(" *", "");
+                                                            <option value="@reHeight">@height</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-right:solid 1px;" id="postTypeC1"><div style="margin-left:10px">POST TYPE</div></td>
+                                                <td id="postTypeC2">
+                                                    <select name="postType" id="postType" style="background-color:yellow;width:280px;height:48px;color:black;" onchange="setPostHeightDisp()">
+                                                        <option value=""></option>
+                                                        <option value="CHANNEL POST">Channel Post</option>
+                                                        <option value="SMART POST">Smart Post</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr id="chHeightR" style="display:none">
+                                                <td style="border-right:solid 1px;"><div style="margin-left:10px">POST HEIGHT</div></td>
+                                                <td>
+                                                    <select name="chHeight" id="chHeight" style="background-color:yellow;width:280px;height:48px;color:black;">
+                                                        <option value=""></option>
+                                                        @foreach (var height in ViewBag.chHeights)
+                                                        {
+                                                            var reHeight = height.Replace(" *", "");
+                                                            <option value="@reHeight">@height</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr id="smHeightR" style="display:none;">
+                                                <td style="border-right:solid 1px;"><div style="margin-left:10px">POST HEIGHT</div></td>
+                                                <td>
+                                                    <select name="smHeight" id="smHeight" style="background-color:yellow;width:280px;height:48px;color:black;">
+                                                        <option value=""></option>
+                                                        @foreach (var height in ViewBag.smHeights)
+                                                        {
+                                                            var reHeight = height.Replace(" *", "");
+                                                            <option value="@reHeight">@height</option>
+                                                        }
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <br />
+                            @Html.Partial("_BottomPanel")
+                        </td>
+                        <td valign="top">
+                            @Html.Partial("_Adverts")
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </td>
+    </tr>
+</table>
+<script language="javascript">
+
+    function setDefaultFrameColour() {
+        if (($("#panelColour").val() != "") && ($("#frameColour").val() == "")) {
+            $("#frameColour").val($("#panelColour").val());
+        }
+    }
+
+    function clearInputs() {
+        $("#meterage").val("");
+        $("#sheetType").val("");
+        $("#panel2370").val("");
+        $("#panel1560").val("");
+        $("#maxcover").val("");
+        $("#panelColour").val("");
+        $("#frameColour").val("");
+        $("#panelHeight").val("");
+        $("#postType").val("");
+        $("#chHeight").val("");
+        $("#smHeight").val("");
+        $("#sheets").val("");
+        $("#posts").val("");
+        $("#rail2370").val("");
+        $("#rail3100").val("");
+        $("#screws").val("");
+    }
+
+    function setPostHeightDisp() {
+        if ($("#postType").val() == "") {
+            $("#chHeight").val("");
+            $("#chHeightR").css("display","none");
+            $("#smHeight").val("");
+            $("#smHeightR").css("display", "none");
+
+            $("#postTypeC1").css("border-bottom", "");
+            $("#postTypeC2").css("border-bottom", "");
+
+        }
+
+        if ($("#postType").val() == "CHANNEL POST") {
+            $("#chHeight").val("");
+            $("#chHeightR").css("display", "");
+            $("#smHeight").val("");
+            $("#smHeightR").css("display", "none");
+
+            $("#postTypeC1").css("border-bottom", "solid 1px");
+            $("#postTypeC2").css("border-bottom", "solid 1px");
+        }
+
+
+        if ($("#postType").val() == "SMART POST") {
+            $("#chHeight").val("");
+            $("#chHeightR").css("display", "none");
+            $("#smHeight").val("");
+            $("#smHeightR").css("display", "");
+
+
+            $("#postTypeC1").css("border-bottom", "solid 1px");
+            $("#postTypeC2").css("border-bottom", "solid 1px");
+        }
+
+    }
+
+    function Calculator() {
+        var errMsg = "";
+        $("#meterage").val($("#meterage").val().replace(/ /g, ""));
+
+
+        if ($("#meterage").val() == "0")
+            $("#meterage").val("");
+
+
+        if ($("#meterage").val() != "") {
+            if (isNaN($("#meterage").val())) {
+                errMsg += "METERAGE input is not valid.<br/>";
+                $("#meterage").val("");
+            }
+        }
+
+
+
+        if (errMsg != "") {
+            showWarning(errMsg);
+        }
+        else {
+
+            var B3 = ($("#meterage").val() == "") ? 0 : parseFloat($("#meterage").val());
+            var G4 = parseFloat(B3) / parseFloat(2.37);
+            var N4 = ((G4 - parseInt(G4) > 0) && (G4 - parseInt(G4) <= 0.33)) ? 1 : 0;
+            var I4 = parseInt(B3 / 2.37) - N4
+            var M4 = (G4 - parseInt(G4) > 0.66) ? 1 : 0;
+            var B4 = I4 + M4;
+            var L4 = ((G4 - parseInt(G4) > 0.33) && (G4 - parseInt(G4) <= 0.66)) ? 1 : 0;
+            var B5 = (N4 == 1) ? 2 : L4;
+            var B6 = (N4 > 0) ? I4 * 2.37 + N4 * 1.56 * 2 : (M4 == 1) ? I4 * 2.37 + M4 * 2.37 : I4 * 2.37 + L4 * 1.56 + N4 * 0.83;
+            var B9 = (L4 > 0) ? 3 * (I4 + M4) + N4 * 4 + L4 * 2 : (N4 > 0) ? 3 * (I4 + M4) + N4 * 4 + L4 * 2 : 3 * (I4 + M4);
+            var I6 = parseInt(B3 / 2.37);
+            var B10 = 2 * I6 + 2 * L4 + 2 * M4 + 2 * N4;
+            var B11 = (L4 > 0) ? 2 * I4 + 2 * M4 : 2 * I4 + 2 * M4 + 2 * L4;
+            var B12 = (L4 > 0) ? L4 : N4 * 2;
+            var B13 = (B4 + B5) * 18;
+
+            $("#panel2370").val(((B4==0)?"":B4));
+            $("#panel1560").val(((B5 == 0) ? "" : B5));
+            $("#maxcover").val(((B6 == 0) ? "" : (B6).toFixed(2)));
+            $("#sheets").val(((B9 == 0) ? "" : B9));
+            $("#posts").val(((B10 == 0) ? "" : B10));
+            $("#rail2370").val(((B11 == 0) ? "" : B11));
+            $("#rail3100").val(((B12 == 0) ? "" : B12));
+            $("#screws").val(((B13 == 0) ? "" : B13));
+
+        }
+    }
+</script>
+

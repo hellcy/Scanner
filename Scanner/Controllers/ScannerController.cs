@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using Scanner.Models;
 using System.Text;
+using System.Data.Entity;
 
 namespace Scanner.Controllers
 {
@@ -27,10 +28,33 @@ namespace Scanner.Controllers
             return View();
         }
 
-        public ActionResult Product1()
+        public ActionResult WorkOrder()
         {
-            CoilDetail details = new CoilDetail();
-            return View(details);
+            WorkOrders orders = new WorkOrders();
+            return View(orders);
+        }
+
+        [HttpPost]
+        public ActionResult WorkOrder(WorkOrders orders)
+        {
+            ViewBag.Title = "Work Order";
+            Session["CurrForm"] = "WorkOrder";
+
+            var sql = "exec dbo.proc_GetWorkOrders ";
+
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    orders.workOrders = context.Database.SqlQuery<WorkOrder_HDR>(sql).ToList<WorkOrder_HDR>();
+               }
+            }
+            catch (Exception e)
+            {
+                orders.errMsg = "No Record Found.";
+            }
+
+            return View(orders);
         }
 
         public ActionResult Product2()
@@ -62,7 +86,7 @@ namespace Scanner.Controllers
                 return View(model);
             }
             if (model.CoilDetails[0].Flag == "UPLOAD")
-                input = model.CoilDetails[0].Save2;
+                input = model.CoilDetails[0].SaveTable;
             else
                 input = model.CoilDetails[0].Input;
 

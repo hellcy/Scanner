@@ -21,7 +21,7 @@ namespace Scanner.Models
             Count = 0;
         }
 
-        public string Save2 { get; set; }
+        public string SaveTable { get; set; }
         public string Save { get; set; }
         public string Input { get; set; }
         public string ID { get; set; }
