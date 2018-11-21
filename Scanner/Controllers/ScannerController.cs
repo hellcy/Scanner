@@ -28,14 +28,27 @@ namespace Scanner.Controllers
             return View();
         }
 
+        public ActionResult WorkOrderLines()
+        {
+            WorkOrder_Lines lines = new WorkOrder_Lines();
+            return View(lines);
+        }
+
+        [HttpPost]
+        public ActionResult WorkOrderLines(WorkOrder_Lines lines)
+        {
+
+            return View(lines);
+        }
+
         public ActionResult WorkOrder()
         {
-            WorkOrders orders = new WorkOrders();
+            WorkOrder_HDRs orders = new WorkOrder_HDRs();
             return View(orders);
         }
 
         [HttpPost]
-        public ActionResult WorkOrder(WorkOrders orders)
+        public ActionResult WorkOrder(WorkOrder_HDRs orders)
         {
             ViewBag.Title = "Work Order";
             Session["CurrForm"] = "WorkOrder";
@@ -46,7 +59,7 @@ namespace Scanner.Controllers
             {
                 using (var context = new DbContext(Global.ConnStr))
                 {
-                    orders.workOrders = context.Database.SqlQuery<WorkOrder_HDR>(sql).ToList<WorkOrder_HDR>();
+                    orders.workOrder_HDRs = context.Database.SqlQuery<WorkOrder_HDR>(sql).ToList<WorkOrder_HDR>();
                }
             }
             catch (Exception e)

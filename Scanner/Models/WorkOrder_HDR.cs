@@ -44,4 +44,15 @@ namespace Scanner.Models
         public string X_BR { get; set; }
 
     }
+
+    public class WorkOrder_HDRs
+    {
+        public WorkOrder_HDRs()
+        {
+            errMsg = "";
+        }
+
+        public IList<WorkOrder_HDR> workOrder_HDRs { get; set; }
+        public String errMsg { get; set; }
+    }
 }
