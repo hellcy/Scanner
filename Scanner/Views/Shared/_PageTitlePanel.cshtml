@@ -1,40 +1,14 @@
 ﻿@using System.Web.Configuration
-@{
-    var image = Session["CurrForm"].ToString() + ".jpg";
-}
+
 <div class="jumbotron">
     <table style="width:100%;">
         <tr>
             <td>
                 <font class="subPagetitle">@ViewBag.Title</font>
-                <div style="font-size:16px;color:blue;line-height:16px;">
-                    <div style='width:200px; text-align:right;'>
-                        <b><u>HOW TO ORDER:</u></b>
-                    </div>
-                    <div>
-                        Place cursor and click on the actual colour you want to order. <br />
-                        The chosen colour row will move on the top of the list and will be highlighted in Blue.<br />
-                        Insert the actual quantity you are ordering in the length column.<br />
-                        Products marked with * need to be ordered.&nbsp;&nbsp;&nbsp;&nbsp;Leadtime = 5-10 working days.
-                    </div>
-                </div>
-            </td>
-            <td>
-                <img id="titleImage" src="~/Images/@image" onerror="displayNoImage(this);" height="130" style="float:right" />
             </td>
         </tr>
     </table>
 </div>
-
-<script type="text/javascript" language="javascript">
-    $(document).ready(function () {
-        $("img").mousedown(function (e) {
-            if (e.button == "2") {
-                alert("Warning!!\nAll images are copyright.");
-            }
-        });
-    });
-</script>
 
 
 

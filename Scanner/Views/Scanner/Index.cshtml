@@ -3,6 +3,15 @@
     ViewBag.Title = "Scanner Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="col-md-12">
-    <h1 style="text-align: center; font-size:100px;">Home Page for Scanner</h1>
-</div>
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px;vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
+        </td>
+    </tr>
+</table>

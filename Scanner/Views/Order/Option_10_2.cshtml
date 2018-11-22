@@ -2,7 +2,15 @@
 @{
     ViewBag.Title = "Option_10_2";
 }
-<div class="col-md-12">
-    <h1 style="text-align: center; font-size:100px;">Option_10_2</h1>
-</div>
-
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px;vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
+        </td>
+    </tr>
+</table>

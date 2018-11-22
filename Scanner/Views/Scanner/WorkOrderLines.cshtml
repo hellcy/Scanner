@@ -4,19 +4,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-</style>
 <table class="bodyTable">
     <tr>
-        <td style="width:250px;"></td>
-        <td valign="top">
-            <div class="jumbotron">
-                <table style="width:100%">
-                    <tr>
-                        <td><font class="subPagetitle">@ViewBag.Title</font></td>
-                    </tr>
-                </table>
+        <td style="width:300px;vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
             </div>
+        </td>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
             <div class="col-md-12">
                 <table class="col-md-6">
                     <tr>
@@ -125,22 +121,22 @@
                 <div class="inner_table" style="width:1520px; height:300px;">
                     @if (Model.errMsg == "")
                     {
-                    <table>
-                        @for (int i = 0; i < Model.workOrder_Lines.Count; i++)
-                        {
-                        <tr>
-                            <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].SEQNO, new { @id = "SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;" })</td>
-                            <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].HDR_SEQNO, new { @id = "HDR_SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;" })</td>
-                            <td style="width:150px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].STOCKCODE, new { @id = "STOCKCODE_" + i, style = "background-color:#e2e2e2;" })</td>
-                            <td style="width:350px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].DESCRIPTION, new { @id = "DESCRIPTION__" + i, style = "background-color:#e2e2e2;" })</td>
-                            <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].QTYREQD, new { @id = "QTYREQD_" + i, style = "background-color:#e2e2e2;" })</td>
-                            <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].QTYUSED, new { @id = "QTYUSED_" + i, style = "background-color:#e2e2e2;" })</td>
-                            <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].BATCHCODE, new { @id = "BATCHCODE_" + i, style = "background-color:#e2e2e2;" })</td>
-                            <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].X_LENGTH, new { @id = "X_LENGTH_" + i, style = "background-color:#e2e2e2;" })</td>
-                            <td style="width:150px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].X_COLOR, new { @id = "X_COLOR_" + i, style = "background-color:#e2e2e2;" })</td>
-                        </tr>
-                        }
-                    </table>
+                        <table>
+                            @for (int i = 0; i < Model.workOrder_Lines.Count; i++)
+                            {
+                                <tr>
+                                    <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].SEQNO, new { @id = "SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                                    <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].HDR_SEQNO, new { @id = "HDR_SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                                    <td style="width:150px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].STOCKCODE, new { @id = "STOCKCODE_" + i, style = "background-color:#e2e2e2;" })</td>
+                                    <td style="width:350px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].DESCRIPTION, new { @id = "DESCRIPTION__" + i, style = "background-color:#e2e2e2;" })</td>
+                                    <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].QTYREQD, new { @id = "QTYREQD_" + i, style = "background-color:#e2e2e2;" })</td>
+                                    <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].QTYUSED, new { @id = "QTYUSED_" + i, style = "background-color:#e2e2e2;" })</td>
+                                    <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].BATCHCODE, new { @id = "BATCHCODE_" + i, style = "background-color:#e2e2e2;" })</td>
+                                    <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].X_LENGTH, new { @id = "X_LENGTH_" + i, style = "background-color:#e2e2e2;" })</td>
+                                    <td style="width:150px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].X_COLOR, new { @id = "X_COLOR_" + i, style = "background-color:#e2e2e2;" })</td>
+                                </tr>
+                            }
+                        </table>
                     }
                 </div>
             </div>

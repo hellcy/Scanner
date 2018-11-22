@@ -5,16 +5,13 @@
 }
 <table class="bodyTable">
     <tr>
-        <td style="width:250px;"></td>
-        <td valign="top">
-            <div class="jumbotron">
-                <table style="width:100%">
-                    <tr>
-                        <td><font class="subPagetitle">@ViewBag.Title</font></td>
-                        <td></td>
-                    </tr>
-                </table>
+        <td style="width:300px;vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
             </div>
+        </td>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
             <div class="TwrapOverFlow">
                 <table class="head">
                     <tr>
@@ -44,59 +41,59 @@
                 <div class="inner_table" style="width:1520px;">
                     @if (Model.errMsg == "")
                     {
-                    <table>
-                        @for (int i = 0; i < Model.workOrder_HDRs.Count; i++)
-                        {
-                        <tr>
-                            <td style="width:50px;"><a onclick="gotoPage('WorkOrderLines','Scanner','ID=@Model.workOrder_HDRs[i].SEQNO')">@Model.workOrder_HDRs[i].SEQNO.ToString()</a></td>
-                            <td style="width:100px;">
-                                @if (@Model.workOrder_HDRs[i].BILLCODE != null)
-                                {@Model.workOrder_HDRs[i].BILLCODE.ToString()}
-                            </td>
-                            <td style="width:100px;">
-                                @if (@Model.workOrder_HDRs[i].PRODCODE != null)
-                                {@Model.workOrder_HDRs[i].PRODCODE.ToString()}
-                            </td>
-                            <td style="width:100px;">
-                                @if (@Model.workOrder_HDRs[i].BATCHCODE != null)
-                                {@Model.workOrder_HDRs[i].BATCHCODE.ToString()}
-                            </td>
-                            <td style="width:100px;">@Model.workOrder_HDRs[i].TRANSDATE.ToString()</td>
-                            <td style="width:100px;">@Model.workOrder_HDRs[i].PRODDATE.ToString()</td>
-                            <td style="width:100px;">@Model.workOrder_HDRs[i].DUEDATE.ToString()</td>
-                            <td style="width:30px;">@Model.workOrder_HDRs[i].ORDSTATUS.ToString()</td>
-                            <td style="width:50px;">@Model.workOrder_HDRs[i].SALESORDNO.ToString()</td>
-                            <td style="width:100px;">
-                                @if (@Model.workOrder_HDRs[i].NOTES != null)
-                                {@Model.workOrder_HDRs[i].NOTES.ToString()}
-                            </td>
-                            <td style="width:30px;">@Model.workOrder_HDRs[i].PRODQTY.ToString()</td>
-                            <td style="width:30px;">@Model.workOrder_HDRs[i].ACTUALQTY.ToString()</td>
-                            <td style="width:30px;">@Model.workOrder_HDRs[i].PRODLOCNO.ToString()</td>
-                            <td style="width:100px;">
-                                @if (@Model.workOrder_HDRs[i].REFERENCE != null)
-                                {@Model.workOrder_HDRs[i].REFERENCE.ToString()}
-                            </td>
-                            <td style="width:30px;">@Model.workOrder_HDRs[i].STAFFNO.ToString()</td>
-                            <td style="width:30px;">@Model.workOrder_HDRs[i].COMPONENTLOCNO.ToString()</td>
-                            <td style="width:100px;">@Model.workOrder_HDRs[i].EXPIRY_DATE.ToString()</td>
-                            <td style="width:50px;">@Model.workOrder_HDRs[i].X_BR_ORDER.ToString()</td>
-                            <td style="width:100px;">
-                                @if (@Model.workOrder_HDRs[i].X_BR_ACCNO != null)
-                                {@Model.workOrder_HDRs[i].X_BR_ACCNO.ToString()}
-                            </td>
-                            <td style="width:50px;">
-                                @if (@Model.workOrder_HDRs[i].X_BR_INVNO != null)
-                                {@Model.workOrder_HDRs[i].X_BR_INVNO.ToString()}
-                            </td>
-                            <td style="width:100px;">
-                                @if (@Model.workOrder_HDRs[i].X_BR != null)
-                                {@Model.workOrder_HDRs[i].X_BR.ToString()}
-                            </td>
+                        <table>
+                            @for (int i = 0; i < Model.workOrder_HDRs.Count; i++)
+                            {
+                                <tr>
+                                    <td style="width:50px;"><a onclick="gotoPage('WorkOrderLines','Scanner','ID=@Model.workOrder_HDRs[i].SEQNO')">@Model.workOrder_HDRs[i].SEQNO.ToString()</a></td>
+                                    <td style="width:100px;">
+                                        @if (@Model.workOrder_HDRs[i].BILLCODE != null)
+                                        {@Model.workOrder_HDRs[i].BILLCODE.ToString()}
+                                    </td>
+                                    <td style="width:100px;">
+                                        @if (@Model.workOrder_HDRs[i].PRODCODE != null)
+                                        {@Model.workOrder_HDRs[i].PRODCODE.ToString()}
+                                    </td>
+                                    <td style="width:100px;">
+                                        @if (@Model.workOrder_HDRs[i].BATCHCODE != null)
+                                        {@Model.workOrder_HDRs[i].BATCHCODE.ToString()}
+                                    </td>
+                                    <td style="width:100px;">@Model.workOrder_HDRs[i].TRANSDATE.ToString()</td>
+                                    <td style="width:100px;">@Model.workOrder_HDRs[i].PRODDATE.ToString()</td>
+                                    <td style="width:100px;">@Model.workOrder_HDRs[i].DUEDATE.ToString()</td>
+                                    <td style="width:30px;">@Model.workOrder_HDRs[i].ORDSTATUS.ToString()</td>
+                                    <td style="width:50px;">@Model.workOrder_HDRs[i].SALESORDNO.ToString()</td>
+                                    <td style="width:100px;">
+                                        @if (@Model.workOrder_HDRs[i].NOTES != null)
+                                        {@Model.workOrder_HDRs[i].NOTES.ToString()}
+                                    </td>
+                                    <td style="width:30px;">@Model.workOrder_HDRs[i].PRODQTY.ToString()</td>
+                                    <td style="width:30px;">@Model.workOrder_HDRs[i].ACTUALQTY.ToString()</td>
+                                    <td style="width:30px;">@Model.workOrder_HDRs[i].PRODLOCNO.ToString()</td>
+                                    <td style="width:100px;">
+                                        @if (@Model.workOrder_HDRs[i].REFERENCE != null)
+                                        {@Model.workOrder_HDRs[i].REFERENCE.ToString()}
+                                    </td>
+                                    <td style="width:30px;">@Model.workOrder_HDRs[i].STAFFNO.ToString()</td>
+                                    <td style="width:30px;">@Model.workOrder_HDRs[i].COMPONENTLOCNO.ToString()</td>
+                                    <td style="width:100px;">@Model.workOrder_HDRs[i].EXPIRY_DATE.ToString()</td>
+                                    <td style="width:50px;">@Model.workOrder_HDRs[i].X_BR_ORDER.ToString()</td>
+                                    <td style="width:100px;">
+                                        @if (@Model.workOrder_HDRs[i].X_BR_ACCNO != null)
+                                        {@Model.workOrder_HDRs[i].X_BR_ACCNO.ToString()}
+                                    </td>
+                                    <td style="width:50px;">
+                                        @if (@Model.workOrder_HDRs[i].X_BR_INVNO != null)
+                                        {@Model.workOrder_HDRs[i].X_BR_INVNO.ToString()}
+                                    </td>
+                                    <td style="width:100px;">
+                                        @if (@Model.workOrder_HDRs[i].X_BR != null)
+                                        {@Model.workOrder_HDRs[i].X_BR.ToString()}
+                                    </td>
 
-                        </tr>
-                        }
-                    </table>
+                                </tr>
+                            }
+                        </table>
                     }
                 </div>
             </div>
