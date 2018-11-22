@@ -7,6 +7,14 @@ namespace Scanner.Models
 {
     public class WorkOrder_Line
     {
+        public WorkOrder_Line()
+        {
+            STOCKCODE = "";
+            DESCRIPTION = "";
+            BATCHCODE = "";
+            X_COLOR = "";
+        }
+
         public Nullable<int> SEQNO { get; set; }
         public Nullable<int> HDR_SEQNO { get; set; }
         public string STOCKCODE { get; set; }
@@ -23,9 +31,13 @@ namespace Scanner.Models
         public WorkOrder_Lines()
         {
             errMsg = "";
+            workOrder_HDR = new WorkOrder_HDR();
+            updateFlag = "";
         }
 
         public IList<WorkOrder_Line> workOrder_Lines { get; set; }
+        public WorkOrder_HDR workOrder_HDR { get; set; }
         public String errMsg { get; set; }
+        public string updateFlag { get; set; }
     }
 }

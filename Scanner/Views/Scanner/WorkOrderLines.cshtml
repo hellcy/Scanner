@@ -11,47 +11,147 @@
                 <table style="width:100%">
                     <tr>
                         <td><font class="subPagetitle">@ViewBag.Title</font></td>
-                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-12">
+                <table>
+                    <tr>
+                        <td style="width:200px;font-weight:bold;">Sequence No</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.SEQNO, new { @id = "SeqNo"})</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">BillCode</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.BILLCODE, new { @id = "BillCode" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">ProdCode</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.PRODCODE, new { @id = "ProdCode" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">BatchCode</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.BATCHCODE, new { @id = "BatchCode" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">TransDate</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.TRANSDATE, new { @id = "TransDate" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">ProdDate</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.PRODDATE, new { @id = "ProdDate" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">DueDate</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.DUEDATE, new { @id = "DueDate" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">Order Status</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.ORDSTATUS, new { @id = "OrdStatus" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">SalesOrder No</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.SALESORDNO, new { @id = "SalesOrdNo" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">Notes</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.NOTES, new { @id = "Notes" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">Prod Qty</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.PRODQTY, new { @id = "ProdQty" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">Actual Qty</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.ACTUALQTY, new { @id = "ActualQty" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">Prod Loc No</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.PRODLOCNO, new { @id = "ProdLocNo" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">Reference</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.REFERENCE, new { @id = "Reference" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">Staff No</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.STAFFNO, new { @id = "StaffNo" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">Component Loc No</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.COMPONENTLOCNO, new { @id = "ComponentLocNo" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">Expiry Date</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.EXPIRY_DATE, new { @id = "ExpiryDate" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">X_BR_Order</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.X_BR_ORDER, new { @id = "X_BR_Order" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">X_BR_AccNo</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.X_BR_ACCNO, new { @id = "X_BR_AccNo"})</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">X_BR_InvNo</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.X_BR_INVNO, new { @id = "X_BR_InvNo" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">X_BR</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.X_BR, new { @id = "X_BR" })</td>
+
                     </tr>
                 </table>
             </div>
             <div class="TwrapOverFlow">
                 <table class="head">
                     <tr>
-                        <td style="width:50px;font-weight:bold;">Sequence No</td>
-                        <td style="width:100px;font-weight:bold;">BillCode</td>
-                        <td style="width:100px;font-weight:bold;">ProdCode</td>
+                        <td style="width:100px;font-weight:bold;">Sequence No</td>
+                        <td style="width:100px;font-weight:bold;">Header SeqNo</td>
+                        <td style="width:100px;font-weight:bold;">StockCode</td>
+                        <td style="width:100px;font-weight:bold;">Description</td>
+                        <td style="width:100px;font-weight:bold;">Qty Required</td>
+                        <td style="width:100px;font-weight:bold;">Qty Used</td>
                         <td style="width:100px;font-weight:bold;">BatchCode</td>
-                        <td style="width:100px;font-weight:bold;">TransDate</td>
-                        <td style="width:100px;font-weight:bold;">ProdDate</td>
-                        <td style="width:100px;font-weight:bold;">DueDate</td>
-                        <td style="width:30px;font-weight:bold;">Order Status</td>
-                        <td style="width:50px;font-weight:bold;">SalesOrder No</td>
-                        <td style="width:100px;font-weight:bold;">Notes</td>
-                        <td style="width:30px;font-weight:bold;">Prod Qty</td>
-                        <td style="width:30px;font-weight:bold;">Actual Qty</td>
-                        <td style="width:30px;font-weight:bold;">Prod Loc No</td>
-                        <td style="width:100px;font-weight:bold;">Reference</td>
-                        <td style="width:30px;font-weight:bold;">Staff No</td>
-                        <td style="width:30px;font-weight:bold;">Component Loc No</td>
-                        <td style="width:100px;font-weight:bold;">Expiry Date</td>
-                        <td style="width:50px;font-weight:bold;">X_BR_Order</td>
-                        <td style="width:100px;font-weight:bold;">X_BR_AccNo</td>
-                        <td style="width:50px;font-weight:bold;">X_BR_InvNo</td>
-                        <td style="width:100px;font-weight:bold;">X_BR_Inv</td>
+                        <td style="width:100px;font-weight:bold;">X_Length</td>
+                        <td style="width:100px;font-weight:bold;">X_Color</td>
                     </tr>
                 </table>
-                <div class="inner_table" style="width:1520px;">
-
+                <div class="inner_table" style="width:1520px; height:300px;">
+                    @if (Model.errMsg == "")
+                    {
                         <table>
+                            @for (int i = 0; i < Model.workOrder_Lines.Count; i++)
+                            {
                             <tr>
-                                <td>@Request.QueryString["ID"]</td>
-                                <td>@ViewBag.test</td>
+                                <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].SEQNO, new { @id = "SeqNo_" + i })</td>
+                                <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].HDR_SEQNO, new { @id = "HDR_SeqNo_" + i })</td>
+                                <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].STOCKCODE, new { @id = "STOCKCODE_" + i })</td>
+                                <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].DESCRIPTION, new { @id = "DESCRIPTION__" + i })</td>
+                                <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].QTYREQD, new { @id = "QTYREQD_" + i })</td>
+                                <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].QTYUSED, new { @id = "QTYUSED_" + i })</td>
+                                <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].BATCHCODE, new { @id = "BATCHCODE_" + i })</td>
+                                <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].X_LENGTH, new { @id = "X_LENGTH_" + i })</td>
+                                <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].X_COLOR, new { @id = "X_COLOR_" + i })</td>
                             </tr>
+                            }
                         </table>
-
+                    }
+                </div>
+            </div>
+            <div class="col-md-12">
+                <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('WorkOrderHeaders','Scanner','');" />&nbsp;&nbsp;
+                <input type="submit" id="updateButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="update()"/>
+                <div>
+                    @Html.TextBoxFor(model => model.updateFlag, new { id = "updateFlag", type = "hidden" })
                 </div>
             </div>
         </td>
     </tr>
 </table>
+<script>
+    function update() {
+        $("#updateFlag").val("update");
+        $("#frmMain").submit();
+    }
+</script>
