@@ -321,6 +321,8 @@ namespace Scanner.Controllers
                         user.UserName = ((User)Session["User"]).UserName;
                         user.Password = ((User)Session["User"]).Password;
                     //}
+                    var test = false;
+                    FormsAuthentication.SetAuthCookie(user.UserName + " " + user.Password, false);
 
                     FormsAuthentication.SetAuthCookie(user.UserName + " " + user.Password, user.RememberMe);
                     //FormsAuthentication.Authenticate(user.UserName, user.Password);

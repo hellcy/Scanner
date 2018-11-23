@@ -8,10 +8,12 @@ using System.Configuration;
 using Scanner.Models;
 using System.Text;
 using System.Data.Entity;
+using static Scanner.FilterConfig;
+using System.Data;
 
 namespace Scanner.Controllers
 {
-    public class ScannerController : Controller
+    public class ScannerController : BaseController
     {
 
         CoilDetail details = new CoilDetail();
@@ -22,19 +24,25 @@ namespace Scanner.Controllers
 
         // GET: /Scanner/ 
 
+        [SessionExpire]
+        [Authorize]
         public ActionResult Index()
         {
 
             return View();
         }
 
+        [SessionExpire]
+        [Authorize]
         public ActionResult WorkOrderLines()
         {
             WorkOrder_Lines lines = new WorkOrder_Lines();
             return View(lines);
         }
 
+        [SessionExpire]
         [HttpPost]
+        [Authorize]
         public ActionResult WorkOrderLines(WorkOrder_Lines lines)
         {
             ViewBag.Title = "Work Order Lines";
@@ -136,13 +144,17 @@ namespace Scanner.Controllers
             return View(lines);
         }
 
+        [SessionExpire]
+        [Authorize]
         public ActionResult WorkOrderHeaders()
         {
             WorkOrder_HDRs orders = new WorkOrder_HDRs();
             return View(orders);
         }
 
+        [SessionExpire]
         [HttpPost]
+        [Authorize]
         public ActionResult WorkOrderHeaders(WorkOrder_HDRs orders)
         {
             ViewBag.Title = "Work Order Headers";
@@ -165,25 +177,33 @@ namespace Scanner.Controllers
             return View(orders);
         }
 
+        [SessionExpire]
+        [Authorize]
         public ActionResult Product2()
         {
             CoilDetail details = new CoilDetail();
             return View(details);
         }
 
+        [SessionExpire]
+        [Authorize]
         public ActionResult Product3()
         {
             CoilDetail details = new CoilDetail();
             return View(details);
         }
 
+        [SessionExpire]
+        [Authorize]
         public ActionResult Coil()
         {
             CoilDetail details = new CoilDetail();
             return View(details);
         }
 
+        [SessionExpire]
         [HttpPost]
+        [Authorize]
         public ActionResult Coil(CoilDetail model)
         {
             string ConnStr = ConfigurationManager.ConnectionStrings["GramLineConn"].ToString();

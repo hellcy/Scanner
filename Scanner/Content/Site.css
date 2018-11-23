@@ -598,7 +598,13 @@ div#google_translate_element div.goog-te-gadget-simple {
     font-weight: bold;
 }
 
+.Yuan .TwrapOverFlow .head tr {
+    overflow-x : auto;
+}
 
+.Yuan .TwrapOverFlow .inner_table table tr {
+    overflow-x: auto;
+}
 
 .TwrapOverFlow {
     width: 1500px;

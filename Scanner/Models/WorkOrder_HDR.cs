@@ -42,6 +42,8 @@ namespace Scanner.Models
         public string X_BR_ACCNO { get; set; }
         public string X_BR_INVNO { get; set; }
         public string X_BR { get; set; }
+        public int maxPages { get; set; }
+        public int TotalRows { get; set; }
 
     }
 

@@ -12,55 +12,55 @@
         </td>
         <td valign="top">
             @Html.Partial("_PageTitlePanel")
-            <div class="TwrapOverFlow">
-                <table class="head">
+            <div class="TwrapOverFlow" style="width:2000px;">
+                <table class="head" style="width:2000px;">
                     <tr>
-                        <td style="width:50px;font-weight:bold;">Sequence No</td>
-                        <td style="width:100px;font-weight:bold;">BillCode</td>
-                        <td style="width:100px;font-weight:bold;">ProdCode</td>
-                        <td style="width:100px;font-weight:bold;">BatchCode</td>
-                        <td style="width:100px;font-weight:bold;">TransDate</td>
-                        <td style="width:100px;font-weight:bold;">ProdDate</td>
-                        <td style="width:100px;font-weight:bold;">DueDate</td>
+                        <td style="width:30px;font-weight:bold;">Sequence No</td>
+                        <td style="width:50px;font-weight:bold;">BillCode</td>
+                        <td style="width:50px;font-weight:bold;">ProdCode</td>
+                        <td style="width:50px;font-weight:bold;">BatchCode</td>
+                        <td style="width:70px;font-weight:bold;">TransDate</td>
+                        <td style="width:70px;font-weight:bold;">ProdDate</td>
+                        <td style="width:70px;font-weight:bold;">DueDate</td>
                         <td style="width:30px;font-weight:bold;">Order Status</td>
                         <td style="width:50px;font-weight:bold;">SalesOrder No</td>
                         <td style="width:100px;font-weight:bold;">Notes</td>
                         <td style="width:30px;font-weight:bold;">Prod Qty</td>
                         <td style="width:30px;font-weight:bold;">Actual Qty</td>
                         <td style="width:30px;font-weight:bold;">Prod Loc No</td>
-                        <td style="width:100px;font-weight:bold;">Reference</td>
+                        <td style="width:70px;font-weight:bold;">Reference</td>
                         <td style="width:30px;font-weight:bold;">Staff No</td>
-                        <td style="width:30px;font-weight:bold;">Component Loc No</td>
-                        <td style="width:100px;font-weight:bold;">Expiry Date</td>
+                        <td style="width:50px;font-weight:bold;">Component Loc No</td>
+                        <td style="width:70px;font-weight:bold;">Expiry Date</td>
                         <td style="width:50px;font-weight:bold;">X_BR_Order</td>
                         <td style="width:100px;font-weight:bold;">X_BR_AccNo</td>
                         <td style="width:50px;font-weight:bold;">X_BR_InvNo</td>
-                        <td style="width:100px;font-weight:bold;">X_BR_Inv</td>
+                        <td style="width:50px;font-weight:bold;">X_BR_Inv</td>
                     </tr>
                 </table>
-                <div class="inner_table" style="width:1520px;">
+                <div class="inner_table" style="width:2000px;">
                     @if (Model.errMsg == "")
                     {
-                        <table>
+                        <table style="width:2000px; overflow-x: auto;">
                             @for (int i = 0; i < Model.workOrder_HDRs.Count; i++)
                             {
                                 <tr>
-                                    <td style="width:50px;"><a onclick="gotoPage('WorkOrderLines','Scanner','ID=@Model.workOrder_HDRs[i].SEQNO')">@Model.workOrder_HDRs[i].SEQNO.ToString()</a></td>
-                                    <td style="width:100px;">
+                                    <td style="width:30px;"><a onclick="gotoPage('WorkOrderLines','Scanner','ID=@Model.workOrder_HDRs[i].SEQNO')">@Model.workOrder_HDRs[i].SEQNO.ToString()</a></td>
+                                    <td style="width:50px;">
                                         @if (@Model.workOrder_HDRs[i].BILLCODE != null)
                                         {@Model.workOrder_HDRs[i].BILLCODE.ToString()}
                                     </td>
-                                    <td style="width:100px;">
+                                    <td style="width:50px;">
                                         @if (@Model.workOrder_HDRs[i].PRODCODE != null)
                                         {@Model.workOrder_HDRs[i].PRODCODE.ToString()}
                                     </td>
-                                    <td style="width:100px;">
+                                    <td style="width:50px;">
                                         @if (@Model.workOrder_HDRs[i].BATCHCODE != null)
                                         {@Model.workOrder_HDRs[i].BATCHCODE.ToString()}
                                     </td>
-                                    <td style="width:100px;">@Model.workOrder_HDRs[i].TRANSDATE.ToString()</td>
-                                    <td style="width:100px;">@Model.workOrder_HDRs[i].PRODDATE.ToString()</td>
-                                    <td style="width:100px;">@Model.workOrder_HDRs[i].DUEDATE.ToString()</td>
+                                    <td style="width:70px;">@Model.workOrder_HDRs[i].TRANSDATE.ToString()</td>
+                                    <td style="width:70px;">@Model.workOrder_HDRs[i].PRODDATE.ToString()</td>
+                                    <td style="width:70px;">@Model.workOrder_HDRs[i].DUEDATE.ToString()</td>
                                     <td style="width:30px;">@Model.workOrder_HDRs[i].ORDSTATUS.ToString()</td>
                                     <td style="width:50px;">@Model.workOrder_HDRs[i].SALESORDNO.ToString()</td>
                                     <td style="width:100px;">
@@ -70,13 +70,13 @@
                                     <td style="width:30px;">@Model.workOrder_HDRs[i].PRODQTY.ToString()</td>
                                     <td style="width:30px;">@Model.workOrder_HDRs[i].ACTUALQTY.ToString()</td>
                                     <td style="width:30px;">@Model.workOrder_HDRs[i].PRODLOCNO.ToString()</td>
-                                    <td style="width:100px;">
+                                    <td style="width:70px;">
                                         @if (@Model.workOrder_HDRs[i].REFERENCE != null)
                                         {@Model.workOrder_HDRs[i].REFERENCE.ToString()}
                                     </td>
                                     <td style="width:30px;">@Model.workOrder_HDRs[i].STAFFNO.ToString()</td>
-                                    <td style="width:30px;">@Model.workOrder_HDRs[i].COMPONENTLOCNO.ToString()</td>
-                                    <td style="width:100px;">@Model.workOrder_HDRs[i].EXPIRY_DATE.ToString()</td>
+                                    <td style="width:50px;">@Model.workOrder_HDRs[i].COMPONENTLOCNO.ToString()</td>
+                                    <td style="width:70px;">@Model.workOrder_HDRs[i].EXPIRY_DATE.ToString()</td>
                                     <td style="width:50px;">@Model.workOrder_HDRs[i].X_BR_ORDER.ToString()</td>
                                     <td style="width:100px;">
                                         @if (@Model.workOrder_HDRs[i].X_BR_ACCNO != null)
@@ -86,7 +86,7 @@
                                         @if (@Model.workOrder_HDRs[i].X_BR_INVNO != null)
                                         {@Model.workOrder_HDRs[i].X_BR_INVNO.ToString()}
                                     </td>
-                                    <td style="width:100px;">
+                                    <td style="width:50px;">
                                         @if (@Model.workOrder_HDRs[i].X_BR != null)
                                         {@Model.workOrder_HDRs[i].X_BR.ToString()}
                                     </td>
@@ -97,6 +97,7 @@
                     }
                 </div>
             </div>
+            @*@Html.Partial("_BottomPanel")*@
         </td>
     </tr>
 </table>

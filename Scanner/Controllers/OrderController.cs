@@ -18,7 +18,7 @@ namespace Scanner.Controllers
     public class OrderController : BaseController
     {
         [SessionExpire]
-        //[Authorize]
+        [Authorize]
         public ActionResult Index()
         {
             if (Session["UseSessionMenuExpandings"] == null)
@@ -5057,6 +5057,7 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_1()
         {
             ViewBag.Title = "Enter Meterage";
@@ -5090,14 +5091,16 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_2()
         {
             ViewBag.Title = "Option_2";
-            Session["CurrForm"] = "Option_2";
+            //Session["CurrForm"] = "Option_2";
             return View();
         }
 
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_3()
         {
             ViewBag.Title = "Option_3";
@@ -5106,6 +5109,7 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_4()
         {
             ViewBag.Title = "Option_4";
@@ -5114,12 +5118,16 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_5()
         {
             ViewBag.Title = "Option_5";
             Session["CurrForm"] = "Option_5";
             return View();
         }
+
+        [SessionExpire]
+        [Authorize]
         public ActionResult Option_6()
         {
             ViewBag.Title = "Option_6";
@@ -5128,6 +5136,7 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_7()
         {
             ViewBag.Title = "Option_7";
@@ -5136,6 +5145,7 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_8()
         {
             ViewBag.Title = "Option_8";
@@ -5144,6 +5154,7 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_9()
         {
             ViewBag.Title = "Option_9";
@@ -5152,6 +5163,7 @@ namespace Scanner.Controllers
         }
 
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_10_1()
         {
             ViewBag.Title = "Option_10_1";
@@ -5159,6 +5171,7 @@ namespace Scanner.Controllers
             return View();
         }
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_10_2()
         {
             ViewBag.Title = "Option_10_2";
@@ -5166,6 +5179,7 @@ namespace Scanner.Controllers
             return View();
         }
         [SessionExpire]
+        [Authorize]
         public ActionResult Option_10_3()
         {
             ViewBag.Title = "Option_10_3";
