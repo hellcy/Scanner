@@ -12,30 +12,204 @@
         </td>
         <td valign="top">
             @Html.Partial("_PageTitlePanel")
+            <table>
+                <tr>
+                    <td><b>Search Text:</b></td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(o => o.whereStr)</td>
+                    <td>&nbsp;</td>
+                    <td><input type="button" class="btn btn-primary" onclick="submitNavpage(1)" value="Submit" style="width:80px;" /></td>
+                    <td><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
+                </tr>
+            </table>
             <div class="TwrapOverFlow" style="width:2000px;">
+                <span style="margin-right:350px; float:right; font-weight:bold">Total Orders : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
                 <table class="head" style="width:2000px;">
                     <tr>
-                        <td style="width:30px;font-weight:bold;">Sequence No</td>
-                        <td style="width:50px;font-weight:bold;">BillCode</td>
-                        <td style="width:50px;font-weight:bold;">ProdCode</td>
-                        <td style="width:50px;font-weight:bold;">BatchCode</td>
-                        <td style="width:70px;font-weight:bold;">TransDate</td>
-                        <td style="width:70px;font-weight:bold;">ProdDate</td>
-                        <td style="width:70px;font-weight:bold;">DueDate</td>
-                        <td style="width:30px;font-weight:bold;">Order Status</td>
-                        <td style="width:50px;font-weight:bold;">SalesOrder No</td>
-                        <td style="width:100px;font-weight:bold;">Notes</td>
-                        <td style="width:30px;font-weight:bold;">Prod Qty</td>
-                        <td style="width:30px;font-weight:bold;">Actual Qty</td>
-                        <td style="width:30px;font-weight:bold;">Prod Loc No</td>
-                        <td style="width:70px;font-weight:bold;">Reference</td>
-                        <td style="width:30px;font-weight:bold;">Staff No</td>
-                        <td style="width:50px;font-weight:bold;">Component Loc No</td>
-                        <td style="width:70px;font-weight:bold;">Expiry Date</td>
-                        <td style="width:50px;font-weight:bold;">X_BR_Order</td>
-                        <td style="width:100px;font-weight:bold;">X_BR_AccNo</td>
-                        <td style="width:50px;font-weight:bold;">X_BR_InvNo</td>
-                        <td style="width:50px;font-weight:bold;">X_BR_Inv</td>
+                        @if (Model.sortCol == "SEQNO")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('SEQNO','Number')">Sequence No<span id="SEQNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('SEQNO','Number')">Sequence No<span id="SEQNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "BILLCODE")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('BILLCODE','String')">BillCode<span id="BILLCODE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('BILLCODE','String')">BillCode<span id="BILLCODE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "PRODCODE")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('PRODCODE','String')">ProdCode<span id="PRODCODE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('PRODCODE','String')">ProdCode<span id="PRODCODE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "BATCHCODE")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('BATCHCODE','String')">BatchCode<span id="BATCHCODE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('BATCHCODE','String')">BatchCode<span id="BATCHCODE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "TRANSDATE")
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('TRANSDATE','Date')">TransDate<span id="TRANSDATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('TRANSDATE','Date')">TransDate<span id="TRANSDATE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "PRODDATE")
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('PRODDATE','Date')">ProdDate<span id="PRODDATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('PRODDATE','Date')">ProdDate<span id="PRODDATE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "DUEDATE")
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DUEDATE','Date')">DueDate<span id="DUEDATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DUEDATE','Date')">DueDate<span id="DUEDATE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "ORDSTATUS")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ORDSTATUS','Number')">Order Status<span id="ORDSTATUS_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ORDSTATUS','Number')">Order Status<span id="ORDSTATUS_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "SALESORDNO")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('SALESORDNO','Number')">SalesOrder No<span id="SALESORDNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('SALESORDNO','Number')">SalesOrder No<span id="SALESORDNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "NOTES")
+                        {
+                            <td style="width:100px;font-weight:bold;"><a onclick="orderToggle('NOTES','String')">Notes<span id="NOTES_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:100px;font-weight:bold;"><a onclick="orderToggle('NOTES','String')">Notes<span id="NOTES_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "PRODQTY")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('PRODQTY','Number')">Prod Qty<span id="PRODQTY_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('PRODQTY','Number')">Prod Qty<span id="PRODQTY_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "ACTUALQTY")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ACTUALQTY','Number')">Actual Qty<span id="ACTUALQTY_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ACTUALQTY','Number')">Actual Qty<span id="ACTUALQTY_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "PRODLOCNO")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('PRODLOCNO','Number')">Prod Loc No<span id="PRODLOCNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('PRODLOCNO','Number')">Prod Loc No<span id="PRODLOCNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "REFERENCE")
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('REFERENCE','String')">Reference<span id="REFERENCE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('REFERENCE','String')">Reference<span id="REFERENCE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "STAFFNO")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('STAFFNO','Number')">Staff No<span id="STAFFNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('STAFFNO','Number')">Staff No<span id="STAFFNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "COMPONENTLOCNO")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COMPONENTLOCNO','Number')">Component Loc No<span id="COMPONENTLOCNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COMPONENTLOCNO','Number')">Component Loc No<span id="COMPONENTLOCNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "EXPIRY_DATE")
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('EXPIRY_DATE','Date')">Expiry Date<span id="EXPIRY_DATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('EXPIRY_DATE','Date')">Expiry Date<span id="EXPIRY_DATE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "X_BR_ORDER")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_BR_ORDER','Number')">X_BR Order<span id="X_BR_ORDER_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_BR_ORDER','Number')">X_BR Order<span id="X_BR_ORDER_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "X_BR_ACCNO")
+                        {
+                            <td style="width:100px;font-weight:bold;"><a onclick="orderToggle('X_BR_ACCNO','String')">X_BR AccNo<span id="X_BR_ACCNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:100px;font-weight:bold;"><a onclick="orderToggle('X_BR_ACCNO','String')">X_BR AccNo<span id="X_BR_ACCNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "X_BR_INVNO")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_BR_INVNO','String')">X_BR InvNo<span id="X_BR_INVNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_BR_INVNO','String')">X_BR InvNo<span id="X_BR_INVNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "X_BR")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_BR','String')">X_BR<span id="X_BR_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_BR','String')">X_BR<span id="X_BR_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "X_CATEGORY")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_CATEGORY','String')">X_Category<span id="X_CATEGORY_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_CATEGORY','String')">X_Category<span id="X_CATEGORY_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "X_COMPLETION_DATE")
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('X_COMPLETION_DATE','Date')">X Completion Date<span id="X_COMPLETION_DATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('X_COMPLETION_DATE','Date')">X Completion Date<span id="X_COMPLETION_DATE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
                     </tr>
                 </table>
                 <div class="inner_table" style="width:2000px;">
@@ -90,14 +264,205 @@
                                         @if (@Model.workOrder_HDRs[i].X_BR != null)
                                         {@Model.workOrder_HDRs[i].X_BR.ToString()}
                                     </td>
+                                    <td style="width:50px;">
+                                        @if (@Model.workOrder_HDRs[i].X_CATEGORY != null)
+                                        {@Model.workOrder_HDRs[i].X_CATEGORY.ToString()}
+                                    </td>
+                                    <td style="width:70px;">@Model.workOrder_HDRs[i].X_COMPLETION_DATE.ToString()</td>
 
                                 </tr>
                             }
                         </table>
                     }
                 </div>
+                @{
+                    var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
+                    var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
+                    var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
+                    var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
+                    var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
+                    var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
+                }
+                <br />
+                <span style="margin-right:350px; float:right; font-weight:bold">
+                    @Html.TextBoxFor(o => o.totalPages, new { style = "display:none;" })Total Pages: @Model.totalPages.ToString(), Records per Page:
+                    <select name="rowsPerPage" id="rowsPerPage" onchange="reloadOrderTrack()" style="height:28px;font-size:14px;">
+                        <option value=15 @sel15>15</option>
+                        <option value=30 @sel30>30</option>
+                        <option value=50 @sel50>50</option>
+                        <option value=100 @sel100>100</option>
+                        <option value=150 @sel150>150</option>
+                        <option value=200 @sel200>200</option>
+                    </select>
+                    &nbsp;&nbsp;
+                    <a onclick="backNavpage()"><span class="glyphicon glyphicon-backward"></span></a>&nbsp;
+                    @Html.TextBoxFor(o => o.pageNum, new { style = "width:30px;font-size:14px;font-weight:bold;border:solid 1px #666; height:28px;font-color:black;", onkeyup = "goNavpage(event.keyCode)" })
+                    &nbsp;<a onclick="forwardNavpage()"><span class="glyphicon glyphicon-forward"></span></a>
+                </span>
+                <input type="hidden" name="rows" id="rowsCnt" value="" />
+                <input type="hidden" name="cols" id="colsCnt" value="" />
+                @Html.TextBoxFor(o => o.sortCol, new { id = "sortCol", style = "display:none" })
+                @Html.TextBoxFor(o => o.sortColType, new { style = "display:none" })
+                @Html.TextBoxFor(o => o.orderBy, new { style = "display:none" })
             </div>
             @*@Html.Partial("_BottomPanel")*@
         </td>
     </tr>
 </table>
+<script language="javascript">
+    var loadErrMsg = '@Html.Raw(Model.errMsg)';
+
+    if (loadErrMsg != "") {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+            message: "<font style='font-size:25px;'>" + loadErrMsg+ "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+    function submitNavpage(ini) {
+        if (ini == 0) {
+            if ($("#pageNum").val().replace(/ /g, "") == "") {
+                $("#pageNum").val("1");
+            }
+        }
+        else {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+            $("#pageNum").val($("#pageNum").val().replace(/\D/g, ''));
+
+            if ($("#pageNum").val() == "0") {
+                $("#pageNum").val("1");
+            }
+        }
+        else {
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+                $("#pageNum").val($("#totalPages").val());
+            }
+
+            $("#byClick").val("1");
+
+            if (ini == 1) {
+                $("#sortCol").val("DefaultSort");
+            }
+
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+    function goNavpage(keyCode) {
+        if (keyCode == 13) {
+            submitNavpage(0);
+        }
+    }
+
+    function forwardNavpage() {
+        if ($("#pageNum").val().replace(/ /g, "") == "") {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+        }
+        else {
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+               $("#pageNum").val($("#totalPages").val());
+            }
+
+            if (parseInt($("#pageNum").val()) < parseInt($("#totalPages").val())) {
+                $("#pageNum").val(parseInt($("#pageNum").val()) + 1);
+            }
+            $("#byClick").val("1");
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+
+    function backNavpage() {
+        if ($("#pageNum").val().replace(/ /g, "") == "") {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+        }
+        else {
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+               $("#pageNum").val($("#totalPages").val());
+            }
+
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > 1) {
+                $("#pageNum").val(parseInt($("#pageNum").val()) - 1);
+            }
+
+            $("#byClick").val("1");
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+
+
+    function reloadOrderTrack() {
+        $("#byClick").val("1");
+        var url = '@Url.Action("-1", "-2")';
+        url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+        $("#frmMain").attr('action', url);
+        $("#frmMain").submit();
+    }
+
+    function orderToggle(Id, sortType) {
+        if (Id == $("#sortCol").val()) {
+            if ($("#orderBy").val() == "glyphicon glyphicon-arrow-down") {
+                $("#orderBy").val("glyphicon glyphicon-arrow-up");
+            }
+            else {
+                $("#orderBy").val("glyphicon glyphicon-arrow-down");
+            }
+        }
+        else {
+            $("#sortCol").val(Id);
+            $("#orderBy").val("glyphicon glyphicon-arrow-up");
+        }
+
+        $("#sortColType").val(sortType);
+
+        $("#byClick").val("1");
+        var url = '@Url.Action("-1", "-2")';
+        url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+        $("#frmMain").attr('action', url);
+        $("#frmMain").submit();
+    }
+</script>

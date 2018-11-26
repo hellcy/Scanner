@@ -55,7 +55,8 @@ namespace Scanner.Controllers
             var sql_3 = "delete from dbo.WORKSORD_LINES where HDR_SEQNO = '" + lines.workOrder_HDR.SEQNO + "'"; // delete old data from lines table
             var sql_4 = "delete from dbo.WORKSORD_HDR where SEQNO = '" + lines.workOrder_HDR.SEQNO + "'"; // delete old data from headers table
 
-            var sql_6 = "insert into dbo.WORKSORD_HDR (SEQNO, BILLCODE, PRODCODE, BATCHCODE, TRANSDATE, PRODDATE, DUEDATE, ORDSTATUS, SALESORDNO, NOTES, PRODQTY, ACTUALQTY, PRODLOCNO, REFERENCE, STAFFNO, COMPONENTLOCNO, EXPIRY_DATE, X_BR_ORDER, X_BR_ACCNO, X_BR_INVNO, X_BR) values('" +
+            var sql_6 = "SET IDENTITY_INSERT dbo.WORKSORD_HDR ON " +
+                "insert into dbo.WORKSORD_HDR (SEQNO, BILLCODE, PRODCODE, BATCHCODE, TRANSDATE, PRODDATE, DUEDATE, ORDSTATUS, SALESORDNO, NOTES, PRODQTY, ACTUALQTY, PRODLOCNO, REFERENCE, STAFFNO, COMPONENTLOCNO, EXPIRY_DATE, X_BR_ORDER, X_BR_ACCNO, X_BR_INVNO, X_BR, X_CATEGORY, X_COMPLETION_DATE) values('" +
                 lines.workOrder_HDR.SEQNO + "', '" +
                 lines.workOrder_HDR.BILLCODE + "', '" +
                 lines.workOrder_HDR.PRODCODE + "', '" +
@@ -76,7 +77,10 @@ namespace Scanner.Controllers
                 lines.workOrder_HDR.X_BR_ORDER + "', '" +
                 lines.workOrder_HDR.X_BR_ACCNO + "', '" +
                 lines.workOrder_HDR.X_BR_INVNO + "', '" +
-                lines.workOrder_HDR.X_BR + "')";
+                lines.workOrder_HDR.X_BR + "', '" +
+                lines.workOrder_HDR.X_CATEGORY + "', '" +
+                lines.workOrder_HDR.X_COMPLETION_DATE + "')" +
+                "SET IDENTITY_INSERT dbo.WORKSORD_HDR OFF";
 
             WorkOrder_HDRs headerDetails = new WorkOrder_HDRs();
 
@@ -95,7 +99,7 @@ namespace Scanner.Controllers
                         {
                             for (int i = 0; i < lines.workOrder_Lines.Count; i++)
                             {
-                                var sql_5 = "insert into dbo.WORKSORD_LINES (SEQNO, HDR_SEQNO, STOCKCODE, DESCRIPTION, QTYREQD, QTYUSED, BATCHCODE, X_LENGTH, X_COLOR) values('" +
+                                var sql_5 = "insert into dbo.WORKSORD_LINES (SEQNO, HDR_SEQNO, STOCKCODE, DESCRIPTION, QTYREQD, QTYUSED, BATCHCODE, X_LENGTH, X_COLOR, X_SOLINE, X_NARRATIVE, X_LINESTATUS) values('" +
                                     lines.workOrder_Lines[i].SEQNO + "', '" +
                                     lines.workOrder_Lines[i].HDR_SEQNO + "', '" +
                                     lines.workOrder_Lines[i].STOCKCODE + "', '" +
@@ -104,6 +108,9 @@ namespace Scanner.Controllers
                                     lines.workOrder_Lines[i].QTYUSED + "', '" +
                                     lines.workOrder_Lines[i].BATCHCODE + "', '" +
                                     lines.workOrder_Lines[i].X_LENGTH + "', '" +
+                                    lines.workOrder_Lines[i].X_SOLINE + "', '" +
+                                    lines.workOrder_Lines[i].X_NARRATIVE + "', '" +
+                                    lines.workOrder_Lines[i].X_LINESTATUS + "', '" +
                                     lines.workOrder_Lines[i].X_COLOR + "')";
                                 context.Database.ExecuteSqlCommand(sql_5);
                             }
@@ -140,6 +147,8 @@ namespace Scanner.Controllers
             lines.workOrder_HDR.X_BR_ACCNO = headerDetails.workOrder_HDRs[0].X_BR_ACCNO;
             lines.workOrder_HDR.X_BR_INVNO = headerDetails.workOrder_HDRs[0].X_BR_INVNO;
             lines.workOrder_HDR.X_BR = headerDetails.workOrder_HDRs[0].X_BR;
+            lines.workOrder_HDR.X_CATEGORY = headerDetails.workOrder_HDRs[0].X_CATEGORY;
+            lines.workOrder_HDR.X_COMPLETION_DATE = headerDetails.workOrder_HDRs[0].X_COMPLETION_DATE;
 
             return View(lines);
         }
@@ -160,19 +169,107 @@ namespace Scanner.Controllers
             ViewBag.Title = "Work Order Headers";
             Session["CurrForm"] = "WorkOrderHeaders";
 
-            var sql = "exec dbo.proc_GetWorkOrders ";
+            if (string.IsNullOrEmpty(orders.sortCol))
+            {
+                if ((Request.Form["actReq"] != null) && (Request.Form["actReq"].ToString() == "f"))
+                {
+                    var rowsCnt = (Session[Request.Form["frmName"].ToString()] != null) ? ((DataTable)Session[Request.Form["frmName"].ToString()]).Rows.Count : 0;
+                    if ((Request.Form["rows"] != null) && (Request.Form["rows"].ToString() != ""))
+                    {
+                        rowsCnt = Convert.ToInt32(Request.Form["rows"]);
+                    }
+
+                    fillCurrTable(Request.Form["frmName"].ToString(), rowsCnt);
+                }
+
+                orders.sortCol = "DefaultSort";
+                orders.sortColType = "Number";
+                orders.rowsPerPage = 15;
+                orders.pageNum = 1;
+                orders.orderBy = "glyphicon glyphicon-arrow-up";
+            }
+
+            if (String.IsNullOrEmpty(orders.whereStr))
+            {
+                orders.whereStr = "";
+            }
+
+            if (orders.whereStr.Replace(" ", "") == "")
+            {
+                orders.whereStr = "";
+            }
+
+            var Role = new SqlParameter("@Role", ((Scanner.Models.User)Session["User"]).Role);
+            var UserName = new SqlParameter("@UserName", ((Scanner.Models.User)Session["User"]).UserName);
+            var pageNum = new SqlParameter("@pageNum", (orders.pageNum == 0) ? 1 : orders.pageNum);
+            var rowsPerPage = new SqlParameter("@rowsPerPage", orders.rowsPerPage);
+            var sortCol = new SqlParameter("@sortCol", orders.sortCol);
+            var sortColType = new SqlParameter("@sortColType", orders.sortColType);
+            var whereStr = new SqlParameter("@whereStr", orders.whereStr.ToString());
+
+            var orderBy = (orders.orderBy == "glyphicon glyphicon-arrow-down") ?
+                new SqlParameter("@orderBy", "desc") :
+                new SqlParameter("@orderBy", "asc");
+
+
+            var table = new SqlParameter("@table", "dbo.WORKSORD_HDR");
+            var selStr = new SqlParameter("@selStr", "");
+
+            var sql = "exec dbo.proc_GetWorkOrders " +
+                "@Role," +
+                "@UserName, " +
+                "@pageNum, " +
+                "@rowsPerPage, " +
+                "@sortCol, " +
+                "@sortColType, " +
+                "@whereStr, " +
+                "@orderBy, " +
+                "@table, " +
+                "@selStr";
+
+            var oldMsg = "";
+
+            if (orders.errMsg == null)
+                orders.errMsg = "";
+            else
+                oldMsg = orders.errMsg;
 
             try
             {
                 using (var context = new DbContext(Global.ConnStr))
                 {
-                    orders.workOrder_HDRs = context.Database.SqlQuery<WorkOrder_HDR>(sql).ToList<WorkOrder_HDR>();
+                    orders.workOrder_HDRs = context.Database.SqlQuery<WorkOrder_HDR>(sql,
+                       Role,
+                       UserName,
+                       pageNum,
+                       rowsPerPage,
+                       sortCol,
+                       sortColType,
+                       whereStr,
+                       orderBy,
+                       table,
+                       selStr).ToList<WorkOrder_HDR>();
                 }
             }
             catch (Exception e)
             {
-                orders.errMsg = "No Record Found.";
+                orders.totalPages = 0;
+                orders.totalRows = 0;
+                orders.workOrder_HDRs = null;
+                orders.errMsg = "No Record Found";
             }
+
+            if (orders.workOrder_HDRs != null)
+            {
+                if (orders.workOrder_HDRs.Count > 0)
+                {
+                    orders.totalPages = orders.workOrder_HDRs[0].maxPages;
+                    orders.totalRows = orders.workOrder_HDRs[0].TotalRows;
+                }
+            }
+
+            if (oldMsg != "")
+                orders.errMsg = oldMsg;
 
             return View(orders);
         }

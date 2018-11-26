@@ -24,6 +24,10 @@ namespace Scanner.Models
         public string BATCHCODE { get; set; }
         public Nullable<int> X_LENGTH { get; set; }
         public string X_COLOR { get; set; }
+        public Nullable<int> X_SOLINE { get; set; }
+        public Nullable<int> X_NARRATIVE { get; set; }
+        public Nullable<int> X_LINESTATUS { get; set; }
+
     }
 
     public class WorkOrder_Lines

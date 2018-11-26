@@ -189,6 +189,7 @@ namespace Scanner.Controllers
                 (currForm != "Category") &&
                 (currForm != "Registration") &&
                 (currForm != "PDFQuotation") &&
+                (currForm != "WorkOrderHeaders") &&
                 (currForm.Substring(0, 2) != "C-"))
             {
                 if (currForm != "SameColourItemOrdering")

@@ -342,7 +342,6 @@
     <Content Include="Views\Shared\_PageTitlePanel.cshtml" />
     <Content Include="Views\Shared\_SideMenuPanel.cshtml" />
     <Content Include="Views\Shared\_TopMenuPanel.cshtml" />
-    <Content Include="Views\Home\Despatch.cshtml" />
     <Content Include="Views\Home\Menu.cshtml" />
     <Content Include="Views\Scanner\Coil.cshtml" />
     <Content Include="Views\Scanner\WorkOrderHeaders.cshtml" />

@@ -9,18 +9,6 @@ namespace Scanner.Models
 {
     public class WorkOrder_HDR
     {
-        public WorkOrder_HDR()
-        {
-            BILLCODE = "";
-            PRODCODE = "";
-            BATCHCODE = "";
-            NOTES = "";
-            REFERENCE = "";
-            X_BR_ACCNO = "";
-            X_BR_INVNO = "";
-            X_BR = "";
-        }
-
         public Nullable<int> SEQNO { get; set; }
         public string BILLCODE { get; set; }
         public string PRODCODE { get; set; }
@@ -42,6 +30,8 @@ namespace Scanner.Models
         public string X_BR_ACCNO { get; set; }
         public string X_BR_INVNO { get; set; }
         public string X_BR { get; set; }
+        public string X_CATEGORY { get; set; }
+        public Nullable<DateTime> X_COMPLETION_DATE { get; set; }
         public int maxPages { get; set; }
         public int TotalRows { get; set; }
 
@@ -49,12 +39,19 @@ namespace Scanner.Models
 
     public class WorkOrder_HDRs
     {
-        public WorkOrder_HDRs()
-        {
-            errMsg = "";
-        }
-
         public IList<WorkOrder_HDR> workOrder_HDRs { get; set; }
         public String errMsg { get; set; }
+        public int totalRows { get; set; }
+        public int totalPages { get; set; }
+        public int pageNum { get; set; }
+        public int rowsPerPage { get; set; }
+        public string sortCol { get; set; }
+        public string sortColType { get; set; }
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "* Search Text Input (Max 50 letters)")]
+        [Display(Name = "Search Text")]
+        public string whereStr { get; set; }
+        public string orderBy { get; set; }
+        public string table { get; set; }
+        public string selStr { get; set; }
     }
 }

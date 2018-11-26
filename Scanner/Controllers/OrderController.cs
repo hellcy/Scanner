@@ -5095,7 +5095,7 @@ namespace Scanner.Controllers
         public ActionResult Option_2()
         {
             ViewBag.Title = "Option_2";
-            //Session["CurrForm"] = "Option_2";
+            Session["CurrForm"] = "Option_2";
             return View();
         }
 
