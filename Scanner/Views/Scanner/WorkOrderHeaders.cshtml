@@ -286,7 +286,7 @@
                 <br />
                 <span style="margin-right:350px; float:right; font-weight:bold">
                     @Html.TextBoxFor(o => o.totalPages, new { style = "display:none;" })Total Pages: @Model.totalPages.ToString(), Records per Page:
-                    <select name="rowsPerPage" id="rowsPerPage" onchange="reloadOrderTrack()" style="height:28px;font-size:14px;">
+                    <select name="rowsPerPage" id="rowsPerPage" onchange="reloadWorkOrders()" style="height:28px;font-size:14px;">
                         <option value=15 @sel15>15</option>
                         <option value=30 @sel30>30</option>
                         <option value=50 @sel50>50</option>
@@ -296,7 +296,7 @@
                     </select>
                     &nbsp;&nbsp;
                     <a onclick="backNavpage()"><span class="glyphicon glyphicon-backward"></span></a>&nbsp;
-                    @Html.TextBoxFor(o => o.pageNum, new { style = "width:30px;font-size:14px;font-weight:bold;border:solid 1px #666; height:28px;font-color:black;", onkeyup = "goNavpage(event.keyCode)" })
+                    @Html.TextBoxFor(o => o.pageNum, new { style = "width:30px;font-size:14px;font-weight:bold;border:solid 1px #666; height:28px;font-color:black;" })
                     &nbsp;<a onclick="forwardNavpage()"><span class="glyphicon glyphicon-forward"></span></a>
                 </span>
                 <input type="hidden" name="rows" id="rowsCnt" value="" />
@@ -367,11 +367,24 @@
         }
     }
 
-    function goNavpage(keyCode) {
-        if (keyCode == 13) {
+    //function goNavpage(keyCode) {
+    //    if (keyCode == 13) {
+    //        submitNavpage(0);
+    //    }
+    //}
+
+    $('#pageNum').keypress(function (e) {
+        if (e.which == 13) {
             submitNavpage(0);
         }
-    }
+    });
+
+    $('#whereStr').keypress(function (e) {
+        if (e.which == 13) {
+            submitNavpage(1);
+        }
+    });
+
 
     function forwardNavpage() {
         if ($("#pageNum").val().replace(/ /g, "") == "") {
@@ -435,7 +448,7 @@
 
 
 
-    function reloadOrderTrack() {
+    function reloadWorkOrders() {
         $("#byClick").val("1");
         var url = '@Url.Action("-1", "-2")';
         url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
