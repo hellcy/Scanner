@@ -406,6 +406,12 @@
         }
     }
 
+    //function goNavpage(keyCode) {
+    //    if (keyCode == 13) {
+    //        submitNavpage(0);
+    //    }
+    //}
+
     $('#pageNum').keypress(function (e) {
         if (e.which == 13) {
             submitNavpage(0);
@@ -418,8 +424,14 @@
         }
     });
 
-    $('#categorySort').on('change keypress', function () {
+    $('#categorySort').change(function () {
         reloadWorkOrders();
+    });
+
+    $('#categorySort').keypress(function (e) {
+        if (e.which == 13) {
+            reloadWorkOrders();
+        }
     })
 
     function clearText() {
