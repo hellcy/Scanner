@@ -141,7 +141,7 @@
                                 <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].SEQNO, new { @id = "SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;" })</td>
                                 <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].HDR_SEQNO, new { @id = "HDR_SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;" })</td>
                                 <td style="width:150px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].STOCKCODE, new { @id = "STOCKCODE_" + i, style = "background-color:#e2e2e2;" })</td>
-                                <td style="width:350px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].DESCRIPTION, new { @id = "DESCRIPTION__" + i, style = "background-color:#e2e2e2;" })</td>
+                                <td style="width:350px;">@Html.TextAreaFor(model => model.workOrder_Lines[i].DESCRIPTION, new { @id = "DESCRIPTION__" + i, style = "background-color:#e2e2e2;", @class = "required", @rows = 3 })</td>
                                 <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].QTYREQD, new { @id = "QTYREQD_" + i, style = "background-color:#e2e2e2;" })</td>
                                 <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].QTYUSED, new { @id = "QTYUSED_" + i, style = "background-color:#e2e2e2;" })</td>
                                 <td style="width:100px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].BATCHCODE, new { @id = "BATCHCODE_" + i, style = "background-color:#e2e2e2;" })</td>
