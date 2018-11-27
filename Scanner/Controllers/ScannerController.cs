@@ -158,6 +158,7 @@ namespace Scanner.Controllers
         public ActionResult WorkOrderHeaders()
         {
             WorkOrder_HDRs orders = new WorkOrder_HDRs();
+            orders.statusSort = -1;
             return View(orders);
         }
 
@@ -199,6 +200,11 @@ namespace Scanner.Controllers
                 orders.whereStr = "";
             }
 
+            if (String.IsNullOrEmpty(orders.categorySort))
+            {
+                orders.categorySort = "";
+            }
+
             var Role = new SqlParameter("@Role", ((Scanner.Models.User)Session["User"]).Role);
             var UserName = new SqlParameter("@UserName", ((Scanner.Models.User)Session["User"]).UserName);
             var pageNum = new SqlParameter("@pageNum", (orders.pageNum == 0) ? 1 : orders.pageNum);
@@ -206,6 +212,8 @@ namespace Scanner.Controllers
             var sortCol = new SqlParameter("@sortCol", orders.sortCol);
             var sortColType = new SqlParameter("@sortColType", orders.sortColType);
             var whereStr = new SqlParameter("@whereStr", orders.whereStr.ToString());
+            var categorySort = new SqlParameter("@categorySort", orders.categorySort.ToString());
+            var statusSort = new SqlParameter("@statusSort", orders.statusSort);
 
             var orderBy = (orders.orderBy == "glyphicon glyphicon-arrow-down") ?
                 new SqlParameter("@orderBy", "desc") :
@@ -225,7 +233,9 @@ namespace Scanner.Controllers
                 "@whereStr, " +
                 "@orderBy, " +
                 "@table, " +
-                "@selStr";
+                "@selStr, " +
+                "@categorySort, " +
+                "@statusSort";
 
             var oldMsg = "";
 
@@ -248,7 +258,14 @@ namespace Scanner.Controllers
                        whereStr,
                        orderBy,
                        table,
-                       selStr).ToList<WorkOrder_HDR>();
+                       selStr,
+                       categorySort,
+                       statusSort).ToList<WorkOrder_HDR>();
+                    if (orders.CategoryList == null)
+                    {
+                        var sql_category = "exec dbo.proc_GetWorkOrderCatrgoryList";
+                        orders.CategoryList = context.Database.SqlQuery<string>(sql_category).ToList<string>();
+                    }
                 }
             }
             catch (Exception e)

@@ -53,5 +53,8 @@ namespace Scanner.Models
         public string orderBy { get; set; }
         public string table { get; set; }
         public string selStr { get; set; }
+        public string categorySort { get; set; }
+        public int statusSort { get; set; } = -1;
+        public IList<string> CategoryList { get; set; }
     }
 }
