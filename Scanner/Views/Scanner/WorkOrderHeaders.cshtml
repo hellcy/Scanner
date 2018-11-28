@@ -16,7 +16,7 @@
                 <tr>
                     <td><b>Search Text:</b></td>
                     <td>&nbsp;</td>
-                    <td>@Html.TextBoxFor(o => o.whereStr)</td>
+                    <td>@Html.TextBoxFor(o => o.whereStr, new { autocomplete="off"})</td>
                     <td>&nbsp;</td>
                     <td><input type="button" class="btn btn-primary" onclick="submitNavpage(1)" value="Submit" style="width:80px;" /></td>
                     <td><input type="button" class="btn btn-primary" onclick="clearText()" value="Clear" style="width:80px;" /></td>
@@ -26,7 +26,7 @@
                     <td><b>Category:</b></td>
                     <td>&nbsp;</td>
                     <td>
-                        @Html.TextBoxFor(o => o.categorySort, new { style = "width:200px;", list = "categoryList" })
+                        @Html.TextBoxFor(o => o.categorySort, new { style = "width:200px;", list = "categoryList", autocomplete="off"})
                         <datalist id="categoryList" size="3">
                             @if (Model.CategoryList != null)
                             {
@@ -50,20 +50,20 @@
 
                         }
                         <select name="statusSort" id="statusSort" style="height:28px; width:100px; font-size:14px;" onchange="reloadWorkOrders()">
-                            <option value=-1 @status_1></option>
-                            <option value=0 @status0>0</option>
-                            <option value=1 @status1>1</option>
-                            <option value=2 @status2>2</option>
-                            <option value=3 @status3>3</option>
-                            <option value=4 @status4>4</option>
+                            <option value=-1 @status_1>All</option>
+                            <option value=0 @status0>New</option>
+                            <option value=1 @status1>Assigned</option>
+                            <option value=2 @status2>In Production</option>
+                            <option value=3 @status3>Completed</option>
+                            <option value=4 @status4>Cancelled</option>
 
                         </select>
                     </td>
                 </tr>
             </table>
-            <div class="TwrapOverFlow" style="width:2000px;">
-                <span style="margin-right:350px; float:right; font-weight:bold">Total Orders : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
-                <table class="head" style="width:2000px;">
+            <div class="TwrapOverFlow" style="width:1650px;">
+                <span style="float:right; font-weight:bold">Total Orders : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
+                <table class="head" style="width:1650px;">
                     <tr>
                         @if (Model.sortCol == "SEQNO")
                         {
@@ -80,22 +80,6 @@
                         else
                         {
                         <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('BILLCODE','String')">BillCode<span id="BILLCODE_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "PRODCODE")
-                        {
-                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('PRODCODE','String')">ProdCode<span id="PRODCODE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('PRODCODE','String')">ProdCode<span id="PRODCODE_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "BATCHCODE")
-                        {
-                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('BATCHCODE','String')">BatchCode<span id="BATCHCODE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('BATCHCODE','String')">BatchCode<span id="BATCHCODE_ord" style="float:right;color:green;display:none;"></span></a></td>
                         }
                         @if (Model.sortCol == "TRANSDATE")
                         {
@@ -123,11 +107,11 @@
                         }
                         @if (Model.sortCol == "ORDSTATUS")
                         {
-                        <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ORDSTATUS','Number')">Order Status<span id="ORDSTATUS_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('ORDSTATUS','Number')">Order Status<span id="ORDSTATUS_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
                         }
                         else
                         {
-                        <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ORDSTATUS','Number')">Order Status<span id="ORDSTATUS_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('ORDSTATUS','Number')">Order Status<span id="ORDSTATUS_ord" style="float:right;color:green;display:none;"></span></a></td>
                         }
                         @if (Model.sortCol == "SALESORDNO")
                         {
@@ -161,14 +145,6 @@
                         {
                         <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ACTUALQTY','Number')">Actual Qty<span id="ACTUALQTY_ord" style="float:right;color:green;display:none;"></span></a></td>
                         }
-                        @if (Model.sortCol == "PRODLOCNO")
-                        {
-                        <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('PRODLOCNO','Number')">Prod Loc No<span id="PRODLOCNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                        <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('PRODLOCNO','Number')">Prod Loc No<span id="PRODLOCNO_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
                         @if (Model.sortCol == "REFERENCE")
                         {
                         <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('REFERENCE','String')">Reference<span id="REFERENCE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
@@ -184,14 +160,6 @@
                         else
                         {
                         <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('STAFFNO','Number')">Staff No<span id="STAFFNO_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "COMPONENTLOCNO")
-                        {
-                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COMPONENTLOCNO','Number')">Component Loc No<span id="COMPONENTLOCNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COMPONENTLOCNO','Number')">Component Loc No<span id="COMPONENTLOCNO_ord" style="float:right;color:green;display:none;"></span></a></td>
                         }
                         @if (Model.sortCol == "EXPIRY_DATE")
                         {
@@ -225,14 +193,6 @@
                         {
                         <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_BR_INVNO','String')">X_BR InvNo<span id="X_BR_INVNO_ord" style="float:right;color:green;display:none;"></span></a></td>
                         }
-                        @if (Model.sortCol == "X_BR")
-                        {
-                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_BR','String')">X_BR<span id="X_BR_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                        <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_BR','String')">X_BR<span id="X_BR_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
                         @if (Model.sortCol == "X_CATEGORY")
                         {
                         <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('X_CATEGORY','String')">X_Category<span id="X_CATEGORY_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
@@ -243,18 +203,18 @@
                         }
                         @if (Model.sortCol == "X_COMPLETION_DATE")
                         {
-                        <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('X_COMPLETION_DATE','Date')">X Completion Date<span id="X_COMPLETION_DATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        <td style="width:70px; font-weight:bold;"><a onclick="orderToggle('X_COMPLETION_DATE','Date')">X Completion Date<span id="X_COMPLETION_DATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
                         }
                         else
                         {
-                        <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('X_COMPLETION_DATE','Date')">X Completion Date<span id="X_COMPLETION_DATE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        <td style="width:70px; font-weight:bold;"><a onclick="orderToggle('X_COMPLETION_DATE','Date')">X Completion Date<span id="X_COMPLETION_DATE_ord" style="float:right;color:green;display:none;"></span></a></td>
                         }
                     </tr>
                 </table>
-                <div class="inner_table" style="width:2000px;">
+                <div class="inner_table" style="width:1650px;">
                     @if (Model.errMsg == "")
                     {
-                    <table style="width:2000px; overflow-x: auto;">
+                    <table style="width:1650px; overflow-x: auto;">
                         @for (int i = 0; i < Model.workOrder_HDRs.Count; i++)
                         {
                         <tr>
@@ -263,32 +223,31 @@
                                 @if (@Model.workOrder_HDRs[i].BILLCODE != null)
                                 {@Model.workOrder_HDRs[i].BILLCODE.ToString()}
                             </td>
-                            <td style="width:50px;">
-                                @if (@Model.workOrder_HDRs[i].PRODCODE != null)
-                                {@Model.workOrder_HDRs[i].PRODCODE.ToString()}
-                            </td>
-                            <td style="width:50px;">
-                                @if (@Model.workOrder_HDRs[i].BATCHCODE != null)
-                                {@Model.workOrder_HDRs[i].BATCHCODE.ToString()}
-                            </td>
                             <td style="width:70px;">@Model.workOrder_HDRs[i].TRANSDATE.ToString()</td>
                             <td style="width:70px;">@Model.workOrder_HDRs[i].PRODDATE.ToString()</td>
                             <td style="width:70px;">@Model.workOrder_HDRs[i].DUEDATE.ToString()</td>
-                            <td style="width:30px;">@Model.workOrder_HDRs[i].ORDSTATUS.ToString()</td>
-                            <td style="width:50px;">@Model.workOrder_HDRs[i].SALESORDNO.ToString()</td>
+                            <td style="width:50px;">
+                                @if (@Model.workOrder_HDRs[i].ORDSTATUS == 0){ <p>New</p>}
+                                else if (@Model.workOrder_HDRs[i].ORDSTATUS == 1){ <p>Assigned</p>}
+                                else if (@Model.workOrder_HDRs[i].ORDSTATUS == 2){ <p>In Production</p>}
+                                else if (@Model.workOrder_HDRs[i].ORDSTATUS == 3){ <p>Completed</p>}
+                                else if (@Model.workOrder_HDRs[i].ORDSTATUS == 4){ <p>Cancelled</p>}
+                            </td>
+                            <td style="width:50px;">
+                                @if (Model.workOrder_HDRs[i].SALESORDNO != -1)
+                                {@Model.workOrder_HDRs[i].SALESORDNO.ToString()}
+                            </td>
                             <td style="width:100px;">
                                 @if (@Model.workOrder_HDRs[i].NOTES != null)
                                 {@Model.workOrder_HDRs[i].NOTES.ToString()}
                             </td>
                             <td style="width:30px;">@Model.workOrder_HDRs[i].PRODQTY.ToString()</td>
                             <td style="width:30px;">@Model.workOrder_HDRs[i].ACTUALQTY.ToString()</td>
-                            <td style="width:30px;">@Model.workOrder_HDRs[i].PRODLOCNO.ToString()</td>
                             <td style="width:70px;">
                                 @if (@Model.workOrder_HDRs[i].REFERENCE != null)
                                 {@Model.workOrder_HDRs[i].REFERENCE.ToString()}
                             </td>
                             <td style="width:30px;">@Model.workOrder_HDRs[i].STAFFNO.ToString()</td>
-                            <td style="width:50px;">@Model.workOrder_HDRs[i].COMPONENTLOCNO.ToString()</td>
                             <td style="width:70px;">@Model.workOrder_HDRs[i].EXPIRY_DATE.ToString()</td>
                             <td style="width:50px;">@Model.workOrder_HDRs[i].X_BR_ORDER.ToString()</td>
                             <td style="width:100px;">
@@ -298,10 +257,6 @@
                             <td style="width:50px;">
                                 @if (@Model.workOrder_HDRs[i].X_BR_INVNO != null)
                                 {@Model.workOrder_HDRs[i].X_BR_INVNO.ToString()}
-                            </td>
-                            <td style="width:50px;">
-                                @if (@Model.workOrder_HDRs[i].X_BR != null)
-                                {@Model.workOrder_HDRs[i].X_BR.ToString()}
                             </td>
                             <td style="width:50px;">
                                 @if (@Model.workOrder_HDRs[i].X_CATEGORY != null)
@@ -323,7 +278,7 @@
                 var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
                 }
                 <br />
-                <span style="margin-right:350px; float:right; font-weight:bold">
+                <span style="float:right; font-weight:bold">
                     @Html.TextBoxFor(o => o.totalPages, new { style = "display:none;" })Total Pages: @Model.totalPages.ToString(), Records per Page:
                     <select name="rowsPerPage" id="rowsPerPage" onchange="reloadWorkOrders()" style="height:28px;font-size:14px;">
                         <option value=15 @sel15>15</option>

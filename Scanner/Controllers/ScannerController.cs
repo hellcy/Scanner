@@ -50,37 +50,67 @@ namespace Scanner.Controllers
 
             string SeqNo = Request.QueryString["ID"];
 
-            var sql = "select * from dbo.WORKSORD_HDR where SEQNO = '" + SeqNo + "'"; // to get all information of the SeqNo of a workOrderHeader
-            var sql_2 = "select * from dbo.WORKSORD_LINES where HDR_SEQNO = '" + SeqNo + "'"; // to get all workOrderLines under the header SeqNo
-            var sql_3 = "delete from dbo.WORKSORD_LINES where HDR_SEQNO = '" + lines.workOrder_HDR.SEQNO + "'"; // delete old data from lines table
-            var sql_4 = "delete from dbo.WORKSORD_HDR where SEQNO = '" + lines.workOrder_HDR.SEQNO + "'"; // delete old data from headers table
+            var sql = "select * from GRAM_SYD_LIVE.dbo.WORKSORD_HDR where SEQNO = '" + SeqNo + "'"; // to get all information of the SeqNo of a workOrderHeader
+            var sql_2 = "select * from GRAM_SYD_LIVE.dbo.WORKSORD_LINES where HDR_SEQNO = '" + SeqNo + "'"; // to get all workOrderLines under the header SeqNo
 
-            var sql_6 = "SET IDENTITY_INSERT dbo.WORKSORD_HDR ON " +
-                "insert into dbo.WORKSORD_HDR (SEQNO, BILLCODE, PRODCODE, BATCHCODE, TRANSDATE, PRODDATE, DUEDATE, ORDSTATUS, SALESORDNO, NOTES, PRODQTY, ACTUALQTY, PRODLOCNO, REFERENCE, STAFFNO, COMPONENTLOCNO, EXPIRY_DATE, X_BR_ORDER, X_BR_ACCNO, X_BR_INVNO, X_BR, X_CATEGORY, X_COMPLETION_DATE) values('" +
-                lines.workOrder_HDR.SEQNO + "', '" +
-                lines.workOrder_HDR.BILLCODE + "', '" +
-                lines.workOrder_HDR.PRODCODE + "', '" +
-                lines.workOrder_HDR.BATCHCODE + "', '" +
-                lines.workOrder_HDR.TRANSDATE + "', '" +
-                lines.workOrder_HDR.PRODDATE + "', '" +
-                lines.workOrder_HDR.DUEDATE + "', '" +
-                lines.workOrder_HDR.ORDSTATUS + "', '" +
-                lines.workOrder_HDR.SALESORDNO + "', '" +
-                lines.workOrder_HDR.NOTES + "', '" +
-                lines.workOrder_HDR.PRODQTY + "', '" +
-                lines.workOrder_HDR.ACTUALQTY + "', '" +
-                lines.workOrder_HDR.PRODLOCNO + "', '" +
-                lines.workOrder_HDR.REFERENCE + "', '" +
-                lines.workOrder_HDR.STAFFNO + "', '" +
-                lines.workOrder_HDR.COMPONENTLOCNO + "', '" +
-                lines.workOrder_HDR.EXPIRY_DATE + "', '" +
-                lines.workOrder_HDR.X_BR_ORDER + "', '" +
-                lines.workOrder_HDR.X_BR_ACCNO + "', '" +
-                lines.workOrder_HDR.X_BR_INVNO + "', '" +
-                lines.workOrder_HDR.X_BR + "', '" +
-                lines.workOrder_HDR.X_CATEGORY + "', '" +
-                lines.workOrder_HDR.X_COMPLETION_DATE + "')" +
-                "SET IDENTITY_INSERT dbo.WORKSORD_HDR OFF";
+            string new_TRANSDATE = "";
+            string new_PRODDATE = "";
+            string new_DUEDATE = "";
+            string new_EXPIRY_DATE = "";
+            string new_X_COMPLETION_DATE = "";
+            string[] tmpArr;
+
+            if (lines.workOrder_HDR.TRANSDATE != null) {
+                tmpArr = lines.workOrder_HDR.TRANSDATE.ToString().Split(' ');
+                new_TRANSDATE = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
+            }
+            if (lines.workOrder_HDR.PRODDATE != null)
+            {
+                tmpArr = lines.workOrder_HDR.TRANSDATE.ToString().Split(' ');
+                new_PRODDATE = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
+            }
+            if (lines.workOrder_HDR.DUEDATE != null)
+            {
+                tmpArr = lines.workOrder_HDR.TRANSDATE.ToString().Split(' ');
+                new_DUEDATE = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
+            }
+            if (lines.workOrder_HDR.EXPIRY_DATE != null)
+            {
+                tmpArr = lines.workOrder_HDR.TRANSDATE.ToString().Split(' ');
+                new_EXPIRY_DATE = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
+            }
+            if (lines.workOrder_HDR.X_COMPLETION_DATE != null)
+            {
+                tmpArr = lines.workOrder_HDR.TRANSDATE.ToString().Split(' ');
+                new_X_COMPLETION_DATE = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
+            }
+
+
+
+            var sql_7 = "update GRAM_SYD_LIVE.dbo.WORKSORD_HDR set " +
+                " BILLCODE = " + ((lines.workOrder_HDR.BILLCODE == null)? "null" : "'" + lines.workOrder_HDR.BILLCODE + "'") + ", " +
+                //" PRODCODE = " + ((lines.workOrder_HDR.PRODCODE == null)? "null" : "'" + lines.workOrder_HDR.PRODCODE + "'") + ", " +
+                //" BATCHCODE = " + ((lines.workOrder_HDR.BATCHCODE == null)? "null" : "'" + lines.workOrder_HDR.BATCHCODE + "'") + ", " +
+                " TRANSDATE = " + ((lines.workOrder_HDR.TRANSDATE == null)? "null" : "'" + new_TRANSDATE + "'") + ", " +
+                " PRODDATE = " + ((lines.workOrder_HDR.PRODDATE == null)? "null" : "'" + new_PRODDATE + "'") + ", " +
+                " DUEDATE = " + ((lines.workOrder_HDR.DUEDATE == null)? "null" : "'" + new_DUEDATE + "'") + ", " +
+                " ORDSTATUS = " + ((lines.workOrder_HDR.ORDSTATUS == null)? "null" : lines.workOrder_HDR.ORDSTATUS.ToString()) + ", " +
+                " SALESORDNO = " + ((lines.workOrder_HDR.SALESORDNO == null)? "null" : lines.workOrder_HDR.SALESORDNO.ToString()) + ", " +
+                " NOTES = " + ((lines.workOrder_HDR.NOTES == null)? "null" : "'" + lines.workOrder_HDR.NOTES + "'") + ", " +
+                " PRODQTY = " + ((lines.workOrder_HDR.PRODQTY == null)? "null" : lines.workOrder_HDR.PRODQTY.ToString()) + ", " +
+                " ACTUALQTY = " + ((lines.workOrder_HDR.ACTUALQTY == null)? "null" : lines.workOrder_HDR.ACTUALQTY.ToString()) + ", " +
+                //" PRODLOCNO = " + ((lines.workOrder_HDR.PRODLOCNO == null)? "null" : lines.workOrder_HDR.PRODLOCNO.ToString()) + ", " +
+                " REFERENCE = " + ((lines.workOrder_HDR.REFERENCE == null)? "null" : "'" + lines.workOrder_HDR.REFERENCE + "'") + ", " +
+                " STAFFNO = " + ((lines.workOrder_HDR.STAFFNO == null)? "null" : lines.workOrder_HDR.STAFFNO.ToString()) + ", " +
+                //" COMPONENTLOCNO = " + ((lines.workOrder_HDR.COMPONENTLOCNO == null)? "null" : lines.workOrder_HDR.COMPONENTLOCNO.ToString()) + ", " +
+                " EXPIRY_DATE = " + ((lines.workOrder_HDR.EXPIRY_DATE == null)? "null" : "'" + new_EXPIRY_DATE + "'") + ", " +
+                " X_BR_ORDER = " + ((lines.workOrder_HDR.X_BR_ORDER == null)? "null" : lines.workOrder_HDR.X_BR_ORDER.ToString()) + ", " +
+                " X_BR_ACCNO = " + ((lines.workOrder_HDR.X_BR_ACCNO == null)? "null" : "'" + lines.workOrder_HDR.X_BR_ACCNO + "'") + ", " +
+                " X_BR_INVNO = " + ((lines.workOrder_HDR.X_BR_INVNO == null)? "null" : "'" + lines.workOrder_HDR.X_BR_INVNO + "'") + ", " +
+                //" X_BR = " + ((lines.workOrder_HDR.X_BR == null)? "null" : "'" + lines.workOrder_HDR.X_BR  + "'") + ", " +
+                " X_CATEGORY = " + ((lines.workOrder_HDR.X_CATEGORY == null)? "null" : "'" + lines.workOrder_HDR.X_CATEGORY + "'") + ", " +
+                " X_COMPLETION_DATE = " + ((lines.workOrder_HDR.X_COMPLETION_DATE == null)? "null" : "'" + new_X_COMPLETION_DATE + "'") + " " +
+                "where SEQNO = " + lines.workOrder_HDR.SEQNO;
 
             WorkOrder_HDRs headerDetails = new WorkOrder_HDRs();
 
@@ -88,34 +118,32 @@ namespace Scanner.Controllers
             {
                 using (var context = new DbContext(Global.ConnStr))
                 {
-                    if (lines.updateFlag == "update")
+                    if (lines.updateFlag == "update") 
                     {
-                        sql = "select * from dbo.WORKSORD_HDR where SEQNO = '" + lines.workOrder_HDR.SEQNO + "'";
-                        sql_2 = "select * from dbo.WORKSORD_LINES where HDR_SEQNO = '" + lines.workOrder_HDR.SEQNO + "'";
+                        sql = "select * from GRAM_SYD_LIVE.dbo.WORKSORD_HDR where SEQNO = '" + lines.workOrder_HDR.SEQNO + "'";
+                        sql_2 = "select * from GRAM_SYD_LIVE.dbo.WORKSORD_LINES where HDR_SEQNO = '" + lines.workOrder_HDR.SEQNO + "'";
 
-                        context.Database.ExecuteSqlCommand(sql_3);
-                        context.Database.ExecuteSqlCommand(sql_4);
                         if (lines.workOrder_Lines != null)
                         {
                             for (int i = 0; i < lines.workOrder_Lines.Count; i++)
                             {
-                                var sql_5 = "insert into dbo.WORKSORD_LINES (SEQNO, HDR_SEQNO, STOCKCODE, DESCRIPTION, QTYREQD, QTYUSED, BATCHCODE, X_LENGTH, X_COLOR, X_SOLINE, X_NARRATIVE, X_LINESTATUS) values('" +
-                                    lines.workOrder_Lines[i].SEQNO + "', '" +
-                                    lines.workOrder_Lines[i].HDR_SEQNO + "', '" +
-                                    lines.workOrder_Lines[i].STOCKCODE + "', '" +
-                                    lines.workOrder_Lines[i].DESCRIPTION + "', '" +
-                                    lines.workOrder_Lines[i].QTYREQD + "', '" +
-                                    lines.workOrder_Lines[i].QTYUSED + "', '" +
-                                    lines.workOrder_Lines[i].BATCHCODE + "', '" +
-                                    lines.workOrder_Lines[i].X_LENGTH + "', '" +
-                                    lines.workOrder_Lines[i].X_SOLINE + "', '" +
-                                    lines.workOrder_Lines[i].X_NARRATIVE + "', '" +
-                                    lines.workOrder_Lines[i].X_LINESTATUS + "', '" +
-                                    lines.workOrder_Lines[i].X_COLOR + "')";
-                                context.Database.ExecuteSqlCommand(sql_5);
+                                var sql_8 = "update GRAM_SYD_LIVE.dbo.WORKSORD_LINES set " +
+                                    //"HDR_SEQNO = " + ((lines.workOrder_Lines[i].HDR_SEQNO == null) ? "null" : lines.workOrder_Lines[i].HDR_SEQNO.ToString()) + ", " +
+                                    //"STOCKCODE = " + ((lines.workOrder_Lines[i].STOCKCODE == null) ? "null" : "'" + lines.workOrder_Lines[i].STOCKCODE.ToString() + "'") + ", " +
+                                    "DESCRIPTION = " + ((lines.workOrder_Lines[i].DESCRIPTION == null) ? "null" : "'" + lines.workOrder_Lines[i].DESCRIPTION + "'") + ", " +
+                                    "QTYREQD = " + ((lines.workOrder_Lines[i].QTYREQD == null) ? "null" : lines.workOrder_Lines[i].QTYREQD.ToString()) + ", " +
+                                    //"QTYUSED = " + ((lines.workOrder_Lines[i].QTYUSED == null) ? "null" : lines.workOrder_Lines[i].QTYUSED.ToString()) + ", " +
+                                    //"BATCHCODE = " + ((lines.workOrder_Lines[i].BATCHCODE == null) ? "null" : "'" + lines.workOrder_Lines[i].BATCHCODE + "'") + ", " +
+                                    "X_LENGTH = " + ((lines.workOrder_Lines[i].X_LENGTH == null) ? "null" : "'" + lines.workOrder_Lines[i].X_LENGTH + "'") + ", " +
+                                    //"X_SOLINE = " + ((lines.workOrder_Lines[i].X_SOLINE == null) ? "null" : lines.workOrder_Lines[i].X_SOLINE.ToString()) + ", " +
+                                    "X_NARRATIVE = " + ((lines.workOrder_Lines[i].X_NARRATIVE == null) ? "null" : lines.workOrder_Lines[i].X_NARRATIVE.ToString()) + ", " +
+                                    //"X_LINESTATUS = " + ((lines.workOrder_Lines[i].X_LINESTATUS == null) ? "null" : lines.workOrder_Lines[i].X_LINESTATUS.ToString()) + ", " +
+                                    "X_COLOR = " + ((lines.workOrder_Lines[i].X_COLOR == null) ? "null" : "'" + lines.workOrder_Lines[i].X_COLOR.ToString() + "'") + " " +
+                                    "where SEQNO = " + lines.workOrder_Lines[i].SEQNO;
+                                context.Database.ExecuteSqlCommand(sql_8);
                             }
                         }
-                        context.Database.ExecuteSqlCommand(sql_6);
+                        context.Database.ExecuteSqlCommand(sql_7);
                     }
                     lines.workOrder_Lines = context.Database.SqlQuery<WorkOrder_Line>(sql_2).ToList<WorkOrder_Line>();
                     headerDetails.workOrder_HDRs = context.Database.SqlQuery<WorkOrder_HDR>(sql).ToList<WorkOrder_HDR>();
@@ -149,7 +177,6 @@ namespace Scanner.Controllers
             lines.workOrder_HDR.X_BR = headerDetails.workOrder_HDRs[0].X_BR;
             lines.workOrder_HDR.X_CATEGORY = headerDetails.workOrder_HDRs[0].X_CATEGORY;
             lines.workOrder_HDR.X_COMPLETION_DATE = headerDetails.workOrder_HDRs[0].X_COMPLETION_DATE;
-
             return View(lines);
         }
 
@@ -220,10 +247,12 @@ namespace Scanner.Controllers
                 new SqlParameter("@orderBy", "asc");
 
 
-            var table = new SqlParameter("@table", "dbo.WORKSORD_HDR");
+            var table = new SqlParameter("@table", "GRAM_SYD_LIVE.dbo.WORKSORD_HDR");
             var selStr = new SqlParameter("@selStr", "");
 
-            var sql = "exec dbo.proc_GetWorkOrders " +
+
+           // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
+            var sql = "exec GramOnline.dbo.proc_GetWorkOrders " +
                 "@Role," +
                 "@UserName, " +
                 "@pageNum, " +
@@ -263,7 +292,7 @@ namespace Scanner.Controllers
                        statusSort).ToList<WorkOrder_HDR>();
                     if (orders.CategoryList == null)
                     {
-                        var sql_category = "exec dbo.proc_GetWorkOrderCatrgoryList";
+                        var sql_category = "exec GramOnline.dbo.proc_GetWorkOrderCatrgoryList";
                         orders.CategoryList = context.Database.SqlQuery<string>(sql_category).ToList<string>();
                     }
                 }
@@ -378,7 +407,7 @@ namespace Scanner.Controllers
                         CoilModel modelDetail = new CoilModel();
                         modelDetail.ID = coilIDs[i];
                         modelDetail.Save = model.CoilDetails[0].Save;
-                        SqlCommand newCmd = new SqlCommand(("select * from X_COIL_MASTER where COILID = '" + coilIDs[i] + "'"), newCon);
+                        SqlCommand newCmd = new SqlCommand(("select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coilIDs[i] + "'"), newCon);
                         newCon.Open();
                         SqlDataReader rdr = newCmd.ExecuteReader();
                         if (rdr.HasRows) // If the sql command doesn't return any record, display a message
