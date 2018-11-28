@@ -393,9 +393,9 @@ namespace Scanner.Controllers
                 {
                     if (model.CoilDetails[0].Flag == "UPLOAD")
                     {
-                        //SqlCommand newCmd2 = new SqlCommand(("IF NOT EXISTS (SELECT * FROM X_COIL_TEST WHERE COILID = '" + coilIDs[i] + "') BEGIN INSERT INTO X_COIL_TEST SELECT * FROM X_COIL_MASTER WHERE COILID = ('" + coilIDs[i] + "') END"), newCon);
                         var date = DateTime.Now;
-                        SqlCommand newCmd2 = new SqlCommand(("IF NOT EXISTS (SELECT * FROM X_COIL_TEST WHERE COILID = '" + coilIDs[i] + "') BEGIN INSERT INTO X_COIL_TEST (COILID, DATE_INSERT) VALUES ('" + coilIDs[i] + "', GETDATE()) END"), newCon);
+                        var UserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+                        SqlCommand newCmd2 = new SqlCommand(("IF NOT EXISTS (SELECT * FROM GramOnline.dbo.X_COIL_TEST WHERE COILID = '" + coilIDs[i] + "') BEGIN INSERT INTO GramOnline.dbo.X_COIL_TEST (COILID, DATE_INSERT, UserName) VALUES ('" + coilIDs[i] + "', GETDATE(), '" + UserName + "') END"), newCon);
                         newCon.Open();
                         SqlDataReader rdr2 = newCmd2.ExecuteReader();
 
