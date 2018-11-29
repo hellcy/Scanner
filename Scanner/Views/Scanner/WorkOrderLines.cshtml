@@ -2,6 +2,9 @@
 @{
     ViewBag.Title = "Work Order Lines";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+
+
 }
 
 <table class="bodyTable">
@@ -21,7 +24,7 @@
                     </tr>
                     <tr>
                         <td style="font-weight:bold;">BillCode</td>
-                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.BILLCODE, new { @id = "BillCode", style = "background-color:#e2e2e2;" })</td>
+                        <td>@Html.TextBoxFor(model => model.workOrder_HDR.BILLCODE, new { @id = "BillCode", style = "background-color:#e2e2e2;" })  <input type="button" name="btnPRINTBILLCODE" id="btnPRINTBILLCODE" class="btn btn-primary btn-group-lg" style="height:30px;width:145px;font-size:14px;font-weight:bold;" onclick="PrintBillCode('@Model.workOrder_HDR.BILLCODE')" Value="PRINT BILLCODE" /></td>
                         <td>@Html.TextBoxFor(model => model.workOrder_HDR.PRODCODE, new { @id = "ProdCode", style = "background-color:#e2e2e2;", type = "hidden" })</td>
                         <td>@Html.TextBoxFor(model => model.workOrder_HDR.BATCHCODE, new { @id = "BatchCode", style = "background-color:#e2e2e2;", type = "hidden" })</td>
                     </tr>
@@ -110,33 +113,33 @@
                 <div class="inner_table" style="width:1520px; height:300px;">
                     @if (Model.errMsg == "")
                     {
-                    <table>
-                        @for (int i = 0; i < Model.workOrder_Lines.Count; i++)
-                        {
-                        <tr>
-                            <td style="width:50px;">
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].SEQNO, new { @id = "SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;" })
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].HDR_SEQNO, new { @id = "HDR_SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;", type = "hidden" })
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].STOCKCODE, new { @id = "STOCKCODE_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
-                            </td>
-                            <td style="width:350px;">@Html.TextAreaFor(model => model.workOrder_Lines[i].DESCRIPTION, new { @id = "DESCRIPTION_" + i, style = "background-color:#e2e2e2;", @class = "required", @rows = 3 })</td>
-                            <td style="width:50px;">
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].QTYREQD, new { @id = "QTYREQD_" + i, style = "background-color:#e2e2e2;" })
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].QTYUSED, new { @id = "QTYUSED_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].BATCHCODE, new { @id = "BATCHCODE_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
-                            </td>
-                            <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].X_LENGTH, new { @id = "X_LENGTH_" + i, style = "background-color:#e2e2e2;" })</td>
-                            <td style="width:150px;">
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].X_COLOR, new { @id = "X_COLOR_" + i, style = "background-color:#e2e2e2;" })
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].X_SOLINE, new { @id = "X_SOLINE_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
-                            </td>
-                            <td style="width:100px;">
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].X_NARRATIVE, new { @id = "X_NARRATIVE_" + i, style = "background-color:#e2e2e2;" })
-                                @Html.TextBoxFor(model => model.workOrder_Lines[i].X_LINESTATUS, new { @id = "X_LINESTATUS_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
-                            </td>
-                        </tr>
-                        }
-                    </table>
+                        <table>
+                            @for (int i = 0; i < Model.workOrder_Lines.Count; i++)
+                            {
+                                <tr>
+                                    <td style="width:50px;">
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].SEQNO, new { @id = "SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;" })
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].HDR_SEQNO, new { @id = "HDR_SeqNo_" + i, @readonly = true, style = "background-color:#e2e2e2;", type = "hidden" })
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].STOCKCODE, new { @id = "STOCKCODE_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
+                                    </td>
+                                    <td style="width:350px;">@Html.TextAreaFor(model => model.workOrder_Lines[i].DESCRIPTION, new { @id = "DESCRIPTION_" + i, style = "background-color:#e2e2e2;", @class = "required", @rows = 3 })</td>
+                                    <td style="width:50px;">
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].QTYREQD, new { @id = "QTYREQD_" + i, style = "background-color:#e2e2e2;" })
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].QTYUSED, new { @id = "QTYUSED_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].BATCHCODE, new { @id = "BATCHCODE_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
+                                    </td>
+                                    <td style="width:50px;">@Html.TextBoxFor(model => model.workOrder_Lines[i].X_LENGTH, new { @id = "X_LENGTH_" + i, style = "background-color:#e2e2e2;" })</td>
+                                    <td style="width:150px;">
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].X_COLOR, new { @id = "X_COLOR_" + i, style = "background-color:#e2e2e2;" })
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].X_SOLINE, new { @id = "X_SOLINE_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
+                                    </td>
+                                    <td style="width:100px;">
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].X_NARRATIVE, new { @id = "X_NARRATIVE_" + i, style = "background-color:#e2e2e2;" })
+                                        @Html.TextBoxFor(model => model.workOrder_Lines[i].X_LINESTATUS, new { @id = "X_LINESTATUS_" + i, style = "background-color:#e2e2e2;", type = "hidden" })
+                                    </td>
+                                </tr>
+                            }
+                        </table>
                     }
                 </div>
             </div>
@@ -155,4 +158,25 @@
         $("#updateFlag").val("update");
         $("#frmMain").submit();
     }
+
+    var billcode = "";
+    function PrintBillCode(billcode)
+    {
+        var mywindow = window.open('', 'PRINT', 'height=400,width=700');
+           mywindow.document.write('<html><head><title>ORDER PRINT PREVIEW (Print By:@loginUserName)</title>');
+           mywindow.document.write('</head><body>');
+
+           mywindow.document.write('<div>BillCode @Model.workOrder_HDR.BILLCODE of Work Order @Model.workOrder_HDR.SEQNO</div>');
+           mywindow.document.write('@Html.Raw(ViewBag.Barcode)');
+
+
+           mywindow.document.write('</body></html>');
+           mywindow.document.close();
+           mywindow.focus();
+           mywindow.print();
+           mywindow.close();
+    }
+
+
+
 </script>

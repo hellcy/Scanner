@@ -10,6 +10,9 @@ using System.Text;
 using System.Data.Entity;
 using static Scanner.FilterConfig;
 using System.Data;
+using Zen.Barcode;
+using System.Drawing;
+using System.IO;
 
 namespace Scanner.Controllers
 {
@@ -47,6 +50,13 @@ namespace Scanner.Controllers
         {
             ViewBag.Title = "Work Order Lines";
             Session["CurrForm"] = "WorkOrderLines";
+
+               // < img src = "@Url.Barcode("123456", BarcodeSymbology.Code128, 30, 1, true)" />
+
+            //BarcodeSymbology.Code39C
+            //barcode.Symbology = KeepAutomation.Barcode.Symbology.Code39;
+            //barcode.CodeToEncode = "'" + lines.workOrder_HDR.BILLCODE + "'";
+            //barcode.generateBarcodeToImageFile("C:/Scanner/code39.png");
 
             string SeqNo = Request.QueryString["ID"];
 
@@ -87,7 +97,7 @@ namespace Scanner.Controllers
 
 
 
-            var sql_7 = "update GRAM_SYD_LIVE.dbo.WORKSORD_HDR set " +
+            var sql_3 = "update GRAM_SYD_LIVE.dbo.WORKSORD_HDR set " +
                 " BILLCODE = " + ((lines.workOrder_HDR.BILLCODE == null)? "null" : "'" + lines.workOrder_HDR.BILLCODE + "'") + ", " +
                 //" PRODCODE = " + ((lines.workOrder_HDR.PRODCODE == null)? "null" : "'" + lines.workOrder_HDR.PRODCODE + "'") + ", " +
                 //" BATCHCODE = " + ((lines.workOrder_HDR.BATCHCODE == null)? "null" : "'" + lines.workOrder_HDR.BATCHCODE + "'") + ", " +
@@ -127,7 +137,7 @@ namespace Scanner.Controllers
                         {
                             for (int i = 0; i < lines.workOrder_Lines.Count; i++)
                             {
-                                var sql_8 = "update GRAM_SYD_LIVE.dbo.WORKSORD_LINES set " +
+                                var sql_4 = "update GRAM_SYD_LIVE.dbo.WORKSORD_LINES set " +
                                     //"HDR_SEQNO = " + ((lines.workOrder_Lines[i].HDR_SEQNO == null) ? "null" : lines.workOrder_Lines[i].HDR_SEQNO.ToString()) + ", " +
                                     //"STOCKCODE = " + ((lines.workOrder_Lines[i].STOCKCODE == null) ? "null" : "'" + lines.workOrder_Lines[i].STOCKCODE.ToString() + "'") + ", " +
                                     "DESCRIPTION = " + ((lines.workOrder_Lines[i].DESCRIPTION == null) ? "null" : "'" + lines.workOrder_Lines[i].DESCRIPTION + "'") + ", " +
@@ -140,10 +150,10 @@ namespace Scanner.Controllers
                                     //"X_LINESTATUS = " + ((lines.workOrder_Lines[i].X_LINESTATUS == null) ? "null" : lines.workOrder_Lines[i].X_LINESTATUS.ToString()) + ", " +
                                     "X_COLOR = " + ((lines.workOrder_Lines[i].X_COLOR == null) ? "null" : "'" + lines.workOrder_Lines[i].X_COLOR.ToString() + "'") + " " +
                                     "where SEQNO = " + lines.workOrder_Lines[i].SEQNO;
-                                context.Database.ExecuteSqlCommand(sql_8);
+                                context.Database.ExecuteSqlCommand(sql_4);
                             }
                         }
-                        context.Database.ExecuteSqlCommand(sql_7);
+                        context.Database.ExecuteSqlCommand(sql_3);
                     }
                     lines.workOrder_Lines = context.Database.SqlQuery<WorkOrder_Line>(sql_2).ToList<WorkOrder_Line>();
                     headerDetails.workOrder_HDRs = context.Database.SqlQuery<WorkOrder_HDR>(sql).ToList<WorkOrder_HDR>();
@@ -177,7 +187,29 @@ namespace Scanner.Controllers
             lines.workOrder_HDR.X_BR = headerDetails.workOrder_HDRs[0].X_BR;
             lines.workOrder_HDR.X_CATEGORY = headerDetails.workOrder_HDRs[0].X_CATEGORY;
             lines.workOrder_HDR.X_COMPLETION_DATE = headerDetails.workOrder_HDRs[0].X_COMPLETION_DATE;
+
+
+            Code39BarcodeDraw barcode39 = BarcodeDrawFactory.Code39WithoutChecksum;
+
+            Image img = null;
+
+            if (lines.workOrder_HDR.BILLCODE != null)
+            {
+                img = barcode39.Draw(lines.workOrder_HDR.BILLCODE, 50);
+            }
+
+            byte[] imgBytes = turnImageToByteArray(img);
+            string imgString = Convert.ToBase64String(imgBytes);
+            ViewBag.Barcode = String.Format("<img src=\"data:image/png;base64,{0}\"/>", imgString);
+           
             return View(lines);
+        }
+
+        private byte[] turnImageToByteArray(System.Drawing.Image img)
+        {
+            MemoryStream ms = new MemoryStream();
+            img.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            return ms.ToArray();
         }
 
         [SessionExpire]

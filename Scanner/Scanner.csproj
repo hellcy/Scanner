@@ -55,6 +55,10 @@
     <Reference Include="itextsharp">
       <HintPath>..\packages\itextsharp.dll</HintPath>
     </Reference>
+    <Reference Include="KeepAutomation.Barcode.Web, Version=6.1.8.521, Culture=neutral, PublicKeyToken=7bccd45cd3040107, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\KeepAutomation.Barcode.Web.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -130,6 +134,9 @@
     <Reference Include="Antlr3.Runtime">
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Zen.Barcode.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b5ae55aa76d2d9de, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zen.Barcode.Rendering.Framework.3.1.10729.1\lib\Zen.Barcode.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
