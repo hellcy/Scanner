@@ -159,24 +159,25 @@
         $("#frmMain").submit();
     }
 
-    var billcode = "";
-    function PrintBillCode(billcode)
+    function PrintBillCode()
     {
-        var mywindow = window.open('', 'PRINT', 'height=400,width=700');
-           mywindow.document.write('<html><head><title>ORDER PRINT PREVIEW (Print By:@loginUserName)</title>');
-           mywindow.document.write('</head><body>');
+        var mywindow = window.open('', 'PRINT', 'height=200,width=700');
+        mywindow.document.write('<html><head><title>BILLCODE PRINT PREVIEW (Print By:@loginUserName)</title>');
+        mywindow.document.write('</head><body>');
+        mywindow.document.write('<table>');
 
-           mywindow.document.write('<div>BillCode @Model.workOrder_HDR.BILLCODE of Work Order @Model.workOrder_HDR.SEQNO</div>');
-           mywindow.document.write('@Html.Raw(ViewBag.Barcode)');
+        mywindow.document.write('<td>@Html.Raw(ViewBag.QRcode)</td>');
+        mywindow.document.write('<td style="font-size:200%;">BillCode: @Model.workOrder_HDR.BILLCODE <br>Work Order: @Model.workOrder_HDR.SEQNO</td>');
+           
+        //mywindow.document.write('<td>@Html.Raw(ViewBag.QRCodeExample)</td>');
+        //mywindow.document.write('<td style="font-size:200%;">73M117A00+PL+SGR+4730+0.8+1025<br>73M117A00+PL+SGR+4730+0.8+1025<br>73M117A00+PL+SGR+4730+0.8+1025<br></td>');
 
+        mywindow.document.write('</table>');
 
-           mywindow.document.write('</body></html>');
-           mywindow.document.close();
-           mywindow.focus();
-           mywindow.print();
-           mywindow.close();
+        mywindow.document.write('</body></html>');
+        mywindow.document.close();
+        mywindow.focus();
+        mywindow.print();
+        mywindow.close();
     }
-
-
-
 </script>

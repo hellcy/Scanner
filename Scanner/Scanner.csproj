@@ -229,6 +229,7 @@
     <Compile Include="Models\ACCGroup.cs" />
     <Compile Include="Models\BranchLoc.cs" />
     <Compile Include="Models\Bridge.cs" />
+    <Compile Include="Models\CoilSlit.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Despatch.cs" />
     <Compile Include="Models\Fence.cs" />
@@ -253,11 +254,10 @@
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\Quote1.cs" />
     <Compile Include="Models\RetuenOrder.cs" />
-    <Compile Include="Models\Scanner.cs" />
+    <Compile Include="Models\CoilMaster.cs" />
     <Compile Include="Models\SideMenu.cs" />
     <Compile Include="Models\SideMenuItem.cs" />
     <Compile Include="Models\StockDescription.cs" />
-    <Compile Include="Models\Test.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Models\WorkOrder_HDR.cs" />
@@ -403,8 +403,8 @@
     <Content Include="Views\Home\Menu.cshtml" />
     <Content Include="Views\Scanner\Coil.cshtml" />
     <Content Include="Views\Scanner\WorkOrderHeaders.cshtml" />
-    <Content Include="Views\Scanner\Product2.cshtml" />
-    <Content Include="Views\Scanner\Product3.cshtml" />
+    <Content Include="Views\Scanner\CoilMaster.cshtml" />
+    <Content Include="Views\Scanner\CoilSlit.cshtml" />
     <Content Include="Views\Order\Option_1.cshtml" />
     <Content Include="Views\Order\Option_2.cshtml" />
     <Content Include="Views\Order\Option_3.cshtml" />

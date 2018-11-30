@@ -19,9 +19,17 @@ namespace Scanner.Controllers
     public class ScannerController : BaseController
     {
 
-        CoilDetail details = new CoilDetail();
+        CoilMasters details = new CoilMasters();
 
-        // change the lengths here for different products!
+        // used at WorkOrderLines to decode System.Drawing image
+        private byte[] turnImageToByteArray(System.Drawing.Image img)
+        {
+            MemoryStream ms = new MemoryStream();
+            img.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            return ms.ToArray();
+        }
+
+        // used at Coil, change the lengths here for different products!
         public const int CoilQRcodeLength = 33;
         public const int CoilIDLength = 9;
 
@@ -189,27 +197,29 @@ namespace Scanner.Controllers
             lines.workOrder_HDR.X_COMPLETION_DATE = headerDetails.workOrder_HDRs[0].X_COMPLETION_DATE;
 
 
-            Code39BarcodeDraw barcode39 = BarcodeDrawFactory.Code39WithoutChecksum;
+            CodeQrBarcodeDraw QRcode = BarcodeDrawFactory.CodeQr; // to generate QR code
+            //Code39BarcodeDraw barcode39 = BarcodeDrawFactory.Code39WithoutChecksum; // to generate barcode
 
             Image img = null;
 
             if (lines.workOrder_HDR.BILLCODE != null)
             {
-                img = barcode39.Draw(lines.workOrder_HDR.BILLCODE, 50);
+                img = QRcode.Draw(lines.workOrder_HDR.BILLCODE,50);
             }
 
+            // QR code size: 150px for about 4cm
+            // QR code maximum length: 120 characters
             byte[] imgBytes = turnImageToByteArray(img);
             string imgString = Convert.ToBase64String(imgBytes);
-            ViewBag.Barcode = String.Format("<img src=\"data:image/png;base64,{0}\"/>", imgString);
-           
-            return View(lines);
-        }
+            ViewBag.QRcode = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
 
-        private byte[] turnImageToByteArray(System.Drawing.Image img)
-        {
-            MemoryStream ms = new MemoryStream();
-            img.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-            return ms.ToArray();
+            //Example for test purpose
+            //img = QRcode.Draw("73M117A00+PL+SGR+4730+0.8+1025aaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbccccccccccccccccccccddddddddddddddddddddeeeeeeeeee", 50);
+            //imgBytes = turnImageToByteArray(img);
+            //string StringExample = Convert.ToBase64String(imgBytes);
+            //ViewBag.QRCodeExample = String.Format("<img src=\"data:image/bmp;base64,{0}\", height=\"150px; \"/>", StringExample);
+
+            return View(lines);
         }
 
         [SessionExpire]
@@ -354,32 +364,16 @@ namespace Scanner.Controllers
 
         [SessionExpire]
         [Authorize]
-        public ActionResult Product2()
-        {
-            CoilDetail details = new CoilDetail();
-            return View(details);
-        }
-
-        [SessionExpire]
-        [Authorize]
-        public ActionResult Product3()
-        {
-            CoilDetail details = new CoilDetail();
-            return View(details);
-        }
-
-        [SessionExpire]
-        [Authorize]
         public ActionResult Coil()
         {
-            CoilDetail details = new CoilDetail();
+            CoilMasters details = new CoilMasters();
             return View(details);
         }
 
         [SessionExpire]
         [HttpPost]
         [Authorize]
-        public ActionResult Coil(CoilDetail model)
+        public ActionResult Coil(CoilMasters model)
         {
             string ConnStr = ConfigurationManager.ConnectionStrings["GramLineConn"].ToString();
 
@@ -390,10 +384,6 @@ namespace Scanner.Controllers
                 return View(model);
             }
 
-            if (model.CoilDetails.Count > 1)
-            {
-                var test = model.CoilDetails[1].Gauge;
-            }
             if (model.CoilDetails[0].Flag == "UPLOAD")
                 input = model.CoilDetails[0].SaveTable;
             else
@@ -406,7 +396,7 @@ namespace Scanner.Controllers
 
             List<string> coilIDs = new List<string>();
 
-            int splitAt = CoilQRcodeLength; // change 9 with the size of strings you want.
+            int splitAt = CoilQRcodeLength;
             int coilIDCount = 0;
             for (int i = 0; i < input.Length; i = i + splitAt)
             {
@@ -436,8 +426,8 @@ namespace Scanner.Controllers
                     }
                     else
                     {
-                        CoilModel modelDetail = new CoilModel();
-                        modelDetail.ID = coilIDs[i];
+                        CoilMaster modelDetail = new CoilMaster();
+                        modelDetail.COILID = coilIDs[i];
                         modelDetail.Save = model.CoilDetails[0].Save;
                         SqlCommand newCmd = new SqlCommand(("select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coilIDs[i] + "'"), newCon);
                         newCon.Open();
@@ -446,33 +436,33 @@ namespace Scanner.Controllers
                         {
                             rdr.Read();
                             if (!rdr.IsDBNull(0))
-                                modelDetail.ID = rdr.GetString(0);
+                                modelDetail.COILID = rdr.GetString(0);
                             if (!rdr.IsDBNull(1))
-                                modelDetail.Type = rdr.GetString(1);
+                                modelDetail.TYPE = rdr.GetString(1);
                             if (!rdr.IsDBNull(2))
-                                modelDetail.Color = rdr.GetString(2);
+                                modelDetail.COLOR = rdr.GetString(2);
                             if (!rdr.IsDBNull(3))
-                                modelDetail.Weight = rdr.GetDouble(3);
+                                modelDetail.WEIGHT = rdr.GetDouble(3);
                             if (!rdr.IsDBNull(4))
-                                modelDetail.Gauge = rdr.GetDouble(4);
+                                modelDetail.GAUGE = rdr.GetDouble(4);
                             if (!rdr.IsDBNull(5))
-                                modelDetail.Width = rdr.GetDouble(5);
+                                modelDetail.WIDTH = rdr.GetDouble(5);
                             if (!rdr.IsDBNull(6))
-                                modelDetail.Order = rdr.GetInt32(6);
+                                modelDetail.ORDER = rdr.GetInt32(6);
                             if (!rdr.IsDBNull(7))
-                                modelDetail.P_order = rdr.GetString(7);
+                                modelDetail.P_ORDER = rdr.GetString(7);
                             if (!rdr.IsDBNull(8))
-                                modelDetail.Month_recd = rdr.GetString(8);
+                                modelDetail.MONTH_RECD = rdr.GetString(8);
                             if (!rdr.IsDBNull(9))
-                                modelDetail.Date_inwh = rdr.GetDateTime(9);
+                                modelDetail.DATE_INWH = rdr.GetDateTime(9);
                             if (!rdr.IsDBNull(10))
-                                modelDetail.Date_transfer = rdr.GetDateTime(10);
+                                modelDetail.DATE_TRANSFER = rdr.GetDateTime(10);
                             if (!rdr.IsDBNull(11))
-                                modelDetail.Last_stocktake_date = rdr.GetDateTime(11);
+                                modelDetail.LAST_STOCKTAKE_DATE = rdr.GetDateTime(11);
                             if (!rdr.IsDBNull(12))
-                                modelDetail.Status = rdr.GetString(12);
+                                modelDetail.STATUS = rdr.GetString(12);
                             if (!rdr.IsDBNull(13))
-                                modelDetail.Clength = rdr.GetInt32(13);
+                                modelDetail.CLENGTH = rdr.GetInt32(13);
                         }
                         else
                         {
@@ -485,6 +475,147 @@ namespace Scanner.Controllers
                 }
             }
             return View(model);
+        }
+
+        [SessionExpire]
+        [Authorize]
+        public ActionResult CoilSlit()
+        {
+            CoilSlit slit = new CoilSlit();
+            return View(slit);
+        }
+
+        [SessionExpire]
+        [HttpPost]
+        [Authorize]
+        public ActionResult CoilSlit(CoilSlit slit)
+        {
+            return View(slit);
+        }
+
+        [SessionExpire]
+        [Authorize]
+        public ActionResult CoilMaster()
+        {
+            CoilMasters master = new CoilMasters();
+            return View(master);
+        }
+
+        [SessionExpire]
+        [HttpPost]
+        [Authorize]
+        public ActionResult CoilMaster(CoilMasters master)
+        {
+            ViewBag.Title = "Coil Master Table";
+            Session["CurrForm"] = "CoilMaster";
+
+            //var sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER";
+
+            if (string.IsNullOrEmpty(master.sortCol))
+            {
+                if ((Request.Form["actReq"] != null) && (Request.Form["actReq"].ToString() == "f"))
+                {
+                    var rowsCnt = (Session[Request.Form["frmName"].ToString()] != null) ? ((DataTable)Session[Request.Form["frmName"].ToString()]).Rows.Count : 0;
+                    if ((Request.Form["rows"] != null) && (Request.Form["rows"].ToString() != ""))
+                    {
+                        rowsCnt = Convert.ToInt32(Request.Form["rows"]);
+                    }
+
+                    fillCurrTable(Request.Form["frmName"].ToString(), rowsCnt);
+                }
+
+                master.sortCol = "DefaultSort";
+                master.sortColType = "Number";
+                master.rowsPerPage = 15;
+                master.pageNum = 1;
+                master.orderBy = "glyphicon glyphicon-arrow-up";
+            }
+
+            if (String.IsNullOrEmpty(master.whereStr))
+            {
+                master.whereStr = "";
+            }
+
+            if (master.whereStr.Replace(" ", "") == "")
+            {
+                master.whereStr = "";
+            }
+
+            var Role = new SqlParameter("@Role", ((Scanner.Models.User)Session["User"]).Role);
+            var UserName = new SqlParameter("@UserName", ((Scanner.Models.User)Session["User"]).UserName);
+            var pageNum = new SqlParameter("@pageNum", (master.pageNum == 0) ? 1 : master.pageNum);
+            var rowsPerPage = new SqlParameter("@rowsPerPage", master.rowsPerPage);
+            var sortCol = new SqlParameter("@sortCol", master.sortCol);
+            var sortColType = new SqlParameter("@sortColType", master.sortColType);
+            var whereStr = new SqlParameter("@whereStr", master.whereStr.ToString());
+
+            var orderBy = (master.orderBy == "glyphicon glyphicon-arrow-down") ?
+                new SqlParameter("@orderBy", "desc") :
+                new SqlParameter("@orderBy", "asc");
+
+
+            var table = new SqlParameter("@table", "GRAM_SYD_LIVE.dbo.X_COIL_MASTER");
+            var selStr = new SqlParameter("@selStr", "");
+
+
+            // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
+            var sql = "exec GramOnline.dbo.proc_GetCoilMasters " +
+                "@Role," +
+                "@UserName, " +
+                "@pageNum, " +
+                "@rowsPerPage, " +
+                "@sortCol, " +
+                "@sortColType, " +
+                "@whereStr, " +
+                "@orderBy, " +
+                "@table, " +
+                "@selStr ";
+
+            var oldMsg = "";
+
+            if (master.errMsg == null)
+                master.errMsg = "";
+            else
+                oldMsg = master.errMsg;
+
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    master.CoilDetails = context.Database.SqlQuery<CoilMaster>(sql,
+                       Role,
+                       UserName,
+                       pageNum,
+                       rowsPerPage,
+                       sortCol,
+                       sortColType,
+                       whereStr,
+                       orderBy,
+                       table,
+                       selStr).ToList<CoilMaster>();
+                }
+            }
+            catch (Exception e)
+            {
+                master.totalPages = 0;
+                master.totalRows = 0;
+                master.CoilDetails = null;
+                master.errMsg = "No Record Found";
+            }
+
+            if (master.CoilDetails != null)
+            {
+                if (master.CoilDetails.Count > 0)
+                {
+                    master.totalPages = master.CoilDetails[0].maxPages;
+                    master.totalRows = master.CoilDetails[0].TotalRows;
+                }
+            }
+
+            if (oldMsg != "")
+                master.errMsg = oldMsg;
+
+            return View(master);
         }
     }
 }
