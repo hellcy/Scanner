@@ -1,7 +1,8 @@
 ﻿@model Scanner.Models.CoilSlit
 @{
-    ViewBag.Title = "CoilSlit";
+    ViewBag.Title = "Coil Slit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
 }
 <style type="text/css" id="custom-background-css">
     body.custom-background {
@@ -17,6 +18,81 @@
         </td>
         <td valign="top">
             @Html.Partial("_PageTitlePanel")
+            <div class="col-md-6">
+                <div style="font-size:25px;" class="editor-label">
+                    Coil ID Scanned
+                </div>
+                <div class="editor-field">
+                    @Html.TextAreaFor(model => model.input, new { id = "input", style = "width: 500px; height:250px; border: 2px solid #ccc;" })
+                    <div style="font-size:30px;">Please press Tab button to display data</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+
+            </div>
+            <div>
+                <div style="color:red; font-size:40px">@ViewBag.Error @ViewBag.Upload</div>
+                <div class="TwrapOverFlow" style="margin-right:10px;">
+                    <table class="head" style="font-size:15px; width:1500px;">
+                        <tr>
+                            <th style="width:80px">
+                                <span class="text">ID</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">Type</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">Color</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">Weight</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">Gauge</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">Width</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">Order</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">P_order</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">Month_recd</span>
+                            </th>
+                            <th style="width:180px">
+                                <span class="text">Date_inwh</span>
+                            </th>
+                            <th style="width:180px">
+                                <span class="text">Date_transfer</span>
+                            </th>
+                            <th style="width:180px">
+                                <span class="text">Last_stocktake_date</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">Status</span>
+                            </th>
+                            <th style="width:50px">
+                                <span class="text">Clength</span>
+                            </th>
+                        </tr>
+                    </table>
+                    <div class="inner_table" style="width:1500px; height:300px;">
+                        <table>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <input type="submit" id="clear" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" />
+                <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />&nbsp;&nbsp;
+                <input type="submit" id="uploadButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" />
+            </div>
         </td>
     </tr>
 </table>
+<script type="text/javascript">
+
+</script>

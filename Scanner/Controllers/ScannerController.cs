@@ -51,6 +51,11 @@ namespace Scanner.Controllers
             return View(lines);
         }
 
+        /* 
+        * This Action is to display all the Work Order Lines in a table under a Work Order, and will also display the Work Order Details.
+        * Users can change the value of Lines and Work Order Details, and update the database by clicking the 'Update' button.
+        * This Action can be accessed by click the 'Work Order' link in the top menu and then click any Sequence Number in the Work Order table.
+        */
         [SessionExpire]
         [HttpPost]
         [Authorize]
@@ -58,13 +63,6 @@ namespace Scanner.Controllers
         {
             ViewBag.Title = "Work Order Lines";
             Session["CurrForm"] = "WorkOrderLines";
-
-               // < img src = "@Url.Barcode("123456", BarcodeSymbology.Code128, 30, 1, true)" />
-
-            //BarcodeSymbology.Code39C
-            //barcode.Symbology = KeepAutomation.Barcode.Symbology.Code39;
-            //barcode.CodeToEncode = "'" + lines.workOrder_HDR.BILLCODE + "'";
-            //barcode.generateBarcodeToImageFile("C:/Scanner/code39.png");
 
             string SeqNo = Request.QueryString["ID"];
 
@@ -78,7 +76,8 @@ namespace Scanner.Controllers
             string new_X_COMPLETION_DATE = "";
             string[] tmpArr;
 
-            if (lines.workOrder_HDR.TRANSDATE != null) {
+            if (lines.workOrder_HDR.TRANSDATE != null)
+            {
                 tmpArr = lines.workOrder_HDR.TRANSDATE.ToString().Split(' ');
                 new_TRANSDATE = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
             }
@@ -106,28 +105,28 @@ namespace Scanner.Controllers
 
 
             var sql_3 = "update GRAM_SYD_LIVE.dbo.WORKSORD_HDR set " +
-                " BILLCODE = " + ((lines.workOrder_HDR.BILLCODE == null)? "null" : "'" + lines.workOrder_HDR.BILLCODE + "'") + ", " +
+                " BILLCODE = " + ((lines.workOrder_HDR.BILLCODE == null) ? "null" : "'" + lines.workOrder_HDR.BILLCODE + "'") + ", " +
                 //" PRODCODE = " + ((lines.workOrder_HDR.PRODCODE == null)? "null" : "'" + lines.workOrder_HDR.PRODCODE + "'") + ", " +
                 //" BATCHCODE = " + ((lines.workOrder_HDR.BATCHCODE == null)? "null" : "'" + lines.workOrder_HDR.BATCHCODE + "'") + ", " +
-                " TRANSDATE = " + ((lines.workOrder_HDR.TRANSDATE == null)? "null" : "'" + new_TRANSDATE + "'") + ", " +
-                " PRODDATE = " + ((lines.workOrder_HDR.PRODDATE == null)? "null" : "'" + new_PRODDATE + "'") + ", " +
-                " DUEDATE = " + ((lines.workOrder_HDR.DUEDATE == null)? "null" : "'" + new_DUEDATE + "'") + ", " +
-                " ORDSTATUS = " + ((lines.workOrder_HDR.ORDSTATUS == null)? "null" : lines.workOrder_HDR.ORDSTATUS.ToString()) + ", " +
-                " SALESORDNO = " + ((lines.workOrder_HDR.SALESORDNO == null)? "null" : lines.workOrder_HDR.SALESORDNO.ToString()) + ", " +
-                " NOTES = " + ((lines.workOrder_HDR.NOTES == null)? "null" : "'" + lines.workOrder_HDR.NOTES + "'") + ", " +
-                " PRODQTY = " + ((lines.workOrder_HDR.PRODQTY == null)? "null" : lines.workOrder_HDR.PRODQTY.ToString()) + ", " +
-                " ACTUALQTY = " + ((lines.workOrder_HDR.ACTUALQTY == null)? "null" : lines.workOrder_HDR.ACTUALQTY.ToString()) + ", " +
+                " TRANSDATE = " + ((lines.workOrder_HDR.TRANSDATE == null) ? "null" : "'" + new_TRANSDATE + "'") + ", " +
+                " PRODDATE = " + ((lines.workOrder_HDR.PRODDATE == null) ? "null" : "'" + new_PRODDATE + "'") + ", " +
+                " DUEDATE = " + ((lines.workOrder_HDR.DUEDATE == null) ? "null" : "'" + new_DUEDATE + "'") + ", " +
+                " ORDSTATUS = " + ((lines.workOrder_HDR.ORDSTATUS == null) ? "null" : lines.workOrder_HDR.ORDSTATUS.ToString()) + ", " +
+                " SALESORDNO = " + ((lines.workOrder_HDR.SALESORDNO == null) ? "null" : lines.workOrder_HDR.SALESORDNO.ToString()) + ", " +
+                " NOTES = " + ((lines.workOrder_HDR.NOTES == null) ? "null" : "'" + lines.workOrder_HDR.NOTES + "'") + ", " +
+                " PRODQTY = " + ((lines.workOrder_HDR.PRODQTY == null) ? "null" : lines.workOrder_HDR.PRODQTY.ToString()) + ", " +
+                " ACTUALQTY = " + ((lines.workOrder_HDR.ACTUALQTY == null) ? "null" : lines.workOrder_HDR.ACTUALQTY.ToString()) + ", " +
                 //" PRODLOCNO = " + ((lines.workOrder_HDR.PRODLOCNO == null)? "null" : lines.workOrder_HDR.PRODLOCNO.ToString()) + ", " +
-                " REFERENCE = " + ((lines.workOrder_HDR.REFERENCE == null)? "null" : "'" + lines.workOrder_HDR.REFERENCE + "'") + ", " +
-                " STAFFNO = " + ((lines.workOrder_HDR.STAFFNO == null)? "null" : lines.workOrder_HDR.STAFFNO.ToString()) + ", " +
+                " REFERENCE = " + ((lines.workOrder_HDR.REFERENCE == null) ? "null" : "'" + lines.workOrder_HDR.REFERENCE + "'") + ", " +
+                " STAFFNO = " + ((lines.workOrder_HDR.STAFFNO == null) ? "null" : lines.workOrder_HDR.STAFFNO.ToString()) + ", " +
                 //" COMPONENTLOCNO = " + ((lines.workOrder_HDR.COMPONENTLOCNO == null)? "null" : lines.workOrder_HDR.COMPONENTLOCNO.ToString()) + ", " +
-                " EXPIRY_DATE = " + ((lines.workOrder_HDR.EXPIRY_DATE == null)? "null" : "'" + new_EXPIRY_DATE + "'") + ", " +
-                " X_BR_ORDER = " + ((lines.workOrder_HDR.X_BR_ORDER == null)? "null" : lines.workOrder_HDR.X_BR_ORDER.ToString()) + ", " +
-                " X_BR_ACCNO = " + ((lines.workOrder_HDR.X_BR_ACCNO == null)? "null" : "'" + lines.workOrder_HDR.X_BR_ACCNO + "'") + ", " +
-                " X_BR_INVNO = " + ((lines.workOrder_HDR.X_BR_INVNO == null)? "null" : "'" + lines.workOrder_HDR.X_BR_INVNO + "'") + ", " +
+                " EXPIRY_DATE = " + ((lines.workOrder_HDR.EXPIRY_DATE == null) ? "null" : "'" + new_EXPIRY_DATE + "'") + ", " +
+                " X_BR_ORDER = " + ((lines.workOrder_HDR.X_BR_ORDER == null) ? "null" : lines.workOrder_HDR.X_BR_ORDER.ToString()) + ", " +
+                " X_BR_ACCNO = " + ((lines.workOrder_HDR.X_BR_ACCNO == null) ? "null" : "'" + lines.workOrder_HDR.X_BR_ACCNO + "'") + ", " +
+                " X_BR_INVNO = " + ((lines.workOrder_HDR.X_BR_INVNO == null) ? "null" : "'" + lines.workOrder_HDR.X_BR_INVNO + "'") + ", " +
                 //" X_BR = " + ((lines.workOrder_HDR.X_BR == null)? "null" : "'" + lines.workOrder_HDR.X_BR  + "'") + ", " +
-                " X_CATEGORY = " + ((lines.workOrder_HDR.X_CATEGORY == null)? "null" : "'" + lines.workOrder_HDR.X_CATEGORY + "'") + ", " +
-                " X_COMPLETION_DATE = " + ((lines.workOrder_HDR.X_COMPLETION_DATE == null)? "null" : "'" + new_X_COMPLETION_DATE + "'") + " " +
+                " X_CATEGORY = " + ((lines.workOrder_HDR.X_CATEGORY == null) ? "null" : "'" + lines.workOrder_HDR.X_CATEGORY + "'") + ", " +
+                " X_COMPLETION_DATE = " + ((lines.workOrder_HDR.X_COMPLETION_DATE == null) ? "null" : "'" + new_X_COMPLETION_DATE + "'") + " " +
                 "where SEQNO = " + lines.workOrder_HDR.SEQNO;
 
             WorkOrder_HDRs headerDetails = new WorkOrder_HDRs();
@@ -136,7 +135,7 @@ namespace Scanner.Controllers
             {
                 using (var context = new DbContext(Global.ConnStr))
                 {
-                    if (lines.updateFlag == "update") 
+                    if (lines.updateFlag == "update")
                     {
                         sql = "select * from GRAM_SYD_LIVE.dbo.WORKSORD_HDR where SEQNO = '" + lines.workOrder_HDR.SEQNO + "'";
                         sql_2 = "select * from GRAM_SYD_LIVE.dbo.WORKSORD_LINES where HDR_SEQNO = '" + lines.workOrder_HDR.SEQNO + "'";
@@ -204,7 +203,7 @@ namespace Scanner.Controllers
 
             if (lines.workOrder_HDR.BILLCODE != null)
             {
-                img = QRcode.Draw(lines.workOrder_HDR.BILLCODE,50);
+                img = QRcode.Draw(lines.workOrder_HDR.BILLCODE, 50);
             }
 
             // QR code size: 150px for about 4cm
@@ -231,6 +230,10 @@ namespace Scanner.Controllers
             return View(orders);
         }
 
+        /*
+         * This Action is to display all the Work Order Headers in a table
+         * This Action can be accessed by clicking the 'Work Order' link in the top menu.
+         */
         [SessionExpire]
         [HttpPost]
         [Authorize]
@@ -293,7 +296,7 @@ namespace Scanner.Controllers
             var selStr = new SqlParameter("@selStr", "");
 
 
-           // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
+            // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
             var sql = "exec GramOnline.dbo.proc_GetWorkOrders " +
                 "@Role," +
                 "@UserName, " +
@@ -370,6 +373,12 @@ namespace Scanner.Controllers
             return View(details);
         }
 
+
+        /*
+         * This Action is to allow users to scan the 'Upload Data' QR code and upload Coil ID to the database, it can also display details of a certain 
+         * Coil in a table based on their ID.
+         * This Action can be accessed by clicking the 'Coil' link in the top menu.
+         */ 
         [SessionExpire]
         [HttpPost]
         [Authorize]
@@ -501,6 +510,10 @@ namespace Scanner.Controllers
             return View(master);
         }
 
+        /*
+         * This Action is to display all the coil details in a table. Users can click any 'Coil ID' and see the details of that coil.
+         * This Action can be accessed by clicking the 'Coil Master' link in the top menu.
+         */ 
         [SessionExpire]
         [HttpPost]
         [Authorize]
@@ -508,8 +521,6 @@ namespace Scanner.Controllers
         {
             ViewBag.Title = "Coil Master Table";
             Session["CurrForm"] = "CoilMaster";
-
-            //var sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER";
 
             if (string.IsNullOrEmpty(master.sortCol))
             {
@@ -616,6 +627,92 @@ namespace Scanner.Controllers
                 master.errMsg = oldMsg;
 
             return View(master);
+        }
+
+        [SessionExpire]
+        [Authorize]
+        public ActionResult CoilMasterDetails()
+        {
+            CoilMasters coil = new CoilMasters();
+            return View(coil);
+        }
+
+        /*
+         * This Action is to display the details of one certain coil. Users can change the value of the details and update the database by clicking the 'Update' button.
+         * This Action can be accessed by clicking the 'Coil Master' link in the top menu, followed by clicking any 'Coil ID'.
+         */ 
+        [SessionExpire]
+        [HttpPost]
+        [Authorize]
+        public ActionResult CoilMasterDetails(CoilMasters coil)
+        {
+            ViewBag.Title = "Coil Master Details";
+            Session["CurrForm"] = "CoilMasterDetails";
+            string CoilID = Request.QueryString["ID"];
+
+            var sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + CoilID + "'"; // to get all information from X_COIL_MASTER table where CoilID matches
+
+            string new_DATE_INWH = "";
+            string new_DATE_TRANSFER = "";
+            string new_LAST_STOCKTAKE_DATE = "";
+            string[] tmpArr;
+
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    if (coil.CoilDetails != null) // first enter the page the coil.CoilDetails is null.
+                    {
+                        if (coil.CoilDetails[0].updateFlag == "update")
+                        {
+
+                            if (coil.CoilDetails[0].DATE_INWH != null)
+                            {
+                                tmpArr = coil.CoilDetails[0].DATE_INWH.ToString().Split(' ');
+                                new_DATE_INWH = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
+                            }
+                            if (coil.CoilDetails[0].DATE_TRANSFER != null)
+                            {
+                                tmpArr = coil.CoilDetails[0].DATE_TRANSFER.ToString().Split(' ');
+                                new_DATE_TRANSFER = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
+                            }
+                            if (coil.CoilDetails[0].LAST_STOCKTAKE_DATE != null)
+                            {
+                                tmpArr = coil.CoilDetails[0].LAST_STOCKTAKE_DATE.ToString().Split(' ');
+                                new_LAST_STOCKTAKE_DATE = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
+                            }
+
+                            var sql_update = "update GRAM_SYD_LIVE.dbo.X_COIL_MASTER set " +
+                                "TYPE = " + ((coil.CoilDetails[0].TYPE == null) ? "null" : "'" + coil.CoilDetails[0].TYPE + "'") + ", " +
+                                "COLOR = " + ((coil.CoilDetails[0].COLOR == null) ? "null" : "'" + coil.CoilDetails[0].COLOR + "'") + ", " +
+                                "WEIGHT = " + ((coil.CoilDetails[0].WEIGHT == null) ? "null" : coil.CoilDetails[0].WEIGHT.ToString()) + ", " +
+                                "GAUGE = " + ((coil.CoilDetails[0].GAUGE == null) ? "null" : coil.CoilDetails[0].GAUGE.ToString()) + ", " +
+                                "WIDTH = " + ((coil.CoilDetails[0].WIDTH == null) ? "null" : coil.CoilDetails[0].WIDTH.ToString()) + ", " +
+                                "[ORDER] = " + ((coil.CoilDetails[0].ORDER == null) ? "null" : coil.CoilDetails[0].ORDER.ToString()) + ", " +
+                                "P_ORDER = " + ((coil.CoilDetails[0].P_ORDER == null) ? "null" : "'" + coil.CoilDetails[0].P_ORDER + "'") + ", " +
+                                "MONTH_RECD = " + ((coil.CoilDetails[0].MONTH_RECD == null) ? "null" : "'" + coil.CoilDetails[0].MONTH_RECD + "'") + ", " +
+                                "DATE_INWH = " + ((coil.CoilDetails[0].DATE_INWH == null) ? "null" : "'" + new_DATE_INWH + "'") + ", " +
+                                "DATE_TRANSFER = " + ((coil.CoilDetails[0].DATE_TRANSFER == null) ? "null" : "'" + new_DATE_TRANSFER + "'") + ", " +
+                                "LAST_STOCKTAKE_DATE = " + ((coil.CoilDetails[0].LAST_STOCKTAKE_DATE == null) ? "null" : "'" + new_LAST_STOCKTAKE_DATE + "'") + ", " +
+                                "STATUS = " + ((coil.CoilDetails[0].STATUS == null) ? "null" : "'" + coil.CoilDetails[0].STATUS + "'") + ", " +
+                                "CLENGTH = " + ((coil.CoilDetails[0].CLENGTH == null) ? "null" : coil.CoilDetails[0].CLENGTH.ToString()) + ", " +
+                                "ZINCCOAT = " + ((coil.CoilDetails[0].ZINCCOAT == null) ? "null" : "'" + coil.CoilDetails[0].ZINCCOAT + "'") +
+                                " where COILID = " + "'" + coil.CoilDetails[0].COILID + "'";
+
+                            sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coil.CoilDetails[0].COILID + "'";
+
+                            context.Database.ExecuteSqlCommand(sql_update);
+                        }
+                    }
+                    coil.CoilDetails = context.Database.SqlQuery<CoilMaster>(sql).ToList<CoilMaster>();
+                }
+            }
+            catch (Exception e)
+            {
+                coil.errMsg = "No Record Found.";
+            }
+
+            return View(coil);
         }
     }
 }

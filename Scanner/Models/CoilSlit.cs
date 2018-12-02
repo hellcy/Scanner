@@ -17,5 +17,6 @@ namespace Scanner.Models
         public Nullable<DateTime> DATE_USED { get; set; }
         public Nullable<int> STATUS { get; set; }
         public string USERID { get; set; }
+        public string input { get; set; }
     }
 }

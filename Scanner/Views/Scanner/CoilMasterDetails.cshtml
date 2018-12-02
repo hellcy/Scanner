@@ -1,0 +1,100 @@
+﻿@model Scanner.Models.CoilMasters
+@{
+    ViewBag.Title = "Coil Master Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+
+
+}
+
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px;vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
+            <div class="col-md-12">
+                <table class="col-md-6">
+                    <tr>
+                        <td style="width:200px;font-weight:bold;">Coil ID</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @id = "COILID", @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">TYPE</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].TYPE, new { @id = "TYPE", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">COLOR</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].COLOR, new { @id = "COLOR", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">WEIGHT</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].WEIGHT, new { @id = "WEIGHT", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">GAUGE</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].GAUGE, new { @id = "GAUGE", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">WIDTH</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].WIDTH, new { @id = "WIDTH", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">ORDER</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].ORDER, new { @id = "ORDER", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">P_ORDER</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].P_ORDER, new { @id = "P_ORDER", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                </table>
+                <table class="col-md-6">
+                    <tr>
+                        <td style="font-weight:bold;">MONTH_RECD</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].MONTH_RECD, new { @id = "MONTH_RECD", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">DATE_INWH</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].DATE_INWH, new { @id = "DATE_INWH", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">DATE_TRANSFER</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].DATE_TRANSFER, new { @id = "DATE_TRANSFER", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">LAST_STOCKTAKE_DATE</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].LAST_STOCKTAKE_DATE, new { @id = "LAST_STOCKTAKE_DATE", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">STATUS</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].STATUS, new { @id = "STATUS", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">CLENGTH</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].CLENGTH, new { @id = "CLENGTH", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">ZINCCOAT</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].ZINCCOAT, new { @id = "ZINCCOAT", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-12">
+                <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('CoilMaster','Scanner','');" />&nbsp;&nbsp;
+                <input type="submit" id="updateButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="update()" />
+                <div>
+                    @Html.TextBoxFor(model => model.CoilDetails[0].updateFlag, new { id = "updateFlag", type = "hidden" })
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+<script>
+    function update() {
+        $("#updateFlag").val("update");
+        $("#frmMain").submit();
+    }
+</script>

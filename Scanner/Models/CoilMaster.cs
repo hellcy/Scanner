@@ -38,15 +38,18 @@ namespace Scanner.Models
         public Nullable<DateTime> LAST_STOCKTAKE_DATE { get; set; }
         public string STATUS { get; set; }
         public Nullable<int> CLENGTH { get; set; }
+        public string ZINCCOAT { get; set; }
         public string Flag { get; set; }
         public int Count { get; set; }
         public int maxPages { get; set; }
         public int TotalRows { get; set; }
+        public string updateFlag { get; set; }
     }
 
     public class CoilMasters
     {
         public IList<CoilMaster> CoilDetails { get; set; } = null;
+        public CoilMaster CoilDetail { get; set; } = null;
         public String errMsg { get; set; }
         public int totalRows { get; set; }
         public int totalPages { get; set; }

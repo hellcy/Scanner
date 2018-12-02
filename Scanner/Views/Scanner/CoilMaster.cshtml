@@ -1,6 +1,6 @@
 ﻿@model Scanner.Models.CoilMasters
 @{
-    ViewBag.Title = "CoilMaster";
+    ViewBag.Title = "Coil Master";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -144,59 +144,73 @@
                         {
                             <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('CLENGTH','Number')">CLENGTH<span id="CLENGTH_ord" style="float:right;color:green;display:none;"></span></a></td>
                         }
+                        @if (Model.sortCol == "ZINCCOAT")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ZINCCOAT','Number')">ZINCCOAT<span id="ZINCCOAT_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ZINCCOAT','Number')">ZINCCOAT<span id="ZINCCOAT_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
                     </tr>
                 </table>
                 <div class="inner_table" style="width:1520px;">
                     @if (Model.errMsg == "")
                     {
-                        <table style="width:1520px; overflow-x: auto;">
-                            @for (int i = 0; i < Model.CoilDetails.Count; i++)
-                            {
-                            <tr>
-                                <td style="width:50px;">
+                    <table style="width:1520px; overflow-x: auto;">
+                        @for (int i = 0; i < Model.CoilDetails.Count; i++)
+                        {
+                        <tr>
+                            <td style="width:50px;">
+                                <a onclick="gotoPage('CoilMasterDetails','Scanner','ID=@Model.CoilDetails[i].COILID')">
                                     @if (@Model.CoilDetails[i].COILID != null)
                                     {@Model.CoilDetails[i].COILID}
-                                </td>
-                                <td style="width:30px;">
-                                    @if (@Model.CoilDetails[i].TYPE != null)
-                                    {@Model.CoilDetails[i].TYPE}
-                                </td>
-                                <td style="width:30px;">
-                                    @if (@Model.CoilDetails[i].COLOR != null)
-                                    {@Model.CoilDetails[i].COLOR}
-                                </td>
-                                <td style="width:30px;">@Model.CoilDetails[i].WEIGHT.ToString()</td>
-                                <td style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
-                                <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
-                                <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
-                                <td style="width:50px;">
-                                    @if (@Model.CoilDetails[i].P_ORDER != null)
-                                    {@Model.CoilDetails[i].P_ORDER}
-                                </td>
-                                <td style="width:50px;">
-                                    @if (@Model.CoilDetails[i].MONTH_RECD != null)
-                                    {@Model.CoilDetails[i].MONTH_RECD}
-                                </td>
-                                <td style="width:70px;">@Model.CoilDetails[i].DATE_INWH.ToString()</td>
-                                <td style="width:70px;">@Model.CoilDetails[i].DATE_TRANSFER.ToString()</td>
-                                <td style="width:70px;">@Model.CoilDetails[i].LAST_STOCKTAKE_DATE.ToString()</td>
-                                <td style="width:30px;">
-                                    @if (@Model.CoilDetails[i].STATUS != null)
-                                    {@Model.CoilDetails[i].STATUS}
-                                </td>
-                                <td style="width:30px;">@Model.CoilDetails[i].CLENGTH.ToString()</td>
-                            </tr>
-                            }
-                        </table>
+                                </a>
+                            </td>
+                            <td style="width:30px;">
+                                @if (@Model.CoilDetails[i].TYPE != null)
+                                {@Model.CoilDetails[i].TYPE}
+                            </td>
+                            <td style="width:30px;">
+                                @if (@Model.CoilDetails[i].COLOR != null)
+                                {@Model.CoilDetails[i].COLOR}
+                            </td>
+                            <td style="width:30px;">@Model.CoilDetails[i].WEIGHT.ToString()</td>
+                            <td style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
+                            <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
+                            <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
+                            <td style="width:50px;">
+                                @if (@Model.CoilDetails[i].P_ORDER != null)
+                                {@Model.CoilDetails[i].P_ORDER}
+                            </td>
+                            <td style="width:50px;">
+                                @if (@Model.CoilDetails[i].MONTH_RECD != null)
+                                {@Model.CoilDetails[i].MONTH_RECD}
+                            </td>
+                            <td style="width:70px;">@Model.CoilDetails[i].DATE_INWH.ToString()</td>
+                            <td style="width:70px;">@Model.CoilDetails[i].DATE_TRANSFER.ToString()</td>
+                            <td style="width:70px;">@Model.CoilDetails[i].LAST_STOCKTAKE_DATE.ToString()</td>
+                            <td style="width:30px;">
+                                @if (@Model.CoilDetails[i].STATUS != null)
+                                {@Model.CoilDetails[i].STATUS}
+                            </td>
+                            <td style="width:30px;">@Model.CoilDetails[i].CLENGTH.ToString()</td>
+                            <td style="width:30px;">
+                                @if (@Model.CoilDetails[i].ZINCCOAT != null)
+                                {@Model.CoilDetails[i].ZINCCOAT}
+                            </td>
+                        </tr>
+                        }
+                    </table>
                     }
                 </div>
                 @{
-                    var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
-                    var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
-                    var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
-                    var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
-                    var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
-                    var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
+                var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
+                var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
+                var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
+                var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
+                var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
+                var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
                 }
                 <br />
                 <span style="float:right; font-weight:bold">
