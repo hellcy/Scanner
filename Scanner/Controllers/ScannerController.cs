@@ -490,16 +490,157 @@ namespace Scanner.Controllers
         [Authorize]
         public ActionResult CoilSlit()
         {
-            CoilSlit slit = new CoilSlit();
-            return View(slit);
+            CoilSlits slits = new CoilSlits();
+            return View(slits);
         }
 
+        /*
+         * This Action is to print new labels for the coil slit produced. When users scan the main coil, all details of that coil will be displayed.
+         * User can choose to cut the coil into 2, 4 or 6 pieces, after selected, user will see the information of their choice, including new coil slit ID.
+         * User can click the 'PRINT' button to print the new labels for the coil slit, the information of that new coil slit will be added to the database. 
+         * Or they can also 'BACK' to the previous page or 'CLEAR' the result and start over.
+         * This Action can be accessed by clicking the 'Coil Slit' link in the top menu.
+         */ 
         [SessionExpire]
         [HttpPost]
         [Authorize]
-        public ActionResult CoilSlit(CoilSlit slit)
+        public ActionResult CoilSlit(CoilSlits slits)
         {
-            return View(slit);
+            ViewBag.Title = "Coil Slit";
+            Session["CurrForm"] = "CoilSlit";
+
+            if (slits.input != null)
+            {
+
+                string input = slits.input;
+                string coilID = input.Substring(0, 9); // get the first 9 characters from input as Coil ID.
+                string type = input.Substring(10, 2); // type
+                string color = input.Substring(13, 3); //color
+                string weight = input.Substring(17, 4); //weight
+                string gauge = input.Substring(22, 3); //gauge
+                string width = input.Substring(26, 4); //width
+                var sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coilID + "'";
+
+                if (slits.inputSlit == 2)
+                {
+                    string[] slitIDs = new string[2];
+                    string[] slitLabels = new string[1];
+                    slitIDs[0] = slits.CoilDetails[0].COILID + "_1" + input.Substring(9,input.Length - 9);
+                    slitIDs[1] = slits.CoilDetails[0].COILID + "_2" + input.Substring(9, input.Length - 9);
+                    slitLabels[0] = slits.CoilDetails[0].COILID + "_1&2" + input.Substring(9, input.Length - 9);
+                    ViewBag.LabelNumber = 1;
+                    slits.CoilSlitIDs = slitIDs;
+                    slits.CoilSlitLabels = slitLabels;
+                    slits.slits[0].COIL_SLIT_ID = slitIDs[0];
+                    slits.slits[1].COIL_SLIT_ID = slitIDs[1];
+                }
+
+                if (slits.inputSlit == 4)
+                {
+                    string[] slitIDs = new string[4];
+                    string[] slitLabels = new string[2];
+                    for (int i = 1; i < slitIDs.Length + 1; i++)
+                    {
+                        slitIDs[i - 1] = slits.CoilDetails[0].COILID + "_" + i + input.Substring(9, input.Length - 9);
+                        slits.slits[i - 1].COIL_SLIT_ID = slitIDs[i - 1];
+                    }
+
+                    for (int i = 1; i < (slitLabels.Length + 1); i++)
+                    {
+                        slitLabels[i - 1] = slits.CoilDetails[0].COILID + "_" + (2 * i - 1) + "&" + (2 * i) + input.Substring(9, input.Length - 9);
+                    }
+                    ViewBag.LabelNumber = 2;
+                    slits.CoilSlitIDs = slitIDs;
+                    slits.CoilSlitLabels = slitLabels;
+                }
+
+                if (slits.inputSlit == 6)
+                {
+                    string[] slitIDs = new string[6];
+                    string[] slitLabels = new string[3];
+                    for (int i = 1; i < slitIDs.Length + 1; i++)
+                    {
+                        slitIDs[i - 1] = slits.CoilDetails[0].COILID + "_" + i + input.Substring(9, input.Length - 9);
+                        slits.slits[i - 1].COIL_SLIT_ID = slitIDs[i - 1];
+                    }
+
+                    for (int i = 1; i < (slitLabels.Length + 1); i++)
+                    {
+                        slitLabels[i - 1] = slits.CoilDetails[0].COILID + "_" + (2 * i - 1) + "&" + (2 * i) + input.Substring(9, input.Length - 9);
+                    }
+                    ViewBag.LabelNumber = 3;
+                    slits.CoilSlitIDs = slitIDs;
+                    slits.CoilSlitLabels = slitLabels;
+                }
+
+                if (slits.inputSlit == 8)
+                {
+                    string[] slitIDs = new string[8];
+                    string[] slitLabels = new string[4];
+                    for (int i = 1; i < slitIDs.Length + 1; i++)
+                    {
+                        slitIDs[i - 1] = slits.CoilDetails[0].COILID + "_" + i + input.Substring(9, input.Length - 9);
+                        slits.slits[i - 1].COIL_SLIT_ID = slitIDs[i - 1];
+                    }
+
+                    for (int i = 1; i < (slitLabels.Length + 1); i++)
+                    {
+                        slitLabels[i - 1] = slits.CoilDetails[0].COILID + "_" + (2 * i - 1) + "&" + (2 * i) + input.Substring(9, input.Length - 9);
+                    }
+                    ViewBag.LabelNumber = 4;
+                    slits.CoilSlitIDs = slitIDs;
+                    slits.CoilSlitLabels = slitLabels;
+                }
+
+                var sql_insert = "if not exists(select * from GramOnline.dbo.X_COIL_SLIT where COIL_SLIT_ID = '" + slits.slits[0].COIL_SLIT_ID + "') " + 
+                    "begin " + 
+                    "insert into GramOnline.dbo.X_COIL_SLIT (COIL_SLIT_ID, TYPE, COLOR, WEIGHT, GAUGE, WIDTH, DATE_PRODUCED, DATE_USED, STATUS, USERID) values (" +
+                    slits.slits[0].COIL_SLIT_ID + ", " +
+                    slits.slits[0].TYPE + ", " +
+                    slits.slits[0].COLOR + ", " +
+                    slits.slits[0].WEIGHT + ", " +
+                    slits.slits[0].GAUGE + ", " +
+                    slits.slits[0].WIDTH + ", " +
+                    slits.slits[0].DATE_PRODUCED + ", " +
+                    slits.slits[0].DATE_USED + ", " +
+                    slits.slits[0].STATUS + ", " +
+                    slits.slits[0].USERID + ") End";
+
+                var coilID2 = new SqlParameter("@coilID", slits.CoilDetails[0].COILID);
+
+                try
+                {
+                    using (var context = new DbContext(Global.ConnStr))
+                    {
+                        slits.CoilDetails = context.Database.SqlQuery<CoilMaster>(sql).ToList<CoilMaster>();
+                    }
+                }
+                catch (Exception e)
+                {
+                    slits.errMsg = "No Record Found";
+                }
+
+                //var rowsPerPage = new SqlParameter("@rowsPerPage", master.rowsPerPage);
+                //// sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
+                //var sql = "exec GramOnline.dbo.proc_GetCoilMasters " +
+                //    "@Role," +
+                //    "@selStr ";
+
+                //try
+                //{
+                //    using (var context = new DbContext(Global.ConnStr))
+                //    {
+                //        master.CoilDetails = context.Database.SqlQuery<CoilMaster>(sql,
+                //           Role).ToList<CoilMaster>();
+                //    }
+                //}
+                //catch (Exception e)
+                //{
+                //    master.errMsg = "No Record Found";
+                //}
+            }
+
+            return View(slits);
         }
 
         [SessionExpire]

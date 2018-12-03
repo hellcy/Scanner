@@ -1,4 +1,4 @@
-﻿@model Scanner.Models.CoilSlit
+﻿@model Scanner.Models.CoilSlits
 @{
     ViewBag.Title = "Coil Slit";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -18,81 +18,137 @@
         </td>
         <td valign="top">
             @Html.Partial("_PageTitlePanel")
-            <div class="col-md-6">
-                <div style="font-size:25px;" class="editor-label">
-                    Coil ID Scanned
-                </div>
-                <div class="editor-field">
-                    @Html.TextAreaFor(model => model.input, new { id = "input", style = "width: 500px; height:250px; border: 2px solid #ccc;" })
-                    <div style="font-size:30px;">Please press Tab button to display data</div>
-                </div>
+            <div class="col-md-12" style="width:1450px; border-bottom: 1px solid;">
+                <table class="col-md-4">
+                    <tr>
+                        <td style="font-size:25px;" class="editor-label">
+                            Coil ID Scanned
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="editor-field">
+                            @Html.TextBoxFor(model => model.input, new {style = "width: 350px; height:50px;"})
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:20px;">Please press Tab button to display data</td>
+                    </tr>
+                </table>
+                @if (@Model.input != null)
+                {
+                <table class="col-md-4" style="font-size:20px;">
+                    <tr><td>Coil ID: @Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @readonly = true })</td></tr>
+                    <tr><td>Type: @Model.CoilDetails[0].TYPE.ToString()</td></tr>
+                    <tr><td>Color: @Model.CoilDetails[0].COLOR.ToString()</td></tr>
+                    <tr><td>Weight: @Model.CoilDetails[0].WEIGHT.ToString()</td></tr>
+                    <tr><td>Gauge: @Model.CoilDetails[0].GAUGE.ToString()</td></tr>
+                    <tr><td>Width: @Model.CoilDetails[0].WIDTH.ToString()</td></tr>
+                    <tr><td>Order: @Model.CoilDetails[0].ORDER.ToString()</td></tr>
+                    <tr>
+                        <td>
+                            p_order:
+                            @if (@Model.CoilDetails[0].P_ORDER != null)
+                            {@Model.CoilDetails[0].P_ORDER.ToString()}
+                        </td>
+                    </tr>
+                </table>
+                <table class="col-md-4" style="font-size:20px;">
+                    <tr>
+                        <td>
+                            Month_Recd:
+                            @if (@Model.CoilDetails[0].MONTH_RECD != null)
+                            {@Model.CoilDetails[0].MONTH_RECD.ToString()}
+                        </td>
+                    </tr>
+                    <tr><td>Date_inwh: @Model.CoilDetails[0].DATE_INWH.ToString()</td></tr>
+                    <tr><td>Date_Transfer: @Model.CoilDetails[0].DATE_TRANSFER.ToString()</td></tr>
+                    <tr><td>Last StockTake Date: @Model.CoilDetails[0].LAST_STOCKTAKE_DATE.ToString()</td></tr>
+                    <tr>
+                        <td>
+                            Status:
+                            @if (@Model.CoilDetails[0].STATUS != null)
+                            {@Model.CoilDetails[0].STATUS.ToString()}
+                        </td>
+                    </tr>
+                    <tr><td>Clength: @Model.CoilDetails[0].CLENGTH.ToString()</td></tr>
+                    <tr>
+                        <td>
+                            ZincCoat:
+                            @if (@Model.CoilDetails[0].ZINCCOAT != null)
+                            {@Model.CoilDetails[0].ZINCCOAT.ToString()}
+                        </td>
+                    </tr>
+                </table>
+                }
             </div>
-            <div class="col-md-3">
-
+            <div class="col-md-4">
+                @Html.TextBoxFor(model => model.inputSlit, new { style = "width: 350px; height:50px;" })
             </div>
-            <div>
-                <div style="color:red; font-size:40px">@ViewBag.Error @ViewBag.Upload</div>
-                <div class="TwrapOverFlow" style="margin-right:10px;">
-                    <table class="head" style="font-size:15px; width:1500px;">
-                        <tr>
-                            <th style="width:80px">
-                                <span class="text">ID</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">Type</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">Color</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">Weight</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">Gauge</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">Width</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">Order</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">P_order</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">Month_recd</span>
-                            </th>
-                            <th style="width:180px">
-                                <span class="text">Date_inwh</span>
-                            </th>
-                            <th style="width:180px">
-                                <span class="text">Date_transfer</span>
-                            </th>
-                            <th style="width:180px">
-                                <span class="text">Last_stocktake_date</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">Status</span>
-                            </th>
-                            <th style="width:50px">
-                                <span class="text">Clength</span>
-                            </th>
-                        </tr>
-                    </table>
-                    <div class="inner_table" style="width:1500px; height:300px;">
-                        <table>
+            <div class="col-md-8">
+                @if (@Model.input != null)
+                {
+                <table class="col-md-4">
+                    <tr><td>New Coil Slit ID: </td></tr>
+                        @if (Model.CoilSlitIDs != null)
+                        {
+                            for (int i = 0; i < Model.CoilSlitIDs.Count; i++)
+                            {
+                                <tr><td>@Model.CoilSlitIDs[i]&nbsp;&nbsp;</td></tr>
+                            }
+                        }
                         </table>
-                    </div>
-                </div>
+                        <table class="col-md-2">
+                    <tr><td>New Coil Slit Label: </td></tr>
+                        @if (Model.CoilSlitLabels != null)
+                        {
+                            for (int i = 0; i < Model.CoilSlitLabels.Count; i++)
+                            {
+                                <tr><td>@Model.CoilSlitLabels[i]&nbsp;&nbsp;</td></tr>
+                            }
+                        }
+                        </table>
+                        <table class="col-md-2">
+                    <tr><td>Number of Label: </td><td>@ViewBag.LabelNumber</td></tr>
+                </table>
+                }
             </div>
-            <div class="col-md-12">
-                <input type="submit" id="clear" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" />
-                <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />&nbsp;&nbsp;
-                <input type="submit" id="uploadButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" />
+            <div class="col-md-12" style="border-top: 1px solid;">
+                <input type="submit" id="clear" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" />&nbsp;&nbsp;
+                <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />
+                <input type="submit" id="PRINT" value="PRINT" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="PrintSlitLabel()" />
             </div>
         </td>
     </tr>
 </table>
 <script type="text/javascript">
+     $('#input').keydown(function (event) {
+        if (event.keyCode == 9) {
+            $("#frmMain").submit();
+        }
+    });
+
+    $('#inputSlit').keyup(function (){
+        $("#frmMain").submit();
+    });
+
+    function PrintSlitLabel()
+    {
+        var mywindow = window.open('', 'PRINT', 'height=500,width=700');
+        mywindow.document.write('<html><head><title>SLIT LABEL PRINT PREVIEW (Print By:@loginUserName)</title>');
+        mywindow.document.write('</head><body>');
+        mywindow.document.write('<table>');
+
+        mywindow.document.write('<td>@Html.Raw(ViewBag.QRcode)</td>');
+        mywindow.document.write('<td style="font-size:200%;">Slit Label: </td>');
+
+        mywindow.document.write('</table>');
+
+        mywindow.document.write('</body></html>');
+        mywindow.document.close();
+        mywindow.focus();
+        mywindow.print();
+        mywindow.close();
+    }
+
 
 </script>
