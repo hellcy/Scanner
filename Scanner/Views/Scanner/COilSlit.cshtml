@@ -82,7 +82,7 @@
                 }
             </div>
             <div class="col-md-4">
-                @Html.TextBoxFor(model => model.inputSlit, new { style = "width: 350px; height:50px;" })
+                @Html.TextBoxFor(model => model.inputSlitNumber, new { style = "width: 350px; height:50px;" })
             </div>
             <div class="col-md-8">
                 @if (@Model.input != null)
@@ -116,6 +116,7 @@
                 <input type="submit" id="clear" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" />&nbsp;&nbsp;
                 <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />
                 <input type="submit" id="PRINT" value="PRINT" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="PrintSlitLabel()" />
+                <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
             </div>
         </td>
     </tr>
@@ -127,7 +128,7 @@
         }
     });
 
-    $('#inputSlit').keyup(function (){
+    $('#inputSlitNumber').keyup(function (){
         $("#frmMain").submit();
     });
 
@@ -148,6 +149,8 @@
         mywindow.focus();
         mywindow.print();
         mywindow.close();
+        $('#printFlag').val('print');
+        $("#frmMain").submit();
     }
 
 
