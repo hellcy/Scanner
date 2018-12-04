@@ -113,7 +113,7 @@
                 }
             </div>
             <div class="col-md-12" style="border-top: 1px solid;">
-                <input type="submit" id="clear" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" />&nbsp;&nbsp;
+                <input type="submit" id="clear" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="ClearSlit()"/>&nbsp;&nbsp;
                 <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />
                 <input type="submit" id="PRINT" value="PRINT" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="PrintSlitLabel()" />
                 <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
@@ -132,15 +132,21 @@
         $("#frmMain").submit();
     });
 
+    function ClearSlit()
+    {
+        $('#input').val('');
+        $('#inputSlitNumber').val('');
+        $("#frmMain").submit();
+    }
+
     function PrintSlitLabel()
     {
-        var mywindow = window.open('', 'PRINT', 'height=500,width=700');
+        var mywindow = window.open('', 'PRINT', 'height=600,width=800');
         mywindow.document.write('<html><head><title>SLIT LABEL PRINT PREVIEW (Print By:@loginUserName)</title>');
         mywindow.document.write('</head><body>');
         mywindow.document.write('<table>');
 
-        mywindow.document.write('<td>@Html.Raw(ViewBag.QRcode)</td>');
-        mywindow.document.write('<td style="font-size:200%;">Slit Label: </td>');
+        mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilSlitLabels.Count; i++){<tr><td>@Html.Raw(Model.QRcodes[i])</td><td style="font-size:200%;">Slit Label: @Html.Raw(Model.CoilSlitLabels[i])</td></tr>}}');
 
         mywindow.document.write('</table>');
 

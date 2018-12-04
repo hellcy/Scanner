@@ -195,7 +195,6 @@ namespace Scanner.Controllers
             lines.workOrder_HDR.X_CATEGORY = headerDetails.workOrder_HDRs[0].X_CATEGORY;
             lines.workOrder_HDR.X_COMPLETION_DATE = headerDetails.workOrder_HDRs[0].X_COMPLETION_DATE;
 
-
             CodeQrBarcodeDraw QRcode = BarcodeDrawFactory.CodeQr; // to generate QR code
             //Code39BarcodeDraw barcode39 = BarcodeDrawFactory.Code39WithoutChecksum; // to generate barcode
 
@@ -519,12 +518,18 @@ namespace Scanner.Controllers
                 double gauge = Double.Parse(input.Substring(22, 3)); // gauge
                 int width = Int32.Parse(input.Substring(26, 4)); // width
 
+                CodeQrBarcodeDraw QRcode = BarcodeDrawFactory.CodeQr; // to generate QR code
+                Image img = null;
+                byte[] imgBytes;
+                string imgString;
+
                 var sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coilID + "'";
 
                 if (slits.inputSlitNumber > 0)
                 {
                     string[] slitIDs = new string[slits.inputSlitNumber];
                     string[] slitLabels = new string[(slits.inputSlitNumber / 2)];
+                    slits.QRcodes = new string[5];
                     for (int i = 1; i < slitIDs.Length + 1; i++)
                     {
                         slitIDs[i - 1] = slits.CoilDetails[0].COILID + "_" + i;
@@ -541,6 +546,11 @@ namespace Scanner.Controllers
                     for (int i = 1; i < (slitLabels.Length + 1); i++)
                     {
                         slitLabels[i - 1] = slits.CoilDetails[0].COILID + "_" + (2 * i - 1) + "&" + (2 * i) + "+" + type + "+" + color + "+" + (weight / slits.inputSlitNumber) + "+" + gauge + "+" + (width / slits.inputSlitNumber);
+
+                        img = QRcode.Draw(slitLabels[i - 1], 50);
+                        imgBytes = turnImageToByteArray(img);
+                        imgString = Convert.ToBase64String(imgBytes);
+                        slits.QRcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
                     }
                     ViewBag.LabelNumber = (int)(slits.inputSlitNumber / 2);
                     slits.CoilSlitIDs = slitIDs;
@@ -548,6 +558,7 @@ namespace Scanner.Controllers
 
                     if (slits.printFlag == "print")
                     {
+
                         for (int i = 0; i < slitIDs.Length; i++)
                         {
                             //var coilID_sql = new SqlParameter("@coilID", slits.CoilDetails[0].COILID);
