@@ -407,7 +407,7 @@
         if (document.getElementById("MenuExpandings").value != "") {
             strArr = document.getElementById("MenuExpandings").value.split(";");
             for (var i = 1; i < strArr.length; i++) {
-                document.getElementById("L" + strArr[i]).innerHTML = "<span class='glyphicon glyphicon-minus-sign'>"; // confilct with Scanner!?
+                //document.getElementById("L" + strArr[i]).innerHTML = "<span class='glyphicon glyphicon-minus-sign'>"; // confilct with Scanner!?
                 document.getElementById(strArr[i]).style.display = "";
             }
 

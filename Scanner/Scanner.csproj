@@ -394,7 +394,6 @@
     <Content Include="Views\Internal\Uploads.cshtml" />
     <Content Include="Views\Return\Index.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
-    <Content Include="Views\Shared\_Adverts.cshtml" />
     <Content Include="Views\Shared\_BottomPanel.cshtml" />
     <Content Include="Views\Shared\_Layout2.cshtml" />
     <Content Include="Views\Shared\_PageTitlePanel.cshtml" />

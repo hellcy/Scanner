@@ -27,7 +27,7 @@
                     </tr>
                     <tr>
                         <td class="editor-field">
-                            @Html.TextBoxFor(model => model.input, new {style = "width: 350px; height:50px;"})
+                            @Html.TextBoxFor(model => model.input, new { style = "width: 350px; height:50px;" })
                         </td>
                     </tr>
                     <tr>
@@ -37,16 +37,16 @@
                 @if (@Model.input != null)
                 {
                 <table class="col-md-4" style="font-size:20px;">
-                    <tr><td>Coil ID: @Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @readonly = true })</td></tr>
-                    <tr><td>Type: @Model.CoilDetails[0].TYPE.ToString()</td></tr>
-                    <tr><td>Color: @Model.CoilDetails[0].COLOR.ToString()</td></tr>
-                    <tr><td>Weight: @Model.CoilDetails[0].WEIGHT.ToString()</td></tr>
-                    <tr><td>Gauge: @Model.CoilDetails[0].GAUGE.ToString()</td></tr>
-                    <tr><td>Width: @Model.CoilDetails[0].WIDTH.ToString()</td></tr>
-                    <tr><td>Order: @Model.CoilDetails[0].ORDER.ToString()</td></tr>
+                    <tr><td><b>Coil ID:</b> @Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @readonly = true })</td></tr>
+                    <tr><td><b>Type:</b> @Model.CoilDetails[0].TYPE.ToString()</td></tr>
+                    <tr><td><b>Color:</b> @Model.CoilDetails[0].COLOR.ToString()</td></tr>
+                    <tr><td><b>Weight:</b> @Model.CoilDetails[0].WEIGHT.ToString()</td></tr>
+                    <tr><td><b>Gauge:</b> @Model.CoilDetails[0].GAUGE.ToString()</td></tr>
+                    <tr><td><b>Width:</b> @Model.CoilDetails[0].WIDTH.ToString()</td></tr>
+                    <tr><td><b>Order:</b> @Model.CoilDetails[0].ORDER.ToString()</td></tr>
                     <tr>
                         <td>
-                            p_order:
+                            <b>p_order:</b>
                             @if (@Model.CoilDetails[0].P_ORDER != null)
                             {@Model.CoilDetails[0].P_ORDER.ToString()}
                         </td>
@@ -55,25 +55,25 @@
                 <table class="col-md-4" style="font-size:20px;">
                     <tr>
                         <td>
-                            Month_Recd:
+                            <b>Month_Recd:</b>
                             @if (@Model.CoilDetails[0].MONTH_RECD != null)
                             {@Model.CoilDetails[0].MONTH_RECD.ToString()}
                         </td>
                     </tr>
-                    <tr><td>Date_inwh: @Model.CoilDetails[0].DATE_INWH.ToString()</td></tr>
-                    <tr><td>Date_Transfer: @Model.CoilDetails[0].DATE_TRANSFER.ToString()</td></tr>
-                    <tr><td>Last StockTake Date: @Model.CoilDetails[0].LAST_STOCKTAKE_DATE.ToString()</td></tr>
+                    <tr><td><b>Date_inwh:</b> @Model.CoilDetails[0].DATE_INWH.ToString()</td></tr>
+                    <tr><td><b>Date_Transfer:</b> @Model.CoilDetails[0].DATE_TRANSFER.ToString()</td></tr>
+                    <tr><td><b>Last StockTake Date:</b> @Model.CoilDetails[0].LAST_STOCKTAKE_DATE.ToString()</td></tr>
                     <tr>
                         <td>
-                            Status:
+                            <b>Status:</b>
                             @if (@Model.CoilDetails[0].STATUS != null)
                             {@Model.CoilDetails[0].STATUS.ToString()}
                         </td>
                     </tr>
-                    <tr><td>Clength: @Model.CoilDetails[0].CLENGTH.ToString()</td></tr>
+                    <tr><td><b>Clength:</b> @Model.CoilDetails[0].CLENGTH.ToString()</td></tr>
                     <tr>
                         <td>
-                            ZincCoat:
+                            <b>ZincCoat:</b>
                             @if (@Model.CoilDetails[0].ZINCCOAT != null)
                             {@Model.CoilDetails[0].ZINCCOAT.ToString()}
                         </td>
@@ -81,14 +81,51 @@
                 </table>
                 }
             </div>
-            <div class="col-md-4">
-                @Html.TextBoxFor(model => model.inputSlitNumber, new { style = "width: 350px; height:50px;" })
+            <div class="col-md-4" style="font-size:20px;">
+                @if (Model.input != null && Model.CoilDetails[0].TYPE == "SM")
+                {
+                    <p>Number of Slits:</p>
+                
+                    var number_0 = (Model.slitNumber == 0) ? "selected " : "";
+                    var number_2 = (Model.slitNumber == 2) ? "selected " : "";
+                    var number_4 = (Model.slitNumber == 4) ? "selected " : "";
+                    var number_6 = (Model.slitNumber == 6) ? "selected " : "";
+                    var number_8 = (Model.slitNumber == 8) ? "selected " : "";
+
+                
+                    <select name="slitNumber" id="slitNumber" style="height:28px; width:100px; font-size:14px;" onchange="reloadSlit()">
+                        <option value=0 @number_0>Please select Number:</option>
+                        <option value=2 @number_2>2</option>
+                        <option value=4 @number_4>4</option>
+                        <option value=6 @number_6>6</option>
+                        <option value=8 @number_8>8</option>
+                    </select>
+                    <p>Slit Width:</p>
+                
+                    var width_cover_51 = (Model.slitWidth == 51) ? "selected " : "";
+                    var width_cover_67 = (Model.slitWidth == 67) ? "selected " : "";
+                    var width_cover_92 = (Model.slitWidth == 92) ? "selected " : "";
+                    var width_base_67 = (Model.slitWidth == 67) ? "selected " : "";
+                    var width_base_83 = (Model.slitWidth == 83) ? "selected " : "";
+                    var width_base_108 = (Model.slitWidth == 108) ? "selected " : "";
+
+                
+                    <select name="slitWidth" id="slitWidth" style="height:28px; width:100px; font-size:14px;" onchange="reloadSlit()">
+                        <option value=0>Please select width:</option>
+                        <option value=51 @width_cover_51>51 mm Cover</option>
+                        <option value=67 @width_cover_67>67 mm Cover</option>
+                        <option value=92 @width_cover_92>92 mm Cover</option>
+                        <option value=67 @width_base_67>67 mm Base</option>
+                        <option value=83 @width_base_83>83 mm Base</option>
+                        <option value=108 @width_base_108>108 mm Base</option>
+                    </select>
+                }
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8" style="font-size:20px;">
                 @if (@Model.input != null)
                 {
-                <table class="col-md-4">
-                    <tr><td>New Coil Slit ID: </td></tr>
+                    <table class="col-md-2" style="font-size:20px;">
+                        <tr><td>New Coil Slit ID: </td></tr>
                         @if (Model.CoilSlitIDs != null)
                         {
                             for (int i = 0; i < Model.CoilSlitIDs.Count; i++)
@@ -96,9 +133,9 @@
                                 <tr><td>@Model.CoilSlitIDs[i]&nbsp;&nbsp;</td></tr>
                             }
                         }
-                        </table>
-                        <table class="col-md-2">
-                    <tr><td>New Coil Slit Label: </td></tr>
+                    </table>
+                    <table class="col-md-3" style="font-size:20px;">
+                        <tr><td>New Coil Slit Label: </td></tr>
                         @if (Model.CoilSlitLabels != null)
                         {
                             for (int i = 0; i < Model.CoilSlitLabels.Count; i++)
@@ -106,17 +143,17 @@
                                 <tr><td>@Model.CoilSlitLabels[i]&nbsp;&nbsp;</td></tr>
                             }
                         }
-                        </table>
-                        <table class="col-md-2">
-                    <tr><td>Number of Label: </td><td>@ViewBag.LabelNumber</td></tr>
-                </table>
+                    </table>
+                    <table class="col-md-3">
+                        <tr><td>Number of Labels: </td><td>@ViewBag.LabelNumber</td></tr>
+                    </table>
+                    <input type="submit" id="PRINT" value="PRINT" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="PrintSlitLabel()" />
+                    <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
                 }
             </div>
             <div class="col-md-12" style="border-top: 1px solid;">
-                <input type="submit" id="clear" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="ClearSlit()"/>&nbsp;&nbsp;
-                <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />
-                <input type="submit" id="PRINT" value="PRINT" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="PrintSlitLabel()" />
-                <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
+                <input type="submit" id="CLEAR" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="ClearSlit()" />&nbsp;&nbsp;
+                <input type="button" id="BACK" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />
             </div>
         </td>
     </tr>
@@ -132,10 +169,16 @@
         $("#frmMain").submit();
     });
 
+    function reloadSlit()
+    {
+        $("#frmMain").submit();
+    }
+
     function ClearSlit()
     {
         $('#input').val('');
         $('#inputSlitNumber').val('');
+        $('#slitWidth').val(0);
         $("#frmMain").submit();
     }
 

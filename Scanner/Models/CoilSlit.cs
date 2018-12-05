@@ -34,12 +34,13 @@ namespace Scanner.Models
     {
         public IList<CoilSlit> slits { get; set; } = new List<CoilSlit>();
         public string input { get; set; }
-        public int inputSlitNumber { get; set; }
         public IList<CoilMaster> CoilDetails { get; set; } = null;
         public string errMsg { get; set; }
         public IList<String> CoilSlitIDs { get; set; } = null;
         public IList<String> CoilSlitLabels { get; set; } = null;
         public IList<String> QRcodes { get; set; } = null;
         public string printFlag { get; set; }
+        public int slitWidth { get; set; } = 0;
+        public int slitNumber { get; set; } = 0;
     }
 }

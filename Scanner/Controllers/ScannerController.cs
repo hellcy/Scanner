@@ -168,7 +168,7 @@ namespace Scanner.Controllers
             }
             catch (Exception e)
             {
-                lines.errMsg = "No Record Found.";
+                lines.errMsg = "No Record Found: ";
             }
 
             lines.workOrder_HDR.SEQNO = headerDetails.workOrder_HDRs[0].SEQNO;
@@ -346,7 +346,11 @@ namespace Scanner.Controllers
                 orders.totalPages = 0;
                 orders.totalRows = 0;
                 orders.workOrder_HDRs = null;
-                orders.errMsg = "No Record Found";
+                orders.errMsg = e.Message.ToString().Replace("'", "\"");
+                if (e.Message.Equals("The specified cast from a materialized 'System.String' type to the 'System.Int32' type is not valid."))
+                {
+                    orders.errMsg = "No Record Found.";
+                }
             }
 
             if (orders.workOrder_HDRs != null)
@@ -507,16 +511,18 @@ namespace Scanner.Controllers
         {
             ViewBag.Title = "Coil Slit";
             Session["CurrForm"] = "CoilSlit";
+
             if (slits.input != null)
             {
+                char[] delimiters = { ' ', '+' };
+                string[] inputArray = slits.input.Split(delimiters); // split the input string by using the delimiter '+'
 
-                string input = slits.input;
-                string coilID = input.Substring(0, 9); // get the first 9 characters from input as Coil ID.
-                string type = input.Substring(10, 2); // type without the PLUS sign
-                string color = input.Substring(13, 3); //color
-                int weight = Int32.Parse(input.Substring(17, 4)); // weight
-                double gauge = Double.Parse(input.Substring(22, 3)); // gauge
-                int width = Int32.Parse(input.Substring(26, 4)); // width
+                string coilID = inputArray[0];
+                //string type = inputArray[1];
+                //string color = inputArray[2];
+                //int weight = Int32.Parse(inputArray[3]);
+                //double gauge = Double.Parse(inputArray[4]);
+                int width = slits.slitWidth;
 
                 CodeQrBarcodeDraw QRcode = BarcodeDrawFactory.CodeQr; // to generate QR code
                 Image img = null;
@@ -524,87 +530,6 @@ namespace Scanner.Controllers
                 string imgString;
 
                 var sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coilID + "'";
-
-                if (slits.inputSlitNumber > 0)
-                {
-                    string[] slitIDs = new string[slits.inputSlitNumber];
-                    string[] slitLabels = new string[(slits.inputSlitNumber / 2)];
-                    slits.QRcodes = new string[5];
-                    for (int i = 1; i < slitIDs.Length + 1; i++)
-                    {
-                        slitIDs[i - 1] = slits.CoilDetails[0].COILID + "_" + i;
-                        slits.slits.Add(new CoilSlit());
-                        slits.slits[i - 1].COIL_SLIT_ID = slitIDs[i - 1];
-                        slits.slits[i - 1].TYPE = type;
-                        slits.slits[i - 1].COLOR = color;
-                        slits.slits[i - 1].WEIGHT = (weight / slits.inputSlitNumber);
-                        slits.slits[i - 1].GAUGE = gauge;
-                        slits.slits[i - 1].WIDTH = (width / slits.inputSlitNumber);
-                        slits.slits[i - 1].STATUS = 0; // new -> 0, used -> 1
-                    }
-
-                    for (int i = 1; i < (slitLabels.Length + 1); i++)
-                    {
-                        slitLabels[i - 1] = slits.CoilDetails[0].COILID + "_" + (2 * i - 1) + "&" + (2 * i) + "+" + type + "+" + color + "+" + (weight / slits.inputSlitNumber) + "+" + gauge + "+" + (width / slits.inputSlitNumber);
-
-                        img = QRcode.Draw(slitLabels[i - 1], 50);
-                        imgBytes = turnImageToByteArray(img);
-                        imgString = Convert.ToBase64String(imgBytes);
-                        slits.QRcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
-                    }
-                    ViewBag.LabelNumber = (int)(slits.inputSlitNumber / 2);
-                    slits.CoilSlitIDs = slitIDs;
-                    slits.CoilSlitLabels = slitLabels;
-
-                    if (slits.printFlag == "print")
-                    {
-
-                        for (int i = 0; i < slitIDs.Length; i++)
-                        {
-                            //var coilID_sql = new SqlParameter("@coilID", slits.CoilDetails[0].COILID);
-                            var coilSlitID_sql = new SqlParameter("@coilSlitID", slits.slits[i].COIL_SLIT_ID);
-                            var type_sql = new SqlParameter("@type", slits.slits[i].TYPE);
-                            var color_sql = new SqlParameter("@color", slits.slits[i].COLOR);
-                            var weight_sql = new SqlParameter("@weight", slits.slits[i].WEIGHT);
-                            var gauge_sql = new SqlParameter("@gauge", slits.slits[i].GAUGE);
-                            var width_sql = new SqlParameter("@width", slits.slits[i].WIDTH);
-                            var status_sql = new SqlParameter("@status", slits.slits[i].STATUS);
-                            var userID_sql = new SqlParameter("@userID", ((Scanner.Models.User)Session["User"]).UserName);
-
-                            var sql_update = "exec GramOnline.dbo.proc_AddCoilSlit " +
-                                //"@coilID, " +
-                                "@coilSlitID, " + 
-                                "@type, " + 
-                                "@color, " + 
-                                "@weight, " + 
-                                "@gauge, " + 
-                                "@width, " + 
-                                "@status, " + 
-                                "@userID ";
-
-                            try
-                            {
-                                using (var context = new DbContext(Global.ConnStr))
-                                {
-                                    context.Database.ExecuteSqlCommand(sql_update,
-                                        //coilID_sql,
-                                        coilSlitID_sql,
-                                        type_sql,
-                                        color_sql,
-                                        weight_sql,
-                                        gauge_sql,
-                                        width_sql,
-                                        status_sql,
-                                        userID_sql);
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                slits.errMsg = "No Record Found";
-                            }
-                        }
-                    }
-                }
 
                 try
                 {
@@ -615,11 +540,97 @@ namespace Scanner.Controllers
                 }
                 catch (Exception e)
                 {
-                    slits.errMsg = "No Record Found";
+                    slits.errMsg = "SQL Exception: " + e + ";";
                 }
 
-            }
+                switch (slits.CoilDetails[0].TYPE)
+                {
+                    case "SM":
+                        if (slits.slitNumber > 0 && slits.CoilDetails != null)
+                        {
+                            string[] slitIDs = new string[slits.slitNumber];
+                            string[] slitLabels = new string[(slits.slitNumber / 2)];
+                            slits.QRcodes = new string[5];
+                            for (int i = 1; i < slitIDs.Length + 1; i++)
+                            {
+                                slitIDs[i - 1] = slits.CoilDetails[0].COILID + "_" + i;
+                                slits.slits.Add(new CoilSlit());
+                                slits.slits[i - 1].COIL_SLIT_ID = slitIDs[i - 1];
+                                slits.slits[i - 1].TYPE = slits.CoilDetails[0].TYPE;
+                                slits.slits[i - 1].COLOR = slits.CoilDetails[0].COLOR;
+                                slits.slits[i - 1].WEIGHT = (slits.CoilDetails[0].WEIGHT / slits.slitNumber);
+                                slits.slits[i - 1].GAUGE = slits.CoilDetails[0].GAUGE;
+                                slits.slits[i - 1].WIDTH = (width / slits.slitNumber);
+                                slits.slits[i - 1].STATUS = 0; // new -> 0, used -> 1
+                            }
 
+                            for (int i = 1; i < (slitLabels.Length + 1); i++)
+                            {
+                                slitLabels[i - 1] = slits.CoilDetails[0].COILID + "_" + (2 * i - 1) + "&" + (2 * i) + "+" + slits.CoilDetails[0].TYPE + "+" + slits.CoilDetails[0].COLOR + "+" + (slits.CoilDetails[0].WEIGHT / slits.slitNumber) + "+" + slits.CoilDetails[0].GAUGE + "+" + width;
+
+                                img = QRcode.Draw(slitLabels[i - 1], 50);
+                                imgBytes = turnImageToByteArray(img);
+                                imgString = Convert.ToBase64String(imgBytes);
+                                slits.QRcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
+                            }
+                            ViewBag.LabelNumber = (int)(slits.slitNumber / 2);
+                            slits.CoilSlitIDs = slitIDs;
+                            slits.CoilSlitLabels = slitLabels;
+
+                            if (slits.printFlag == "print")
+                            {
+
+                                for (int i = 0; i < slitIDs.Length; i++)
+                                {
+                                    var coilID_sql = new SqlParameter("@coilID", slits.CoilDetails[0].COILID);
+                                    var coilSlitID_sql = new SqlParameter("@coilSlitID", slits.slits[i].COIL_SLIT_ID);
+                                    var type_sql = new SqlParameter("@type", slits.slits[i].TYPE);
+                                    var color_sql = new SqlParameter("@color", slits.slits[i].COLOR);
+                                    var weight_sql = new SqlParameter("@weight", slits.slits[i].WEIGHT);
+                                    var gauge_sql = new SqlParameter("@gauge", slits.slits[i].GAUGE);
+                                    var width_sql = new SqlParameter("@width", slits.slits[i].WIDTH);
+                                    var status_sql = new SqlParameter("@status", slits.slits[i].STATUS);
+                                    var userID_sql = new SqlParameter("@userID", ((Scanner.Models.User)Session["User"]).UserName);
+
+                                    var sql_update = "exec GramOnline.dbo.proc_AddCoilSlit " +
+                                        "@coilID, " +
+                                        "@coilSlitID, " +
+                                        "@type, " +
+                                        "@color, " +
+                                        "@weight, " +
+                                        "@gauge, " +
+                                        "@width, " +
+                                        "@status, " +
+                                        "@userID ";
+
+                                    try
+                                    {
+                                        using (var context = new DbContext(Global.ConnStr))
+                                        {
+                                            context.Database.ExecuteSqlCommand(sql_update,
+                                                coilID_sql,
+                                                coilSlitID_sql,
+                                                type_sql,
+                                                color_sql,
+                                                weight_sql,
+                                                gauge_sql,
+                                                width_sql,
+                                                status_sql,
+                                                userID_sql);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        slits.errMsg = "SQL Exception: " + e + ";";
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
             return View(slits);
         }
 
@@ -732,7 +743,11 @@ namespace Scanner.Controllers
                 master.totalPages = 0;
                 master.totalRows = 0;
                 master.CoilDetails = null;
-                master.errMsg = "No Record Found";
+                master.errMsg = e.Message.ToString().Replace("'","\"");
+                if (e.Message.Equals("The specified cast from a materialized 'System.String' type to the 'System.Int32' type is not valid."))
+                {
+                    master.errMsg = "No Record Found.";
+                }
             }
 
             if (master.CoilDetails != null)
@@ -771,7 +786,7 @@ namespace Scanner.Controllers
             Session["CurrForm"] = "CoilMasterDetails";
             string CoilID = Request.QueryString["ID"];
 
-            var sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + CoilID + "'"; // to get all information from X_COIL_MASTER table where CoilID matches
+            var sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + CoilID + "';"; // to get all information from X_COIL_MASTER table where CoilID matches
 
             string new_DATE_INWH = "";
             string new_DATE_TRANSFER = "";
@@ -818,9 +833,9 @@ namespace Scanner.Controllers
                                 "STATUS = " + ((coil.CoilDetails[0].STATUS == null) ? "null" : "'" + coil.CoilDetails[0].STATUS + "'") + ", " +
                                 "CLENGTH = " + ((coil.CoilDetails[0].CLENGTH == null) ? "null" : coil.CoilDetails[0].CLENGTH.ToString()) + ", " +
                                 "ZINCCOAT = " + ((coil.CoilDetails[0].ZINCCOAT == null) ? "null" : "'" + coil.CoilDetails[0].ZINCCOAT + "'") +
-                                " where COILID = " + "'" + coil.CoilDetails[0].COILID + "'";
+                                " where COILID = " + "'" + coil.CoilDetails[0].COILID + "';";
 
-                            sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coil.CoilDetails[0].COILID + "'";
+                            sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coil.CoilDetails[0].COILID + "';";
 
                             context.Database.ExecuteSqlCommand(sql_update);
                         }
@@ -830,7 +845,7 @@ namespace Scanner.Controllers
             }
             catch (Exception e)
             {
-                coil.errMsg = "No Record Found.";
+                coil.errMsg = "No Record Found: ";
             }
 
             return View(coil);

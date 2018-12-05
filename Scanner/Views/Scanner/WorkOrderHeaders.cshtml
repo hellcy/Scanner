@@ -26,7 +26,7 @@
                     <td><b>Category:</b></td>
                     <td>&nbsp;</td>
                     <td>
-                        @Html.TextBoxFor(o => o.categorySort, new { style = "width:200px;", list = "categoryList", autocomplete="off"})
+                        @Html.TextBoxFor(o => o.categorySort, new { style = "width:200px;", list = "categoryList", autocomplete = "off" })
                         <datalist id="categoryList" size="3">
                             @if (Model.CategoryList != null)
                             {
@@ -40,13 +40,13 @@
                     <td><b>Status:</b></td>
                     <td>&nbsp;</td>
                     <td>
-                        @{ 
-                            var status_1 = (Model.statusSort == -1) ? "selected " : "";
-                            var status0 = (Model.statusSort == 0) ? "selected " : "";
-                            var status1 = (Model.statusSort == 1) ? "selected " : "";
-                            var status2 = (Model.statusSort == 2) ? "selected " : "";
-                            var status3 = (Model.statusSort == 3) ? "selected " : "";
-                            var status4 = (Model.statusSort == 4) ? "selected " : "";
+                        @{
+                        var status_1 = (Model.statusSort == -1) ? "selected " : "";
+                        var status0 = (Model.statusSort == 0) ? "selected " : "";
+                        var status1 = (Model.statusSort == 1) ? "selected " : "";
+                        var status2 = (Model.statusSort == 2) ? "selected " : "";
+                        var status3 = (Model.statusSort == 3) ? "selected " : "";
+                        var status4 = (Model.statusSort == 4) ? "selected " : "";
 
                         }
                         <select name="statusSort" id="statusSort" style="height:28px; width:100px; font-size:14px;" onchange="reloadWorkOrders()">
@@ -483,4 +483,5 @@
         $("#frmMain").attr('action', url);
         $("#frmMain").submit();
     }
+
 </script>
