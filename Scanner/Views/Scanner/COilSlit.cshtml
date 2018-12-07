@@ -34,7 +34,7 @@
                         <td style="font-size:20px;">Please press Tab button to display data</td>
                     </tr>
                 </table>
-                @if (@Model.input != null)
+                @if (@Model.input != null && Model.errMsg == "")
                 {
                 <table class="col-md-4" style="font-size:20px;">
                     <tr><td><b>Coil ID:</b> @Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @readonly = true })</td></tr>
@@ -82,7 +82,8 @@
                 }
             </div>
             <div class="col-md-4" style="font-size:20px;">
-                @if (Model.input != null && Model.CoilDetails[0].TYPE == "SM")
+                <div style="font-size:200%; color:red;">@Model.errMsg</div>
+                @if (Model.errMsg == "" && Model.input != null && Model.CoilDetails[0].TYPE == "SM")
                 {
                     <p>Number of Slits:</p>
                 
@@ -184,12 +185,12 @@
 
     function PrintSlitLabel()
     {
-        var mywindow = window.open('', 'PRINT', 'height=600,width=800');
+        var mywindow = window.open('', 'PRINT', 'height=600,width=1500');
         mywindow.document.write('<html><head><title>SLIT LABEL PRINT PREVIEW (Print By:@loginUserName)</title>');
         mywindow.document.write('</head><body>');
         mywindow.document.write('<table>');
 
-        mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilSlitLabels.Count; i++){<tr><td>@Html.Raw(Model.QRcodes[i])</td><td style="font-size:200%;">Slit Label: @Html.Raw(Model.CoilSlitLabels[i])</td></tr>}}');
+        mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilSlitLabels.Count; i++){<tr><td>@Html.Raw(Model.QRcodes[i])</td><td><div style="height:100px;">&emsp;&emsp;<b>@Html.Raw(Model.Barcodes[i])</b></div><br><div style="font-size:150%">&emsp;@Html.Raw(Model.CoilSlitLabels[i])</div></td></tr>}}');
 
         mywindow.document.write('</table>');
 

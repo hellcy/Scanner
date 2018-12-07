@@ -39,6 +39,7 @@ namespace Scanner.Models
         public IList<String> CoilSlitIDs { get; set; } = null;
         public IList<String> CoilSlitLabels { get; set; } = null;
         public IList<String> QRcodes { get; set; } = null;
+        public IList<String> Barcodes { get; set; } = null;
         public string printFlag { get; set; }
         public int slitWidth { get; set; } = 0;
         public int slitNumber { get; set; } = 0;

@@ -261,6 +261,14 @@ namespace Scanner.Controllers
                 orders.orderBy = "glyphicon glyphicon-arrow-up";
             }
 
+            if (orders.sortCol != "SEQNO" && orders.sortCol != "BILLCODE" && orders.sortCol != "TRANSDATE" && orders.sortCol != "PRODDATE" && orders.sortCol != "DUEDATE"
+                && orders.sortCol != "ORDSTATUS" && orders.sortCol != "SALESORDNO" && orders.sortCol != "NOTES" && orders.sortCol != "PRODQTY" && orders.sortCol != "ACTUALQTY"
+                && orders.sortCol != "REFERENCE" && orders.sortCol != "STAFFNO" && orders.sortCol != "EXPIRY_DATE" && orders.sortCol != "X_BR_ORDER" && orders.sortCol != "X_BR_ACCNO"
+                && orders.sortCol != "X_BR_INVNO" && orders.sortCol != "X_CATEGORY" && orders.sortCol != "X_COMPLETION_DATE")
+            {
+                orders.sortCol = "DefaultSort";
+            }
+
             if (String.IsNullOrEmpty(orders.whereStr))
             {
                 orders.whereStr = "";
@@ -514,10 +522,15 @@ namespace Scanner.Controllers
 
             if (slits.input != null)
             {
-                char[] delimiters = { ' ', '+' };
-                string[] inputArray = slits.input.Split(delimiters); // split the input string by using the delimiter '+'
+                //char[] delimiters = { ' ', '+' };
+                //string[] inputArray = slits.input.Split(delimiters); // split the input string by using the delimiter '+'
+                if (slits.input.Length < 9)
+                {
+                    slits.errMsg = "Wrong Coil ID.";
+                    return View(slits);
+                }
 
-                string coilID = inputArray[0];
+                string coilID = slits.input.Substring(0,9);
                 //string type = inputArray[1];
                 //string color = inputArray[2];
                 //int weight = Int32.Parse(inputArray[3]);
@@ -525,7 +538,9 @@ namespace Scanner.Controllers
                 int width = slits.slitWidth;
 
                 CodeQrBarcodeDraw QRcode = BarcodeDrawFactory.CodeQr; // to generate QR code
-                Image img = null;
+                Code128BarcodeDraw barcode128 = BarcodeDrawFactory.Code128WithChecksum; // to generate barcode
+                Image img_QRcode = null;
+                Image img_Barcode = null;
                 byte[] imgBytes;
                 string imgString;
 
@@ -551,6 +566,7 @@ namespace Scanner.Controllers
                             string[] slitIDs = new string[slits.slitNumber];
                             string[] slitLabels = new string[(slits.slitNumber / 2)];
                             slits.QRcodes = new string[5];
+                            slits.Barcodes = new string[5];
                             for (int i = 1; i < slitIDs.Length + 1; i++)
                             {
                                 slitIDs[i - 1] = slits.CoilDetails[0].COILID + "_" + i;
@@ -568,10 +584,14 @@ namespace Scanner.Controllers
                             {
                                 slitLabels[i - 1] = slits.CoilDetails[0].COILID + "_" + (2 * i - 1) + "&" + (2 * i) + "+" + slits.CoilDetails[0].TYPE + "+" + slits.CoilDetails[0].COLOR + "+" + (slits.CoilDetails[0].WEIGHT / slits.slitNumber) + "+" + slits.CoilDetails[0].GAUGE + "+" + width;
 
-                                img = QRcode.Draw(slitLabels[i - 1], 50);
-                                imgBytes = turnImageToByteArray(img);
+                                img_QRcode = QRcode.Draw(slitLabels[i - 1], 50);
+                                imgBytes = turnImageToByteArray(img_QRcode);
                                 imgString = Convert.ToBase64String(imgBytes);
                                 slits.QRcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
+                                img_Barcode = barcode128.Draw(slitLabels[i - 1], 100);
+                                imgBytes = turnImageToByteArray(img_Barcode);
+                                imgString = Convert.ToBase64String(imgBytes);
+                                slits.Barcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
                             }
                             ViewBag.LabelNumber = (int)(slits.slitNumber / 2);
                             slits.CoilSlitIDs = slitIDs;
@@ -627,7 +647,18 @@ namespace Scanner.Controllers
                             }
                         }
                         break;
+                    case "RA":
+                        break;
+                    case "PO":
+                        break;
+                    case "PL":
+                        slits.errMsg = "";
+                        break;
+                    case "LA":
+                        slits.errMsg = "";
+                        break;
                     default:
+                        slits.errMsg = "Type not exist.";
                         break;
                 }
             }
@@ -672,6 +703,13 @@ namespace Scanner.Controllers
                 master.rowsPerPage = 15;
                 master.pageNum = 1;
                 master.orderBy = "glyphicon glyphicon-arrow-up";
+            }
+
+            if (master.sortCol != "COILID" && master.sortCol != "TYPE" && master.sortCol != "COLOR" && master.sortCol != "WEIGHT" && master.sortCol != "GAUGE" &&
+                master.sortCol != "WIDTH" && master.sortCol != "[ORDER]" && master.sortCol != "P_ORDER" && master.sortCol != "MONTH_RECD" && master.sortCol != "DATE_INWH" &&
+                master.sortCol != "DATE_TRANSFER" && master.sortCol != "LAST_STOCKTAKE_DATE" && master.sortCol != "STATUS" && master.sortCol != "CLENGTH" && master.sortCol != "ZINCCOAT")
+            {
+                master.sortCol = "DefaultSort";
             }
 
             if (String.IsNullOrEmpty(master.whereStr))
@@ -743,7 +781,7 @@ namespace Scanner.Controllers
                 master.totalPages = 0;
                 master.totalRows = 0;
                 master.CoilDetails = null;
-                master.errMsg = e.Message.ToString().Replace("'","\"");
+                master.errMsg = e.Message.ToString().Replace("'", "\"");
                 if (e.Message.Equals("The specified cast from a materialized 'System.String' type to the 'System.Int32' type is not valid."))
                 {
                     master.errMsg = "No Record Found.";
