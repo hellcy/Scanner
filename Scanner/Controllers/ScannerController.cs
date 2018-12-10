@@ -635,13 +635,14 @@ namespace Scanner.Controllers
                         img_QRcode = QRcode.Draw(slitLabels[i - 1], 50);
                         imgBytes = turnImageToByteArray(img_QRcode);
                         imgString = Convert.ToBase64String(imgBytes);
-                        slits.QRcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
+                        Guid id_2 = Guid.NewGuid();
+                        slits.QRcodes[i - 1] = String.Format("<img id=\"" + id_2.ToString() + "\" src=\"data:image/png;base64,{0}\"/>",imgString);
                         img_Barcode = barcode128.Draw(slitLabels[i - 1], 100);
                         imgBytes = turnImageToByteArray(img_Barcode);
                         imgString = Convert.ToBase64String(imgBytes);
-                        slits.Barcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
+                        Guid id = Guid.NewGuid();
+                        slits.Barcodes[i - 1] = String.Format("<img id=\""+id.ToString()+"\" src=\"data:image/png;base64,{0}\"/>",imgString);
                     }
-
                     slits.CoilSlitIDs = slitIDs;
                     slits.CoilSlitLabels = slitLabels;
 
@@ -695,6 +696,16 @@ namespace Scanner.Controllers
                     }
                 }
             }
+            CodeQrBarcodeDraw QRcode2 = BarcodeDrawFactory.CodeQr; // to generate QR code
+            Image img_QRcode2 = null;
+            Image img_Barcode2 = null;
+            byte[] imgBytes2;
+            string imgString2;
+            string testsss = "iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAAABGdBTUEAALGPC / xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA + UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAACVpJREFUeNrt3Y1q4loUgFFfQ / H9n0t8DBE6KDgESepJzc / e + 6wPQtux7bRxZ + nNnFwPP5KUpINdIAlYkgQsScCSJGBJErAkAUuSgCVJwJIELEkCliQBSxKwJAlYkgQsScCSJGBJErAkAUuSgCVJwJIELEkCliQBSxKwJAlYkgQsScCSJGBJApYkAUuSgCUJWJIErKZOp9PP4XCwzdhm3dH2gznbYP8CywYsYAELWMAClg1YwAIWsIAFLBuwgAWsIB2PR8MBrNX3gzkDFrCABSz7F1g2YAELWMACFrBswHLSHVhOugMLWDZgAQtYWcG6Xq / Pr7ndbv +/ fur91tu3bupnmLMfVhuKAGias / pz1h1YFQNWPLDMGbAMErCABSxgGSRgmTNgAQtYwDJnwHo1Z33M5XJ5nkysuM3ZD8AyZ5nnDFgGCVjmDFjAAhawzBmwOhukR8O3Y7c7hwWsXuasu5PuwztgWOuftXzuXxcKfvr73t++3vcMK + bCUXMGrEUGaY07fM1BmrrdM6zaK93NGbCa7sSo12JVuTQn2zVp5uwHWHsN0p4HX4SLc4FlzjLPGbAMErDMGbAMErCAZc6AZZCAZc6AlRGstdbHRBikygtHs4FlziwcNUjAApY5A5ZBApY5AxawDBKwzBmwtj4Z2nLJRLSTodUuzell4ag5A9YigzQ2PBlXIGe9NMdKd3MGLJdMlASr8rWE5gxY1scAy5xZhwUsgwQscwYsgwQsYJkzYBkkYJkzYIUCy / qY + uuwKv8vks0ZsAwSsMwZsIBlkIBlzoBlkIAFLHPmpLtLJoBlzlyaUwKsseFxyQSwzFn8OQNW4kHK + s / N2V4SzJxZ1mB9TMfrY3oAy5wByyABC1jmDFgGCVjmDFjAMkjAMmfAemV9TM71MdnAMmfWYQELWMAyZ8AySMACljkDlkECljkD1tYn3V0yAaytFo6aM2AtMkhjw + OSCWCZs1pz1g1YrbdvXbVLJvb8p39z1s + clV + HteSd / O3nLr0fgBVnHZY5A9asQdrzzjdI / YBlzoAV7pHPIAHLnAHLIAELWOasBlhrrY / JtmX95 + YsYJkz67CAZZCAZc6A1TJIr5ObBglY5gxYIf + bOvMj3 / vgv38MrDjnsMwZsBZ55Jta0Dd2GcLw9kifO / x4 + OdOusd5hmXOgLXYI9 / 9fn / eAY + 3v73 / 6fYtP7dlA1asZ1jmDFhfD5ItzrV5la8ltAHLIAELWMAClkECljkDFrCABSxzBiyDBCxgAauLZQ02YG2xrMEGLIMELGABC1gGCVjmDFjOYQHLOSxzBiyPfMDyDAtYacE6n8 + GA1irf19zBiwlyAGlEnNsFwALWAKWgAUsAUvAAhawBCxgCVgCFrAELAELWMASsIAlYAlYwBKwBCwBS8ACloC15QFV + WdwX + Tcv9mON2ABC1jAAhawgAUsYAELWMACFrCABSxgAQtYwAIWsIAFLGABC1jAAhawgAUsYAHLgQosYAELWMACFrCABSxgAQtY4cGCm4Mv2v71uwWcC2ABy33sdwMWsIDloAYWsIAFLGAByzADy33sdwMWsIDloAYWsIAFLGAByzADy33sdwMWsIDloAYWsIAFLGAByzADy0HtdwNWbwBUftmsbNc + Voa7h30GLGABC1jAAhawgAUsYAELWMACFrCABSxgAQtYwAIWsIAFLGABC1jAAhawgAUsYAELWMACFrCABSxgAQtYwAIWsEoc1LDwQNPL / gUWsBxQwAIWsIAFLPsXWMACFrCABSxgOaCABSxgAQtY9i + wgAUsYAELWLByQAELWMACFrDsX2ABC1jAAhawgOWAAhawSoHl4IszoJV / Bhi7lhBYwAIWsIAFLGABC1jAAhawgAUsYAELWMACFrCABSxgAQtYwAIWsIAFLGABC1jAAhawgGXwgQUsYAELWMACFrCSgKU4DwgO1DgHqmsJgQUsYAELWAIWsIAFLAELWMACFrCABSxgCVjAAhawBCxgAUvAAhawgCVgAQtYwBKwgAUsAQtYwAJWQ6fTyct8Jbw + 0DWVOfcZsIAFLGABC1g2B599BixgAQtYwAIWsIAFLGAVB + t4PELIwQcsYAELWMCyz4AFLGABC1jAsjn47DNgOekOLGDZZ8ACFrCABSxgTWzX6 / X5Nbfb7f / XT73fevvWTf0Mc / aD1sXCy4d5ma9FwaoYsIAFLGABC1jAAhawgAUsYAELWMACFrDigjVnHdblcnmetK64zdkPAhawgAUsYAELWMACFrCABaw026Ph27HbncMCFrCKnnQfHujDWv + s5XP / uiD109 / 3 / vb1vmdYwAJWYbDWgGVNsKZu9wwLWMACVthh3vrSHC / HtS6E2eBO++CUGayKj77AAhawgAUsYAELWMACFrCABSxgAQtYwIoL1lrrsCKAFWHhKLCABSxgAQtYwAIWsIAFLGABC1jAAhaw9jnp3nJpTrST7ntdmgMsYAErAFhjSGVc6b72pTnAAhawgFXy0pzKL7GVDZYeEOoGrIoHKrCABSxgAQtYwAIWsIAFLGABC1jAAhaw4oJlHVacdVjAAhawgAUsYAELWMACFrCABSxgAQtYwFrupLtLc4AFLGClAmsMKZfmAAtYwAJW4ktzIgBQ + eWtIsxZDxBah9XJOixgAQtYwAIWsIAFLGABC1jAAhawgAUsYH2fdVjrrsMCFrCABSxgAQtYwAIWsIAFLGABC1jAAtY + J91dmgMsYAErFVhjSLk0B1jAAlZKsFpv37oeXzXHQZ3zvgDWQmBtjcm3n7v0fgAWsICVFKw9kQGWDVjA2u0ZFrBswAIWsIAFLGDVAGutdVjZtsr / x1FgAQtYwAIWsICVBazXSXRgAQtYwAp57ibzM6x3YN8 / BhawgFXsGdbUwtGxy13GljJE + Nzhx8M / d9IdWMAq + Azrfr8 / D / TH29 / e / 3T7lp / bsgELWMAqBpYt5zV0vm8 / L8cFLBsAgAUsYAHL9wUWsIAFLN8XWMCyAQBYwNq5OcsabAAAFrCABSzfF1jAAhawfF9gOYcFLAAAC1ieYQHL9wUWsH7pfD5DCFi + r3KAJUnAkgQsSQKWJAFLErAkCViSBCxJwJIkYEkSsCQBS5KAJQlYkgQsSQKWJGBJErAkCViSgCVJwJIkYEkCliQBS5KAJQlYkgQsSQKWJGBJErAkCViSgCVJwJIkYEkCliRt0z / e9So7IlQi6gAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0xMS0wOFQwNToyNjowOSswMDowMN9pYtgAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMTEtMDhUMDU6MjY6MDkrMDA6MDCuNNpkAAAAKHRFWHRzdmc6YmFzZS11cmkAZmlsZTovLy90bXAvbWFnaWNrLW9RUFdxNEcxPYYf + gAAAABJRU5ErkJggg ==";
+            img_QRcode2 = QRcode2.Draw("fffff", 50);
+            imgBytes2 = turnImageToByteArray(img_QRcode2);
+            imgString2 = Convert.ToBase64String(imgBytes2);
+            ViewBag.testChrome = String.Format("<img src=\"data:image/png;base64,{0}\"/>", imgString2);
             return View(slits);
         }
 

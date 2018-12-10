@@ -18,6 +18,7 @@
         </td>
         <td valign="top">
             @Html.Partial("_PageTitlePanel")
+            @Html.Raw(ViewBag.testChrome)
             <div class="col-md-12" style="width:1450px; border-bottom: 1px solid;">
                 <table class="col-md-4">
                     <tr>
@@ -27,7 +28,7 @@
                     </tr>
                     <tr>
                         <td class="editor-field">
-                            @Html.TextBoxFor(model => model.input, new { style = "width: 350px; height:50px;" })
+                            @Html.TextBoxFor(model => model.input, new { style = "width: 350px; height:50px;", autocomplete="off"})
                         </td>
                     </tr>
                     <tr>
@@ -36,49 +37,49 @@
                 </table>
                 @if (@Model.input != null && Model.errMsg == "")
                 {
-                <table class="col-md-4" style="font-size:20px;">
-                    <tr><td><b>Coil ID:</b> @Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @readonly = true })</td></tr>
-                    <tr><td><b>Type:</b> @Model.CoilDetails[0].TYPE.ToString()</td></tr>
-                    <tr><td><b>Color:</b> @Model.CoilDetails[0].COLOR.ToString()</td></tr>
-                    <tr><td><b>Weight:</b> @Model.CoilDetails[0].WEIGHT.ToString()</td></tr>
-                    <tr><td><b>Gauge:</b> @Model.CoilDetails[0].GAUGE.ToString()</td></tr>
-                    <tr><td><b>Width:</b> @Model.CoilDetails[0].WIDTH.ToString()</td></tr>
-                    <tr><td><b>Order:</b> @Model.CoilDetails[0].ORDER.ToString()</td></tr>
-                    <tr>
-                        <td>
-                            <b>p_order:</b>
-                            @if (@Model.CoilDetails[0].P_ORDER != null)
-                            {@Model.CoilDetails[0].P_ORDER.ToString()}
-                        </td>
-                    </tr>
-                </table>
-                <table class="col-md-4" style="font-size:20px;">
-                    <tr>
-                        <td>
-                            <b>Month_Recd:</b>
-                            @if (@Model.CoilDetails[0].MONTH_RECD != null)
-                            {@Model.CoilDetails[0].MONTH_RECD.ToString()}
-                        </td>
-                    </tr>
-                    <tr><td><b>Date_inwh:</b> @Model.CoilDetails[0].DATE_INWH.ToString()</td></tr>
-                    <tr><td><b>Date_Transfer:</b> @Model.CoilDetails[0].DATE_TRANSFER.ToString()</td></tr>
-                    <tr><td><b>Last StockTake Date:</b> @Model.CoilDetails[0].LAST_STOCKTAKE_DATE.ToString()</td></tr>
-                    <tr>
-                        <td>
-                            <b>Status:</b>
-                            @if (@Model.CoilDetails[0].STATUS != null)
-                            {@Model.CoilDetails[0].STATUS.ToString()}
-                        </td>
-                    </tr>
-                    <tr><td><b>Clength:</b> @Model.CoilDetails[0].CLENGTH.ToString()</td></tr>
-                    <tr>
-                        <td>
-                            <b>ZincCoat:</b>
-                            @if (@Model.CoilDetails[0].ZINCCOAT != null)
-                            {@Model.CoilDetails[0].ZINCCOAT.ToString()}
-                        </td>
-                    </tr>
-                </table>
+                    <table class="col-md-4" style="font-size:20px;">
+                        <tr><td><b>Coil ID:</b> @Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @readonly = true })</td></tr>
+                        <tr><td><b>Type:</b> @Model.CoilDetails[0].TYPE.ToString()</td></tr>
+                        <tr><td><b>Color:</b> @Model.CoilDetails[0].COLOR.ToString()</td></tr>
+                        <tr><td><b>Weight:</b> @Model.CoilDetails[0].WEIGHT.ToString()</td></tr>
+                        <tr><td><b>Gauge:</b> @Model.CoilDetails[0].GAUGE.ToString()</td></tr>
+                        <tr><td><b>Width:</b> @Model.CoilDetails[0].WIDTH.ToString()</td></tr>
+                        <tr><td><b>Order:</b> @Model.CoilDetails[0].ORDER.ToString()</td></tr>
+                        <tr>
+                            <td>
+                                <b>p_order:</b>
+                                @if (@Model.CoilDetails[0].P_ORDER != null)
+                                {@Model.CoilDetails[0].P_ORDER.ToString()}
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="col-md-4" style="font-size:20px;">
+                        <tr>
+                            <td>
+                                <b>Month_Recd:</b>
+                                @if (@Model.CoilDetails[0].MONTH_RECD != null)
+                                {@Model.CoilDetails[0].MONTH_RECD.ToString()}
+                            </td>
+                        </tr>
+                        <tr><td><b>Date_inwh:</b> @Model.CoilDetails[0].DATE_INWH.ToString()</td></tr>
+                        <tr><td><b>Date_Transfer:</b> @Model.CoilDetails[0].DATE_TRANSFER.ToString()</td></tr>
+                        <tr><td><b>Last StockTake Date:</b> @Model.CoilDetails[0].LAST_STOCKTAKE_DATE.ToString()</td></tr>
+                        <tr>
+                            <td>
+                                <b>Status:</b>
+                                @if (@Model.CoilDetails[0].STATUS != null)
+                                {@Model.CoilDetails[0].STATUS.ToString()}
+                            </td>
+                        </tr>
+                        <tr><td><b>Clength:</b> @Model.CoilDetails[0].CLENGTH.ToString()</td></tr>
+                        <tr>
+                            <td>
+                                <b>ZincCoat:</b>
+                                @if (@Model.CoilDetails[0].ZINCCOAT != null)
+                                {@Model.CoilDetails[0].ZINCCOAT.ToString()}
+                            </td>
+                        </tr>
+                    </table>
                 }
             </div>
             <div class="col-md-4" style="font-size:20px;">
@@ -142,32 +143,32 @@
             <div class="col-md-8" style="font-size:20px;">
                 @if (@Model.input != null)
                 {
-                <table class="col-md-2" style="font-size:20px;">
-                    <tr><td>New Coil Slit ID: </td></tr>
-                    @if (Model.CoilSlitIDs != null)
-                    {
-                    for (int i = 0; i < Model.CoilSlitIDs.Count; i++)
-                    {
-                    <tr><td>@Model.CoilSlitIDs[i]&nbsp;&nbsp;</td></tr>
-                    }
-                    }
-                </table>
-                <table class="col-md-3" style="font-size:20px;">
-                    <tr><td>New Coil Slit Label: </td></tr>
-                    @if (Model.CoilSlitLabels != null)
-                    {
-                    for (int i = 0; i < Model.CoilSlitLabels.Count; i++)
-                    {
-                    <tr><td>@Model.CoilSlitLabels[i]&nbsp;&nbsp;</td></tr>
-                    }
-                    }
-                </table>
-                <input type="button" id="PRINT" value="PRINT" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="PrintSlitLabel()" />
-                <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
+                    <table class="col-md-2" style="font-size:20px;">
+                        <tr><td>New Coil Slit ID: </td></tr>
+                        @if (Model.CoilSlitIDs != null)
+                        {
+                            for (int i = 0; i < Model.CoilSlitIDs.Count; i++)
+                            {
+                                <tr><td>@Model.CoilSlitIDs[i]&nbsp;&nbsp;</td></tr>
+                            }
+                        }
+                    </table>
+                    <table class="col-md-3" style="font-size:20px;">
+                        <tr><td>New Coil Slit Label: </td></tr>
+                        @if (Model.CoilSlitLabels != null)
+                        {
+                            for (int i = 0; i < Model.CoilSlitLabels.Count; i++)
+                            {
+                                <tr><td>@Model.CoilSlitLabels[i]&nbsp;&nbsp;</td></tr>
+                            }
+                        }
+                    </table>
+                    <input type="button" id="PRINT" value="PRINT" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="PrintSlitLabel()" />
+                    <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
                 }
             </div>
             <div class="col-md-12" style="border-top: 1px solid;">
-                <input type="submit" id="CLEAR" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="ClearSlit()" />&nbsp;&nbsp;
+                <input type="button" id="CLEAR" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="ClearSlit()" />&nbsp;&nbsp;
                 <input type="button" id="BACK" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />
             </div>
         </td>
@@ -178,23 +179,19 @@
 
      $('#input').keydown(function (event) {
         if (event.keyCode == 9) {
-            $("#frmMain").submit();
+            $('#frmMain').submit();
         }
-    });
-
-    $('#inputSlitNumber').keyup(function (){
-        $("#frmMain").submit();
     });
 
     function reloadSlitNumber()
     {
         $('#slitWidth').val('');
-        $("#frmMain").submit();
+        $('#frmMain').submit();
     }
 
     function reloadSlitWidth()
     {
-        $("#frmMain").submit();
+        $('#frmMain').submit();
     }
 
     function ClearSlit()
@@ -202,7 +199,7 @@
         $('#input').val('');
         $('#inputSlitNumber').val('');
         $('#slitWidth').val(0);
-        $("#frmMain").submit();
+        $('#frmMain').submit();
     }
 
     function PrintSlitLabel()
@@ -220,9 +217,12 @@
 
             mywindow.document.write('</body></html>');
             mywindow.document.close();
-            mywindow.focus();
-            mywindow.print();
-            mywindow.close();
+            setTimeout(function ()
+            {
+                mywindow.focus();
+                mywindow.print();
+                mywindow.close();
+            }, 0);
             $('#printFlag').val('print');
             $("#frmMain").submit();
         }
