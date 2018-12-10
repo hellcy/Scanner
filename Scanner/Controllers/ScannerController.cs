@@ -520,6 +520,8 @@ namespace Scanner.Controllers
             ViewBag.Title = "Coil Slit";
             Session["CurrForm"] = "CoilSlit";
 
+            slits.errMsg = "";
+
             if (slits.input != null)
             {
                 //char[] delimiters = { ' ', '+' };
@@ -531,11 +533,24 @@ namespace Scanner.Controllers
                 }
 
                 string coilID = slits.input.Substring(0,9);
-                //string type = inputArray[1];
-                //string color = inputArray[2];
-                //int weight = Int32.Parse(inputArray[3]);
-                //double gauge = Double.Parse(inputArray[4]);
-                int width = slits.slitWidth;
+
+                int cover_width = 0;
+                int base_width = 0;
+                if (slits.slitWidth == 208)
+                {
+                    cover_width = 51;
+                    base_width = 67;
+                }
+                if (slits.slitWidth == 240)
+                {
+                    cover_width = 67;
+                    base_width = 83;
+                }
+                if (slits.slitWidth == 290)
+                {
+                    cover_width = 92;
+                    base_width = 108;
+                }
 
                 CodeQrBarcodeDraw QRcode = BarcodeDrawFactory.CodeQr; // to generate QR code
                 Code128BarcodeDraw barcode128 = BarcodeDrawFactory.Code128WithChecksum; // to generate barcode
@@ -560,106 +575,124 @@ namespace Scanner.Controllers
 
                 switch (slits.CoilDetails[0].TYPE)
                 {
-                    case "SM":
-                        if (slits.slitNumber > 0 && slits.CoilDetails != null)
-                        {
-                            string[] slitIDs = new string[slits.slitNumber];
-                            string[] slitLabels = new string[(slits.slitNumber / 2)];
-                            slits.QRcodes = new string[5];
-                            slits.Barcodes = new string[5];
-                            for (int i = 1; i < slitIDs.Length + 1; i++)
-                            {
-                                slitIDs[i - 1] = slits.CoilDetails[0].COILID + "_" + i;
-                                slits.slits.Add(new CoilSlit());
-                                slits.slits[i - 1].COIL_SLIT_ID = slitIDs[i - 1];
-                                slits.slits[i - 1].TYPE = slits.CoilDetails[0].TYPE;
-                                slits.slits[i - 1].COLOR = slits.CoilDetails[0].COLOR;
-                                slits.slits[i - 1].WEIGHT = (slits.CoilDetails[0].WEIGHT / slits.slitNumber);
-                                slits.slits[i - 1].GAUGE = slits.CoilDetails[0].GAUGE;
-                                slits.slits[i - 1].WIDTH = (width / slits.slitNumber);
-                                slits.slits[i - 1].STATUS = 0; // new -> 0, used -> 1
-                            }
-
-                            for (int i = 1; i < (slitLabels.Length + 1); i++)
-                            {
-                                slitLabels[i - 1] = slits.CoilDetails[0].COILID + "_" + (2 * i - 1) + "&" + (2 * i) + "+" + slits.CoilDetails[0].TYPE + "+" + slits.CoilDetails[0].COLOR + "+" + (slits.CoilDetails[0].WEIGHT / slits.slitNumber) + "+" + slits.CoilDetails[0].GAUGE + "+" + width;
-
-                                img_QRcode = QRcode.Draw(slitLabels[i - 1], 50);
-                                imgBytes = turnImageToByteArray(img_QRcode);
-                                imgString = Convert.ToBase64String(imgBytes);
-                                slits.QRcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
-                                img_Barcode = barcode128.Draw(slitLabels[i - 1], 100);
-                                imgBytes = turnImageToByteArray(img_Barcode);
-                                imgString = Convert.ToBase64String(imgBytes);
-                                slits.Barcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
-                            }
-                            ViewBag.LabelNumber = (int)(slits.slitNumber / 2);
-                            slits.CoilSlitIDs = slitIDs;
-                            slits.CoilSlitLabels = slitLabels;
-
-                            if (slits.printFlag == "print")
-                            {
-
-                                for (int i = 0; i < slitIDs.Length; i++)
-                                {
-                                    var coilID_sql = new SqlParameter("@coilID", slits.CoilDetails[0].COILID);
-                                    var coilSlitID_sql = new SqlParameter("@coilSlitID", slits.slits[i].COIL_SLIT_ID);
-                                    var type_sql = new SqlParameter("@type", slits.slits[i].TYPE);
-                                    var color_sql = new SqlParameter("@color", slits.slits[i].COLOR);
-                                    var weight_sql = new SqlParameter("@weight", slits.slits[i].WEIGHT);
-                                    var gauge_sql = new SqlParameter("@gauge", slits.slits[i].GAUGE);
-                                    var width_sql = new SqlParameter("@width", slits.slits[i].WIDTH);
-                                    var status_sql = new SqlParameter("@status", slits.slits[i].STATUS);
-                                    var userID_sql = new SqlParameter("@userID", ((Scanner.Models.User)Session["User"]).UserName);
-
-                                    var sql_update = "exec GramOnline.dbo.proc_AddCoilSlit " +
-                                        "@coilID, " +
-                                        "@coilSlitID, " +
-                                        "@type, " +
-                                        "@color, " +
-                                        "@weight, " +
-                                        "@gauge, " +
-                                        "@width, " +
-                                        "@status, " +
-                                        "@userID ";
-
-                                    try
-                                    {
-                                        using (var context = new DbContext(Global.ConnStr))
-                                        {
-                                            context.Database.ExecuteSqlCommand(sql_update,
-                                                coilID_sql,
-                                                coilSlitID_sql,
-                                                type_sql,
-                                                color_sql,
-                                                weight_sql,
-                                                gauge_sql,
-                                                width_sql,
-                                                status_sql,
-                                                userID_sql);
-                                        }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        slits.errMsg = "SQL Exception: " + e + ";";
-                                    }
-                                }
-                            }
-                        }
-                        break;
                     case "RA":
+                        slits.slitNumber = 4;
+                        slits.slitWidth = 170;
+                        cover_width = slits.slitWidth;
+                        base_width = slits.slitWidth;
+                        break;
+                    case "SM":
                         break;
                     case "PO":
+                        slits.slitNumber = 8;
+                        slits.slitWidth = 135;
+                        cover_width = slits.slitWidth;
+                        base_width = slits.slitWidth;
                         break;
                     case "PL":
-                        slits.errMsg = "";
+                        slits.slitNumber = 4;
+                        slits.slitWidth = 255;
+                        cover_width = slits.slitWidth;
+                        base_width = slits.slitWidth;
                         break;
-                    case "LA":
-                        slits.errMsg = "";
+                    case "IS":
+                        slits.slitNumber = 8;
+                        slits.slitWidth = 116;
+                        cover_width = slits.slitWidth;
+                        base_width = slits.slitWidth;
                         break;
                     default:
                         slits.errMsg = "Type not exist.";
                         break;
+                }
+
+                if (slits.slitNumber > 0 && slits.CoilDetails != null)
+                {
+                    string[] slitIDs = new string[slits.slitNumber];
+                    string[] slitLabels = new string[slits.slitNumber];
+                    slits.QRcodes = new string[8];
+                    slits.Barcodes = new string[8];
+                    for (int i = 1; i < slitIDs.Length + 1; i++)
+                    {
+                        slitIDs[i - 1] = slits.CoilDetails[0].COILID + "_" + i;
+                        slits.slits.Add(new CoilSlit());
+                        slits.slits[i - 1].COIL_SLIT_ID = slitIDs[i - 1];
+                        slits.slits[i - 1].TYPE = slits.CoilDetails[0].TYPE;
+                        slits.slits[i - 1].COLOR = slits.CoilDetails[0].COLOR;
+                        slits.slits[i - 1].WEIGHT = (int)(slits.CoilDetails[0].WEIGHT / slits.slitNumber);
+                        slits.slits[i - 1].GAUGE = slits.CoilDetails[0].GAUGE;
+                        if (i % 2 != 0)
+                        {
+                            slits.slits[i - 1].WIDTH = cover_width;
+                        }
+                        else
+                        {
+                            slits.slits[i - 1].WIDTH = base_width;
+                        }
+                        slits.slits[i - 1].STATUS = 0; // new -> 0, used -> 1
+
+                        slitLabels[i - 1] = slits.CoilDetails[0].COILID + "_" + i + "+" + slits.CoilDetails[0].TYPE + "+" + slits.CoilDetails[0].COLOR + "+" + (int)(slits.CoilDetails[0].WEIGHT / slits.slitNumber) + "+" + slits.CoilDetails[0].GAUGE + "+" + slits.slits[i - 1].WIDTH;
+                        img_QRcode = QRcode.Draw(slitLabels[i - 1], 50);
+                        imgBytes = turnImageToByteArray(img_QRcode);
+                        imgString = Convert.ToBase64String(imgBytes);
+                        slits.QRcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
+                        img_Barcode = barcode128.Draw(slitLabels[i - 1], 100);
+                        imgBytes = turnImageToByteArray(img_Barcode);
+                        imgString = Convert.ToBase64String(imgBytes);
+                        slits.Barcodes[i - 1] = String.Format("<img src=\"data:image/bmp;base64,{0}\"/>", imgString);
+                    }
+
+                    slits.CoilSlitIDs = slitIDs;
+                    slits.CoilSlitLabels = slitLabels;
+
+                    if (slits.printFlag == "print")
+                    {
+
+                        for (int i = 0; i < slitIDs.Length; i++)
+                        {
+                            var coilID_sql = new SqlParameter("@coilID", slits.CoilDetails[0].COILID);
+                            var coilSlitID_sql = new SqlParameter("@coilSlitID", slits.slits[i].COIL_SLIT_ID);
+                            var type_sql = new SqlParameter("@type", slits.slits[i].TYPE);
+                            var color_sql = new SqlParameter("@color", slits.slits[i].COLOR);
+                            var weight_sql = new SqlParameter("@weight", slits.slits[i].WEIGHT);
+                            var gauge_sql = new SqlParameter("@gauge", slits.slits[i].GAUGE);
+                            var width_sql = new SqlParameter("@width", slits.slits[i].WIDTH);
+                            var status_sql = new SqlParameter("@status", slits.slits[i].STATUS);
+                            var userID_sql = new SqlParameter("@userID", ((Scanner.Models.User)Session["User"]).UserName);
+
+                            var sql_update = "exec GramOnline.dbo.proc_AddCoilSlit " +
+                                "@coilID, " +
+                                "@coilSlitID, " +
+                                "@type, " +
+                                "@color, " +
+                                "@weight, " +
+                                "@gauge, " +
+                                "@width, " +
+                                "@status, " +
+                                "@userID ";
+
+                            try
+                            {
+                                using (var context = new DbContext(Global.ConnStr))
+                                {
+                                    context.Database.ExecuteSqlCommand(sql_update,
+                                        coilID_sql,
+                                        coilSlitID_sql,
+                                        type_sql,
+                                        color_sql,
+                                        weight_sql,
+                                        gauge_sql,
+                                        width_sql,
+                                        status_sql,
+                                        userID_sql);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                slits.errMsg = "SQL Exception: " + e + ";";
+                            }
+                        }
+                    }
                 }
             }
             return View(slits);
