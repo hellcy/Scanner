@@ -4,10 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
 }
-<style type="text/css" id="custom-background-css">
+<style type="text/css">
     body.custom-background {
         background-color: #eaf6ff;
     }
+    .pagebreak {
+        page-break-before: always;
+    }
+    /* page-break-after works, as well */
 </style>
 <table class="bodyTable">
     <tr>
@@ -38,7 +42,7 @@
                 @if (@Model.input != null && Model.errMsg == "")
                 {
                     <table class="col-md-4" style="font-size:20px;">
-                        <tr><td><b>Coil ID:</b> @Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @readonly = true })</td></tr>
+                        <tr><td><b>Coil ID:</b> @Model.CoilDetails[0].COILID</td></tr>
                         <tr><td><b>Type:</b> @Model.CoilDetails[0].TYPE.ToString()</td></tr>
                         <tr><td><b>Color:</b> @Model.CoilDetails[0].COLOR.ToString()</td></tr>
                         <tr><td><b>Weight:</b> @Model.CoilDetails[0].WEIGHT.ToString()</td></tr>
@@ -93,7 +97,7 @@
                     var number_6 = (Model.slitNumber == 6) ? "selected " : "";
                     var number_8 = (Model.slitNumber == 8) ? "selected " : "";
 
-                    <select name="slitNumber" id="slitNumber" style="height:28px; width:100px; font-size:14px;" onchange="reloadSlitNumber()">
+                    <select name="slitNumber" id="slitNumber" style="height:28px; width:150px; font-size:14px;" onchange="reloadSlitNumber()">
                         <option value=0 @number_0>Please select Number:</option>
                         <option value=2 @number_2>2</option>
                         <option value=4 @number_4>4</option>
@@ -107,7 +111,7 @@
                         var width_cover_67_base_83 = (Model.slitWidth == 240) ? "selected " : "";
                         var width_cover_92_base_108 = (Model.slitWidth == 290) ? "selected " : "";
 
-                        <select name="slitWidth" id="slitWidth" style="height:28px; width:100px; font-size:14px;" onchange="reloadSlitWidth()">
+                        <select name="slitWidth" id="slitWidth" style="height:28px; width:150px; font-size:14px;" onchange="reloadSlitWidth()">
                             <option value=0>Please select width:</option>
                             @if (208 * (Model.slitNumber / 2) < 680)
                             {
@@ -124,24 +128,24 @@
                 }
                 @if (Model.errMsg == "" && Model.input != null && Model.CoilDetails[0].TYPE == "RA")
                 {
-                    <p>Slit Number: 4</p>
-                    <p>Slit Width: 170 mm</p>
+                    <p style="font-size:25px; font-weight:bold;">Slit Number: 4</p>
+                    <p style="font-size:25px; font-weight:bold;">Slit Width: 170 mm</p>
                 }
                 @if (Model.errMsg == "" && Model.input != null && Model.CoilDetails[0].TYPE == "PO")
                 {
-                    <p>Slit Number: 8</p>
-                    <p>Slit Width: 135 mm</p>}
+                    <p style="font-size:25px; font-weight:bold;">Slit Number: 8</p>
+                    <p style="font-size:25px; font-weight:bold;">Slit Width: 135 mm</p>}
                 @if (Model.errMsg == "" && Model.input != null && Model.CoilDetails[0].TYPE == "PL")
                 {
-                    <p>Slit Number: 4</p>
-                    <p>Slit Width: 255 mm</p>}
+                    <p style="font-size:25px; font-weight:bold;">Slit Number: 4</p>
+                    <p style="font-size:25px; font-weight:bold;">Slit Width: 255 mm</p>}
                 @if (Model.errMsg == "" && Model.input != null && Model.CoilDetails[0].TYPE == "IS")
                 {
-                    <p>Slit Number: 8</p>
-                    <p>Slit Width: 116 mm</p>}
+                    <p style="font-size:25px; font-weight:bold;">Slit Number: 8</p>
+                    <p style="font-size:25px; font-weight:bold;">Slit Width: 116 mm</p>}
             </div>
             <div class="col-md-8" style="font-size:20px;">
-                @if (@Model.input != null)
+                @if (Model.errMsg == "" && Model.input != null)
                 {
                     <table class="col-md-2" style="font-size:20px;">
                         <tr><td>New Coil Slit ID: </td></tr>
@@ -209,11 +213,20 @@
             var mywindow = window.open('', 'PRINT', 'height=600,width=700');
             mywindow.document.write('<html><head><title>SLIT LABEL PRINT PREVIEW (Print By:@loginUserName)</title>');
             mywindow.document.write('</head><body>');
-            mywindow.document.write('<table>');
 
-            mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilSlitLabels.Count; i++){<tr><td>@Html.Raw(Model.QRcodes[i])</td><td><div style="height:100px;">&emsp;&emsp;<b>@Html.Raw(Model.Barcodes[i])</b></div><br><div style="font-size:150%">&emsp;@Html.Raw(Model.CoilSlitLabels[i])</div></td></tr>}}');
+            /* 
+            Browser: Chrome
+            Layout: Landscape
+            Paper Size: User Defined
+            Margins: Default
+            Scale: 100 
+            */
 
-            mywindow.document.write('</table>');
+            //For big label, 1.5cm margin-top on printer preference
+            //mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilSlitLabels.Count; i++){<br/><br/><br/><br/><br/><br/><table><tr><td>@Html.Raw(Model.QRcodes[i])</td><td><div>&emsp;@Html.Raw(Model.Barcodes[i])</div><div style="font-size:150%">&emsp;@Html.Raw(Model.CoilSlitLabels[i])</div></td></tr><div class="pagebreak"> </div></table><br/><br/><br/>}}');
+            
+            //For small label, no margin on printer preference
+            mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilSlitLabels.Count; i++){<table><tr><td>@Html.Raw(Model.QRcodes[i])</td><td><div>&emsp;&emsp;&emsp;@Html.Raw(Model.Barcodes[i])</div><div style="font-size:150%">&emsp;&emsp;@Html.Raw(Model.CoilSlitLabels[i])</div></td></tr><div class="pagebreak"> </div></table><br/><br/><br/><br/><br/><br/><br/><br/>}}');
 
             mywindow.document.write('</body></html>');
             mywindow.document.close();
@@ -228,7 +241,7 @@
         }
         else
         {
-            $('#printErr').text('Please select slit width.');
+            $('#printErr').text('Please fill required information here.');
         }
     }
 
