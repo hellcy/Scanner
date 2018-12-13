@@ -166,7 +166,7 @@
 
         mywindow.document.write('<td>@Html.Raw(ViewBag.QRcode)</td>');
         mywindow.document.write('<td style="font-size:200%;">BillCode: @Model.workOrder_HDR.BILLCODE <br>Work Order: @Model.workOrder_HDR.SEQNO</td>');
-           
+
         //mywindow.document.write('<td>@Html.Raw(ViewBag.QRCodeExample)</td>');
         //mywindow.document.write('<td style="font-size:200%;">73M117A00+PL+SGR+4730+0.8+1025<br>73M117A00+PL+SGR+4730+0.8+1025<br>73M117A00+PL+SGR+4730+0.8+1025<br></td>');
 
@@ -174,8 +174,11 @@
 
         mywindow.document.write('</body></html>');
         mywindow.document.close();
-        mywindow.focus();
-        mywindow.print();
-        mywindow.close();
+        setTimeout(function ()
+        {
+            mywindow.focus();
+            mywindow.print();
+            mywindow.close();
+        }, 0);
     }
 </script>

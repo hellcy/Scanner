@@ -522,37 +522,32 @@ namespace Scanner.Controllers
             Session["CurrForm"] = "CoilSlit";
 
             slits.errMsg = "";
-            string command = "^XA^FO10,10,^AO,30,20^FDFDTesting^FS^FO10,30^BY3^BCN,100,Y,N,N^FDTesting^FS^XZ";
 
-            // Create a buffer with the command
-            Byte[] buffer = new byte[command.Length];
-            buffer = System.Text.Encoding.ASCII.GetBytes(command);
-
-            if (slits.input != null)
+            if (slits.inputHidden != null)
             {
                 //char[] delimiters = { ' ', '+' };
                 //string[] inputArray = slits.input.Split(delimiters); // split the input string by using the delimiter '+'
-                if (slits.input.Length < 9)
+                if (slits.inputHidden.Length < 9)
                 {
                     slits.errMsg = "Wrong Coil ID.";
                     return View(slits);
                 }
 
-                string coilID = slits.input.Substring(0,9);
+                string coilID = slits.inputHidden.Substring(0,9);
 
                 int cover_width = 0;
                 int base_width = 0;
-                if (slits.slitWidth == 208)
+                if (slits.slitWidth == 118)
                 {
                     cover_width = 51;
                     base_width = 67;
                 }
-                if (slits.slitWidth == 240)
+                if (slits.slitWidth == 150)
                 {
                     cover_width = 67;
                     base_width = 83;
                 }
-                if (slits.slitWidth == 290)
+                if (slits.slitWidth == 200)
                 {
                     cover_width = 92;
                     base_width = 108;
@@ -633,6 +628,7 @@ namespace Scanner.Controllers
                         slits.slits[i - 1].COLOR = slits.CoilDetails[0].COLOR;
                         slits.slits[i - 1].WEIGHT = (int)(slits.CoilDetails[0].WEIGHT / slits.slitNumber);
                         slits.slits[i - 1].GAUGE = slits.CoilDetails[0].GAUGE;
+                        slits.slits[i - 1].LENGTH = slits.CoilDetails[0].CLENGTH;
                         if (i % 2 != 0)
                         {
                             slits.slits[i - 1].WIDTH = cover_width;
@@ -650,6 +646,7 @@ namespace Scanner.Controllers
                         imgBytes = turnImageToByteArray(img_QRcode);
                         imgString = Convert.ToBase64String(imgBytes);
                         slits.QRcodes[i - 1] = String.Format("<img src=\"data:image/png;base64,{0}\"/>",imgString);
+
                         img_Barcode = barcode128.Draw(slitLabels[i - 1], 100);
                         imgBytes = turnImageToByteArray(img_Barcode);
                         imgString = Convert.ToBase64String(imgBytes);
@@ -660,8 +657,7 @@ namespace Scanner.Controllers
 
                     if (slits.printFlag == "print")
                     {
-
-                        for (int i = 0; i < slitIDs.Length; i++)
+                        for (int i = 0; i < slits.CoilSlitIDs.Count; i++)
                         {
                             var coilID_sql = new SqlParameter("@coilID", slits.CoilDetails[0].COILID);
                             var coilSlitID_sql = new SqlParameter("@coilSlitID", slits.slits[i].COIL_SLIT_ID);
@@ -672,6 +668,15 @@ namespace Scanner.Controllers
                             var width_sql = new SqlParameter("@width", slits.slits[i].WIDTH);
                             var status_sql = new SqlParameter("@status", slits.slits[i].STATUS);
                             var userID_sql = new SqlParameter("@userID", ((Scanner.Models.User)Session["User"]).UserName);
+                            var length_sql = new SqlParameter("@length", DBNull.Value);
+                            if (slits.slits[i].LENGTH != null)
+                            {
+                                length_sql = new SqlParameter("@length", slits.slits[i].LENGTH);
+                            }
+                            else
+                            {
+                                length_sql = new SqlParameter("@length", DBNull.Value);
+                            }
 
                             var sql_update = "exec GramOnline.dbo.proc_AddCoilSlit " +
                                 "@coilID, " +
@@ -682,7 +687,8 @@ namespace Scanner.Controllers
                                 "@gauge, " +
                                 "@width, " +
                                 "@status, " +
-                                "@userID ";
+                                "@userID, " +
+                                "@length ";
 
                             try
                             {
@@ -697,54 +703,19 @@ namespace Scanner.Controllers
                                         gauge_sql,
                                         width_sql,
                                         status_sql,
-                                        userID_sql);
+                                        userID_sql,
+                                        length_sql);
                                 }
                             }
                             catch (Exception e)
                             {
-                                slits.errMsg = "SQL Exception: " + e + ";";
+                                slits.errMsg = "SQL Exception: " + e.Message + ";";
                             }
                         }
                     }
                 }
             }
             return View(slits);
-        }
-
-        protected void btnPrint_Click(object sender, EventArgs e, Image code)
-        {
-            try
-            {
-                PrintDocument pd = new PrintDocument();
-                pd.DefaultPageSettings.PaperSize = new System.Drawing.Printing.PaperSize("Custom", 100, 77);
-
-                //We want potrait. 
-                pd.DefaultPageSettings.Landscape = false;
-
-                pd.PrintPage += new PrintPageEventHandler(PrintPage);
-                pd.Print();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.ReadLine();
-            }
-        }
-
-        private static void PrintPage(object o, PrintPageEventArgs e)
-        {
-            //System.Drawing.Image img = System.Drawing.Image.FromFile(@"c:\test\test.png");
-            //img.RotateFlip(RotateFlipType.Rotate90FlipNone);
-            //e.Graphics.DrawImage(img,0,0);
-
-            int printHeight = 450;
-            int printWidth = 400;
-            int leftMargin = 20;
-            int rightMargin = 0;
-            System.Drawing.Image img = System.Drawing.Image.FromFile(@"c:\test\test.png");
-            img.RotateFlip(RotateFlipType.Rotate90FlipNone);
-
-            e.Graphics.DrawImage(img, new Rectangle(leftMargin, rightMargin, printWidth, printHeight));
         }
 
         [SessionExpire]

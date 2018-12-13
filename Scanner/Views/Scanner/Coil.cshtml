@@ -92,58 +92,58 @@
                     <div class="inner_table" style="width:1500px; height:300px;">
                         <table>
                             @{
-                            int i = 0;
-                            if (Model != null && Model.CoilDetails != null)
-                            {
-                            foreach (var item in Model.CoilDetails.Skip(1).ToList())
-                            {
-                            <tr>
-                                <td style="width:80px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].COILID, new { @id = "COILID_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].TYPE, new { @id = "TYPE_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].COLOR, new { @id = "COLOR_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].WEIGHT, new { @id = "WEIGHT_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].GAUGE, new { @id = "GAUGE_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].WIDTH, new { @id = "WIDTH_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].ORDER, new { @id = "ORDER_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].P_ORDER, new { @id = "P_ORDER_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].MONTH_RECD, new { @id = "MONTH_RECD_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:180px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].DATE_INWH, new { @id = "DATE_INWH_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:180px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].DATE_TRANSFER, new { @id = "DATE_TRANSFER_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:180px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].LAST_STOCKTAKE_DATE, new { @id = "LAST_STOCKTAKE_DATE_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].STATUS, new { @id = "STATUS_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                                <td style="width:50px; background-color:#e2e2e2;">
-                                    @Html.TextBoxFor(model => model.CoilDetails[i + 1].CLENGTH, new { @id = "CLENGTH_" + i, style = "background-color:#e2e2e2;" })
-                                </td>
-                            </tr>
-                            i++;
-                            }
-                            }
+                                int i = 0;
+                                if (Model != null && Model.CoilDetails != null)
+                                {
+                                    foreach (var item in Model.CoilDetails.Skip(1).ToList())
+                                    {
+                                        <tr>
+                                            <td style="width:80px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].COILID, new { @id = "COILID_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].TYPE, new { @id = "TYPE_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].COLOR, new { @id = "COLOR_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].WEIGHT, new { @id = "WEIGHT_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].GAUGE, new { @id = "GAUGE_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].WIDTH, new { @id = "WIDTH_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].ORDER, new { @id = "ORDER_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].P_ORDER, new { @id = "P_ORDER_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].MONTH_RECD, new { @id = "MONTH_RECD_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:180px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].DATE_INWH, new { @id = "DATE_INWH_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:180px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].DATE_TRANSFER, new { @id = "DATE_TRANSFER_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:180px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].LAST_STOCKTAKE_DATE, new { @id = "LAST_STOCKTAKE_DATE_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].STATUS, new { @id = "STATUS_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                            <td style="width:50px; background-color:#e2e2e2;">
+                                                @Html.TextBoxFor(model => model.CoilDetails[i + 1].CLENGTH, new { @id = "CLENGTH_" + i, style = "background-color:#e2e2e2;" })
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                }
                             }
                         </table>
                     </div>
@@ -157,11 +157,12 @@
         </td>
     </tr>
 </table>
+
 <script type="text/javascript">
     $('#ID').focus();
     $('#ID').val('');
     $('#uploadFlag').val('');
-
+    
     $('#clear').click(function () {
         $('.inner_table').remove(); //remove all table rows except the headings
         $('#ID').val('');
@@ -191,23 +192,4 @@
             return false;
         }
     });
-
-    function PrintBillCode()
-    {
-        var mywindow = window.open('', 'PRINT', 'height=200,width=700');
-        mywindow.document.write('<html><head><title>COIL SLIT PRINT PREVIEW (Print By:@loginUserName)</title>');
-        mywindow.document.write('</head><body>');
-        mywindow.document.write('<table>');
-
-        mywindow.document.write('<td>@Html.Raw(ViewBag.QRcode)</td>');
-        mywindow.document.write('<td style="font-size:200%;">BillCode:  <br>Work Order: </td>');
-
-        mywindow.document.write('</table>');
-
-        mywindow.document.write('</body></html>');
-        mywindow.document.close();
-        mywindow.focus();
-        mywindow.print();
-        mywindow.close();
-    }
 </script>
