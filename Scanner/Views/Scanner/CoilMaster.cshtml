@@ -25,6 +25,7 @@
                     <td>@Html.TextBoxFor(o => o.whereStr, new { autocomplete = "off" })</td>
                     <td>&nbsp;</td>
                     <td><input type="button" class="btn btn-primary" onclick="submitNavpage(1)" value="SEARCH" style="width:80px;" /></td>
+                    <td><input type="button" class="btn btn-primary" onclick="clearText()" value="CLEAR" style="width:80px;" /></td>
                     <td><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
                 </tr>
             </table>
@@ -294,6 +295,11 @@
             $("#frmMain").attr('action', url);
             $("#frmMain").submit();
         }
+    }
+
+    function clearText() {
+        $('#whereStr').val('');
+        submitNavpage(1);
     }
 
     $('#pageNum').keypress(function (e) {

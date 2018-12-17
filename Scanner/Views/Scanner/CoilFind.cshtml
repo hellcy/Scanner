@@ -1,0 +1,43 @@
+﻿@model Scanner.Models.CoilSlits
+@{
+    ViewBag.Title = "Coil Lookup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+}
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px;vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
+            <div class="col-md-12" style="width:1450px; border-bottom: 1px solid;">
+                <table class="col-md-4">
+                    <tr>
+                        <td style="font-size:25px;" class="editor-label">
+                            Coil ID Scanned
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="editor-field">
+                            @Html.TextBoxFor(model => model.input, new { style = "width: 350px; height:50px;", autocomplete = "off" })
+                            @Html.TextBoxFor(model => model.inputHidden, new { style = "width: 350px; height:50px;", type = "hidden" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:20px;">Please press Tab button to display data</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-12" style="border-top: 1px solid;">
+                <input type="button" id="CLEAR" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="ClearSlit()" />&nbsp;&nbsp;
+                <input type="button" id="BACK" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+
+</script>

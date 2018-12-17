@@ -720,6 +720,23 @@ namespace Scanner.Controllers
 
         [SessionExpire]
         [Authorize]
+        public ActionResult CoilFind()
+        {
+            CoilSlits slits = new CoilSlits();
+            return View();
+        }
+
+        [SessionExpire]
+        [HttpPost]
+        [Authorize]
+        public ActionResult CoilFind(CoilSlits slits)
+        {
+
+            return View(slits);
+        }
+
+        [SessionExpire]
+        [Authorize]
         public ActionResult CoilMaster()
         {
             CoilMasters master = new CoilMasters();
