@@ -2,7 +2,6 @@
 @{
     ViewBag.Title = "Coil Lookup";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
 }
 <table class="bodyTable">
     <tr>
@@ -13,31 +12,443 @@
         </td>
         <td valign="top">
             @Html.Partial("_PageTitlePanel")
-            <div class="col-md-12" style="width:1450px; border-bottom: 1px solid;">
-                <table class="col-md-4">
+            <table>
+                <tr>
+                    <td><b>Search Text:</b></td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(o => o.whereStr, new { autocomplete = "off" })</td>
+                    <td>&nbsp;</td>
+                    <td><input type="button" class="btn btn-primary" onclick="submitNavpage(1)" value="SEARCH" style="width:80px;" /></td>
+                    <td><input type="button" class="btn btn-primary" onclick="clearText()" value="CLEAR" style="width:80px;" /></td>
+                    <td><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
+                </tr>
+                <tr>
+                    <td><b>Color:</b></td>
+                    <td>&nbsp;</td>
+                    <td>
+                        @Html.TextBoxFor(o => o.colorSort, new { style = "width:200px;", list = "colorList", autocomplete = "off" })
+                        <datalist id="colorList" size="3">
+                            @if (Model.ColorList != null)
+                            {
+                                foreach (var color in Model.ColorList)
+                                {
+                                    <option value="@color" />
+                                }
+                            }
+                        </datalist>
+                    </td>
+                    <td><b>Width:</b></td>
+                    <td>&nbsp;</td>
+                    <td>
+                        @{
+                            var width_1 = (Model.widthSort == -1) ? "selected " : "";
+                            var width_51 = (Model.widthSort == 51) ? "selected " : "";
+                            var width_67 = (Model.widthSort == 67) ? "selected " : "";
+                            var width_83 = (Model.widthSort == 83) ? "selected " : "";
+                            var width_84 = (Model.widthSort == 84) ? "selected " : "";
+                            var width_92 = (Model.widthSort == 92) ? "selected " : "";
+                            var width_108 = (Model.widthSort == 108) ? "selected " : "";
+                            var width_116 = (Model.widthSort == 116) ? "selected " : "";
+                            var width_255 = (Model.widthSort == 255) ? "selected " : "";
+                        }
+                        <select name="widthSort" id="widthSort" style="height:28px; width:100px; font-size:14px;" onchange="reloadCoilSlits()">
+                            <option value=-1 @width_1>All</option>
+                            <option value=51 @width_51>51</option>
+                            <option value=67 @width_67>67</option>
+                            <option value=83 @width_83>83</option>
+                            <option value=84 @width_84>84</option>
+                            <option value=92 @width_92>92</option>
+                            <option value=108 @width_108>108</option>
+                            <option value=116 @width_116>116</option>
+                            <option value=255 @width_255>255</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <div class="TwrapOverFlow" style="width:1520px;">
+                <span style="float:right; font-weight:bold">Total Coils : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
+                <table class="head" style="width:1520px;">
                     <tr>
-                        <td style="font-size:25px;" class="editor-label">
-                            Coil ID Scanned
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="editor-field">
-                            @Html.TextBoxFor(model => model.input, new { style = "width: 350px; height:50px;", autocomplete = "off" })
-                            @Html.TextBoxFor(model => model.inputHidden, new { style = "width: 350px; height:50px;", type = "hidden" })
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="font-size:20px;">Please press Tab button to display data</td>
+                        @if (Model.sortCol == "COIL_SLIT_ID") 
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COIL_SLIT_ID','String')">COIL SLIT ID<span id="COIL_SLIT_ID_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COIL_SLIT_ID','String')">COIL SLIT ID<span id="COIL_SLIT_ID_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "TYPE")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('TYPE','String')">TYPE<span id="TYPE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('TYPE','String')">TYPE<span id="TYPE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "COLOR")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('COLOR','String')">COLOR<span id="COLOR_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('COLOR','String')">COLOR<span id="COLOR_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "WEIGHT")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WEIGHT','Number')">WEIGHT<span id="WEIGHT_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WEIGHT','Number')">WEIGHT<span id="WEIGHT_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "GAUGE")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('GAUGE','Number')">GAUGE<span id="GAUGE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('GAUGE','Number')">GAUGE<span id="GAUGE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "WIDTH")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WIDTH','Number')">WIDTH<span id="WIDTH_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WIDTH','Number')">WIDTH<span id="WIDTH_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "LENGTH")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('LENGTH','Number')">LENGTH<span id="LENGTH_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('LENGTH','Number')">LENGTH<span id="LENGTH_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "DATE_PRODUCED")
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_PRODUCED','Date')">DATE PRODUCED<span id="DATE_PRODUCED_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_PRODUCED','Date')">DATE PRODUCED<span id="DATE_PRODUCED_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "DATE_USED")
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_USED','Date')">DATE USED<span id="DATE_USED_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_USED','Date')">DATE USED<span id="DATE_USED_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "STATUS")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('STATUS','Number')">STATUS<span id="STATUS_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('STATUS','Number')">STATUS<span id="STATUS_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "USERID")
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('USERID','String')">USERID<span id="USERID_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('USERID','String')">USERID<span id="USERID_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "SECTION")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('SECTION','String')">SECTION<span id="SECTION_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('SECTION','String')">SECTION<span id="SECTION_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "RACK")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('RACK','String')">RACK<span id="RACK_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('RACK','String')">RACK<span id="RACK_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "COLUMNS")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('COLUMNS','Number')">COLUMNS<span id="COLUMNS_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('COLUMNS','Number')">COLUMNS<span id="COLUMNS_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "ROW")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ROW','Number')">ROW<span id="ROW_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ROW','Number')">ROW<span id="ROW_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
                     </tr>
                 </table>
+                <div class="inner_table" style="width:1520px;">
+                    @if (Model.errMsg == "")
+                    {
+                        <table style="width:1520px; overflow-x: auto;">
+                            @for (int i = 0; i < Model.slits.Count; i++)
+                            {
+                            <tr>
+                                <td style="width:50px;">
+                                    @if (@Model.slits[i].COIL_SLIT_ID != null)
+                                    {@Model.slits[i].COIL_SLIT_ID.ToString()}
+                                </td>
+                                <td style="width:30px;">
+                                    @if (@Model.slits[i].TYPE != null)
+                                    {@Model.slits[i].TYPE.ToString()}
+                                </td>
+                                <td style="width:30px;">
+                                    @if (@Model.slits[i].COLOR != null)
+                                    {@Model.slits[i].COLOR.ToString()}
+                                </td>
+                                <td style="width:30px;">@Model.slits[i].WEIGHT.ToString()</td>
+                                <td style="width:30px;">@Model.slits[i].GAUGE.ToString()</td>
+                                <td style="width:30px;">@Model.slits[i].WIDTH.ToString()</td>
+                                <td style="width:30px;">@Model.slits[i].LENGTH.ToString()</td>
+                                <td style="width:70px;">@Model.slits[i].DATE_PRODUCED.ToString()</td>
+                                <td style="width:70px;">@Model.slits[i].DATE_USED.ToString()</td>
+                                <td style="width:30px;">@Model.slits[i].STATUS.ToString()</td>
+                                <td style="width:70px;">
+                                    @if (@Model.slits[i].USERID != null)
+                                    {@Model.slits[i].USERID.ToString()}
+                                </td>
+                                <td style="width:30px;">
+                                    @if (@Model.slits[i].SECTION != null)
+                                    {@Model.slits[i].SECTION.ToString()}
+                                </td>
+                                <td style="width:30px;">
+                                    @if (@Model.slits[i].RACK != null)
+                                    {@Model.slits[i].RACK.ToString()}
+                                </td>
+                                <td style="width:30px;">@Model.slits[i].COLUMNS.ToString()</td>
+                                <td style="width:30px;">@Model.slits[i].ROW.ToString()</td>
+                            </tr>
+                            }
+                        </table>
+                    }
+                </div>
+                @{
+                    var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
+                    var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
+                    var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
+                    var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
+                    var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
+                    var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
+                }
+                <br />
+                <span style="float:right; font-weight:bold">
+                    @Html.TextBoxFor(o => o.totalPages, new { style = "display:none;" })Total Pages: @Model.totalPages.ToString(), Records per Page:
+                    <select name="rowsPerPage" id="rowsPerPage" onchange="reloadCoilSlits()" style="height:28px;font-size:14px;">
+                        <option value=15 @sel15>15</option>
+                        <option value=30 @sel30>30</option>
+                        <option value=50 @sel50>50</option>
+                        <option value=100 @sel100>100</option>
+                        <option value=150 @sel150>150</option>
+                        <option value=200 @sel200>200</option>
+                    </select>
+                    &nbsp;&nbsp;
+                    <a onclick="backNavpage()"><span class="glyphicon glyphicon-backward"></span></a>&nbsp;
+                    @Html.TextBoxFor(o => o.pageNum, new { style = "width:30px;font-size:14px;font-weight:bold;border:solid 1px #666; height:28px;font-color:black;" })
+                    &nbsp;<a onclick="forwardNavpage()"><span class="glyphicon glyphicon-forward"></span></a>
+                </span>
+                <input type="hidden" name="rows" id="rowsCnt" value="" />
+                <input type="hidden" name="cols" id="colsCnt" value="" />
+                @Html.TextBoxFor(o => o.sortCol, new { id = "sortCol", style = "display:none" })
+                @Html.TextBoxFor(o => o.sortColType, new { style = "display:none" })
+                @Html.TextBoxFor(o => o.orderBy, new { style = "display:none" })
             </div>
-            <div class="col-md-12" style="border-top: 1px solid;">
-                <input type="button" id="CLEAR" value="CLEAR" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="ClearSlit()" />&nbsp;&nbsp;
-                <input type="button" id="BACK" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('Index','Scanner','');" />
-            </div>
+            @*@Html.Partial("_BottomPanel")*@
         </td>
     </tr>
 </table>
-<script type="text/javascript">
+<script language="javascript">
+    var loadErrMsg = '@Html.Raw(Model.errMsg)';
+
+    if (loadErrMsg != "") {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+            message: "<font style='font-size:25px;'>" + loadErrMsg + "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+    function submitNavpage(ini) {
+        if (ini == 0) {
+            if ($("#pageNum").val().replace(/ /g, "") == "") {
+                $("#pageNum").val("1");
+            }
+        }
+        else {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+            $("#pageNum").val($("#pageNum").val().replace(/\D/g, ''));
+
+            if ($("#pageNum").val() == "0") {
+                $("#pageNum").val("1");
+            }
+        }
+        else {
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+                $("#pageNum").val($("#totalPages").val());
+            }
+
+            $("#byClick").val("1");
+
+            if (ini == 1) {
+                $("#sortCol").val("DefaultSort");
+            }
+
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "CoilFind").replace("-2", "Scanner");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+    $('#pageNum').keypress(function (e) {
+        if (e.which == 13) {
+            submitNavpage(0);
+        }
+    });
+
+    $('#whereStr').keypress(function (e) {
+        if (e.which == 13) {
+            submitNavpage(1);
+        }
+    });
+
+    $('#colorSort').change(function () {
+        reloadCoilSlits();
+    });
+
+    $('#colorSort').keypress(function (e) {
+        if (e.which == 13) {
+            reloadCoilSlits();
+        }
+    })
+
+    function clearText() {
+        $('#colorSort').val('');
+        $('#widthSort').val('-1');
+        $('#whereStr').val('');
+        submitNavpage(1);
+    }
+
+
+    function forwardNavpage() {
+        if ($("#pageNum").val().replace(/ /g, "") == "") {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+        }
+        else {
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+                $("#pageNum").val($("#totalPages").val());
+            }
+
+            if (parseInt($("#pageNum").val()) < parseInt($("#totalPages").val())) {
+                $("#pageNum").val(parseInt($("#pageNum").val()) + 1);
+            }
+            $("#byClick").val("1");
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "CoilFind").replace("-2", "Scanner");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+
+    function backNavpage() {
+        if ($("#pageNum").val().replace(/ /g, "") == "") {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+        }
+        else {
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+                $("#pageNum").val($("#totalPages").val());
+            }
+
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > 1) {
+                $("#pageNum").val(parseInt($("#pageNum").val()) - 1);
+            }
+
+            $("#byClick").val("1");
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "CoilFind").replace("-2", "Scanner");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+
+
+    function reloadCoilSlits() {
+        $("#byClick").val("1");
+        var url = '@Url.Action("-1", "-2")';
+        url = url.replace("-1", "CoilFind").replace("-2", "Scanner");
+        $("#frmMain").attr('action', url);
+        $("#frmMain").submit();
+    }
+
+    function orderToggle(Id, sortType) {
+        if (Id == $("#sortCol").val()) {
+            if ($("#orderBy").val() == "glyphicon glyphicon-arrow-down") {
+                $("#orderBy").val("glyphicon glyphicon-arrow-up");
+            }
+            else {
+                $("#orderBy").val("glyphicon glyphicon-arrow-down");
+            }
+        }
+        else {
+            $("#sortCol").val(Id);
+            $("#orderBy").val("glyphicon glyphicon-arrow-up");
+        }
+
+        $("#sortColType").val(sortType);
+
+        $("#byClick").val("1");
+        var url = '@Url.Action("-1", "-2")';
+        url = url.replace("-1", "CoilFind").replace("-2", "Scanner");
+        $("#frmMain").attr('action', url);
+        $("#frmMain").submit();
+    }
 
 </script>

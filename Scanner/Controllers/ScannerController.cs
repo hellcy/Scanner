@@ -304,8 +304,8 @@ namespace Scanner.Controllers
             var selStr = new SqlParameter("@selStr", "");
 
 
-            // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
-            var sql = "exec GramOnline.dbo.proc_GetWorkOrders " +
+            // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_Y_GetSideMenu_v2").ToList<SideMenu>();
+            var sql = "exec GramOnline.dbo.proc_Y_GetWorkOrders " +
                 "@Role," +
                 "@UserName, " +
                 "@pageNum, " +
@@ -345,7 +345,7 @@ namespace Scanner.Controllers
                        statusSort).ToList<WorkOrder_HDR>();
                     if (orders.CategoryList == null)
                     {
-                        var sql_category = "exec GramOnline.dbo.proc_GetWorkOrderCatrgoryList";
+                        var sql_category = "exec GramOnline.dbo.proc_Y_GetWorkOrderCatrgoryList";
                         orders.CategoryList = context.Database.SqlQuery<string>(sql_category).ToList<string>();
                     }
                 }
@@ -438,7 +438,7 @@ namespace Scanner.Controllers
                     {
                         var date = DateTime.Now;
                         var UserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
-                        SqlCommand newCmd2 = new SqlCommand(("IF NOT EXISTS (SELECT * FROM GramOnline.dbo.X_COIL_TEST WHERE COILID = '" + coilIDs[i] + "') BEGIN INSERT INTO GramOnline.dbo.X_COIL_TEST (COILID, DATE_INSERT, UserName) VALUES ('" + coilIDs[i] + "', GETDATE(), '" + UserName + "') END"), newCon);
+                        SqlCommand newCmd2 = new SqlCommand(("IF NOT EXISTS (SELECT * FROM GramOnline.dbo.TB_Y_X_COIL_TEST WHERE COILID = '" + coilIDs[i] + "') BEGIN INSERT INTO GramOnline.dbo.TB_Y_X_COIL_TEST (COILID, DATE_INSERT, UserName) VALUES ('" + coilIDs[i] + "', GETDATE(), '" + UserName + "') END"), newCon);
                         newCon.Open();
                         SqlDataReader rdr2 = newCmd2.ExecuteReader();
 
@@ -580,6 +580,14 @@ namespace Scanner.Controllers
                     return View(slits);
                 }
 
+                string M_color = "";
+                string S_color = "";
+                if (slits.CoilDetails[0].COLOR.Length == 4)
+                {
+                    M_color = slits.CoilDetails[0].COLOR.Substring(0, 2);
+                    S_color = slits.CoilDetails[0].COLOR.Substring(2, 2);
+                }
+
                 switch (slits.CoilDetails[0].TYPE)
                 {
                     case "RA":
@@ -626,6 +634,8 @@ namespace Scanner.Controllers
                         slits.slits[i - 1].COIL_SLIT_ID = slitIDs[i - 1];
                         slits.slits[i - 1].TYPE = slits.CoilDetails[0].TYPE;
                         slits.slits[i - 1].COLOR = slits.CoilDetails[0].COLOR;
+                        slits.slits[i - 1].M_COLOR = M_color;
+                        slits.slits[i - 1].S_COLOR = S_color;
                         slits.slits[i - 1].WEIGHT = (int)(slits.CoilDetails[0].WEIGHT / slits.slitNumber);
                         slits.slits[i - 1].GAUGE = slits.CoilDetails[0].GAUGE;
                         slits.slits[i - 1].LENGTH = slits.CoilDetails[0].CLENGTH;
@@ -663,6 +673,8 @@ namespace Scanner.Controllers
                             var coilSlitID_sql = new SqlParameter("@coilSlitID", slits.slits[i].COIL_SLIT_ID);
                             var type_sql = new SqlParameter("@type", slits.slits[i].TYPE);
                             var color_sql = new SqlParameter("@color", slits.slits[i].COLOR);
+                            var m_color_sql = new SqlParameter("@m_color", slits.slits[i].M_COLOR);
+                            var s_color_sql = new SqlParameter("@s_color", slits.slits[i].S_COLOR);
                             var weight_sql = new SqlParameter("@weight", slits.slits[i].WEIGHT);
                             var gauge_sql = new SqlParameter("@gauge", slits.slits[i].GAUGE);
                             var width_sql = new SqlParameter("@width", slits.slits[i].WIDTH);
@@ -678,11 +690,13 @@ namespace Scanner.Controllers
                                 length_sql = new SqlParameter("@length", DBNull.Value);
                             }
 
-                            var sql_update = "exec GramOnline.dbo.proc_AddCoilSlit " +
+                            var sql_update = "exec GramOnline.dbo.proc_Y_AddCoilSlit " +
                                 "@coilID, " +
                                 "@coilSlitID, " +
                                 "@type, " +
                                 "@color, " +
+                                "@m_color, " +
+                                "@s_color, " +
                                 "@weight, " +
                                 "@gauge, " +
                                 "@width, " +
@@ -699,6 +713,8 @@ namespace Scanner.Controllers
                                         coilSlitID_sql,
                                         type_sql,
                                         color_sql,
+                                        m_color_sql,
+                                        s_color_sql,
                                         weight_sql,
                                         gauge_sql,
                                         width_sql,
@@ -722,16 +738,147 @@ namespace Scanner.Controllers
         [Authorize]
         public ActionResult CoilFind()
         {
-            CoilSlits slits = new CoilSlits();
+            CoilSlits slit = new CoilSlits();
             return View();
         }
 
+        /*
+         This action is for looking up existing slited coils in the GramOnline.dbo.TB_Y_X_COIL_SLIT table, which contains the location of searched coils.
+         The staff can use it to quicker find coils by their color or width or even search their particular IDs using keyword search.
+             */
         [SessionExpire]
         [HttpPost]
         [Authorize]
         public ActionResult CoilFind(CoilSlits slits)
         {
+            ViewBag.Title = "Coil Lookup";
+            Session["CurrForm"] = "CoilFind";
 
+            if (string.IsNullOrEmpty(slits.sortCol))
+            {
+                if ((Request.Form["actReq"] != null) && (Request.Form["actReq"].ToString() == "f"))
+                {
+                    var rowsCnt = (Session[Request.Form["frmName"].ToString()] != null) ? ((DataTable)Session[Request.Form["frmName"].ToString()]).Rows.Count : 0;
+                    if ((Request.Form["rows"] != null) && (Request.Form["rows"].ToString() != ""))
+                    {
+                        rowsCnt = Convert.ToInt32(Request.Form["rows"]);
+                    }
+
+                    fillCurrTable(Request.Form["frmName"].ToString(), rowsCnt);
+                }
+
+                slits.sortCol = "DefaultSort";
+                slits.sortColType = "Number";
+                slits.rowsPerPage = 15;
+                slits.pageNum = 1;
+                slits.orderBy = "glyphicon glyphicon-arrow-up";
+            }
+
+            if (slits.sortCol != "COIL_SLIT_ID" && slits.sortCol != "TYPE" && slits.sortCol != "COLOR" && slits.sortCol != "WEIGHT" && slits.sortCol != "GAUGE"
+                && slits.sortCol != "WIDTH" && slits.sortCol != "LENGTH" && slits.sortCol != "DATE_PRODUCED" && slits.sortCol != "DATE_USED" && slits.sortCol != "STATUS"
+                && slits.sortCol != "USERID" && slits.sortCol != "SECTION" && slits.sortCol != "RACK" && slits.sortCol != "COLUMNS" && slits.sortCol != "ROW")
+            {
+                slits.sortCol = "DefaultSort";
+            }
+
+            if (String.IsNullOrEmpty(slits.whereStr))
+            {
+                slits.whereStr = "";
+            }
+
+            if (slits.whereStr.Replace(" ", "") == "")
+            {
+                slits.whereStr = "";
+            }
+
+            if (String.IsNullOrEmpty(slits.colorSort))
+            {
+                slits.colorSort = "";
+            }
+
+            var Role = new SqlParameter("@Role", ((Scanner.Models.User)Session["User"]).Role);
+            var UserName = new SqlParameter("@UserName", ((Scanner.Models.User)Session["User"]).UserName);
+            var pageNum = new SqlParameter("@pageNum", (slits.pageNum == 0) ? 1 : slits.pageNum);
+            var rowsPerPage = new SqlParameter("@rowsPerPage", slits.rowsPerPage);
+            var sortCol = new SqlParameter("@sortCol", slits.sortCol);
+            var sortColType = new SqlParameter("@sortColType", slits.sortColType);
+            var whereStr = new SqlParameter("@whereStr", slits.whereStr.ToString());
+            var colorSort = new SqlParameter("@colorSort", slits.colorSort.ToString());
+            var widthSort = new SqlParameter("@widthSort", slits.widthSort.ToString());
+
+            var orderBy = (slits.orderBy == "glyphicon glyphicon-arrow-down") ?
+                new SqlParameter("@orderBy", "desc") :
+                new SqlParameter("@orderBy", "asc");
+
+
+            var table = new SqlParameter("@table", "GramOnline.dbo.TB_Y_X_COIL_SLIT");
+            var selStr = new SqlParameter("@selStr", "");
+
+            var sql = "exec GramOnline.dbo.proc_Y_GetCoilSlits " +
+                "@Role," +
+                "@UserName, " +
+                "@pageNum, " +
+                "@rowsPerPage, " +
+                "@sortCol, " +
+                "@sortColType, " +
+                "@whereStr, " +
+                "@orderBy, " +
+                "@table, " +
+                "@selStr, " +
+                "@colorSort, " +
+                "@widthSort ";
+
+            var oldMsg = "";
+
+            if (slits.errMsg == null)
+                slits.errMsg = "";
+            else
+                oldMsg = slits.errMsg;
+
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    slits.slits = context.Database.SqlQuery<CoilSlit>(sql,
+                       Role,
+                       UserName,
+                       pageNum,
+                       rowsPerPage,
+                       sortCol,
+                       sortColType,
+                       whereStr,
+                       orderBy,
+                       table,
+                       selStr,
+                       colorSort,
+                       widthSort).ToList<CoilSlit>();
+                    if (slits.ColorList == null)
+                    {
+                        var sql_color = "SELECT codes FROM GRAM_SYD_LIVE.dbo.X_COLOR_CHART order by codes asc";
+                        slits.ColorList = context.Database.SqlQuery<string>(sql_color).ToList<string>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                slits.totalPages = 0;
+                slits.totalRows = 0;
+                slits.slits = null;
+                slits.errMsg = e.Message.ToString().Replace("'", "\"");
+                if (e.Message.Equals("The specified cast from a materialized 'System.String' type to the 'System.Int32' type is not valid."))
+                {
+                    slits.errMsg = "No Record Found.";
+                }
+            }
+
+            if (slits.slits != null)
+            {
+                if (slits.slits.Count > 0)
+                {
+                    slits.totalPages = slits.slits[0].maxPages;
+                    slits.totalRows = slits.slits[0].TotalRows;
+                }
+            }
             return View(slits);
         }
 
@@ -809,8 +956,8 @@ namespace Scanner.Controllers
             var selStr = new SqlParameter("@selStr", "");
 
 
-            // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
-            var sql = "exec GramOnline.dbo.proc_GetCoilMasters " +
+            // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_Y_GetSideMenu_v2").ToList<SideMenu>();
+            var sql = "exec GramOnline.dbo.proc_Y_GetCoilMasters " +
                 "@Role," +
                 "@UserName, " +
                 "@pageNum, " +

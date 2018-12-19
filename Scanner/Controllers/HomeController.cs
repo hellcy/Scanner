@@ -55,7 +55,7 @@ namespace Scanner.Controllers
                             {
                                 try
                                 {
-                                    sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
+                                    sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_Y_GetSideMenu_v2").ToList<SideMenu>();
                                     Session["SideMenu"] = sideMenus;
                                 }
                                 catch (Exception e)
@@ -266,7 +266,7 @@ namespace Scanner.Controllers
                                 {
                                     try
                                     {
-                                        sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
+                                        sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_Y_GetSideMenu_v2").ToList<SideMenu>();
                                         Session["SideMenu"] = sideMenus;
                                     }
                                     catch (Exception e)
@@ -332,7 +332,7 @@ namespace Scanner.Controllers
                     {
                         try
                         {
-                            sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
+                            sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_Y_GetSideMenu_v2").ToList<SideMenu>();
                             Session["SideMenu"] = sideMenus;
                         }
                         catch (Exception e)
@@ -453,7 +453,7 @@ namespace Scanner.Controllers
                     {
                         try
                         {
-                            sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_GetSideMenu_v2").ToList<SideMenu>();
+                            sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_Y_GetSideMenu_v2").ToList<SideMenu>();
                             Session["SideMenu"] = sideMenus;
                         }
                         catch (Exception e)

@@ -3,12 +3,6 @@
     ViewBag.Title = "Coil Master";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<style type="text/css" id="custom-background-css">
-    body.custom-background {
-        background-color: #eaf6ff;
-    }
-</style>
 <table class="bodyTable">
     <tr>
         <td style="width:300px;vertical-align:top;">
@@ -30,7 +24,7 @@
                 </tr>
             </table>
             <div class="TwrapOverFlow" style="width:1520px;">
-                <span style="float:right; font-weight:bold">Total Orders : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
+                <span style="float:right; font-weight:bold">Total Coils : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
                 <table class="head" style="width:1520px;">
                     <tr>
                         @if (Model.sortCol == "COILID")
