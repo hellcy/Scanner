@@ -161,7 +161,11 @@
 <script type="text/javascript">
     $('#ID').focus();
     $('#ID').val('');
-    $('#uploadFlag').val('');
+    var upload = $('#uploadFlag').val();
+    if (upload == "UPLOAD") {
+        $('.inner_table').remove();
+        $('#uploadFlag').val('');
+    }
     
     $('#clear').click(function () {
         $('.inner_table').remove(); //remove all table rows except the headings
@@ -173,7 +177,6 @@
 
     $('#uploadButton').click(function () {
         $('#SaveTable').val($('#Save').val());
-        $('.inner_table').remove(); //remove all table rows except the headings
         $('#uploadFlag').val("UPLOAD");
         $("#frmMain").submit(function () {
             $('#Save').val('');
@@ -187,9 +190,9 @@
         }
     });
 
-    $('#ID').keypress(function (e) {
-        if (e.which == 13) {
-            return false;
-        }
-    });
+    //$('#ID').keypress(function (e) {
+    //    if (e.which == 13) {
+    //        return false;
+    //    }
+    //});
 </script>

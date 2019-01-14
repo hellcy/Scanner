@@ -382,6 +382,7 @@ namespace Scanner.Controllers
         public ActionResult Coil()
         {
             CoilMasters details = new CoilMasters();
+            details.CoilDetails = new List<CoilMaster>();
             return View(details);
         }
 
@@ -417,17 +418,28 @@ namespace Scanner.Controllers
 
             List<string> coilIDs = new List<string>();
 
-            int splitAt = CoilQRcodeLength;
+            //int splitAt = CoilQRcodeLength;
             int coilIDCount = 0;
-            for (int i = 0; i < input.Length; i = i + splitAt)
+
+            //for (int i = 0; i < input.Length; i = i + splitAt)
+            //{
+            //    coilIDCount++;
+            //    if (input.Length - i >= splitAt)
+            //        coilIDs.Add(input.Substring(i, CoilIDLength));
+            //    else if (input.Length - i >= CoilIDLength)
+            //        coilIDs.Add(input.Substring(i, CoilIDLength));
+            //    else
+            //        coilIDs.Add(input.Substring(i, ((input.Length - i))));
+            //}
+            string[] lines = input.Split(
+                new[] { Environment.NewLine },
+                StringSplitOptions.None
+            );
+            coilIDCount = lines.Length - 1;
+
+            for (int i = 0; i < coilIDCount; i++)
             {
-                coilIDCount++;
-                if (input.Length - i >= splitAt)
-                    coilIDs.Add(input.Substring(i, CoilIDLength));
-                else if (input.Length - i >= CoilIDLength)
-                    coilIDs.Add(input.Substring(i, CoilIDLength));
-                else
-                    coilIDs.Add(input.Substring(i, ((input.Length - i))));
+                coilIDs.Add(lines[i].Substring(0, CoilIDLength));
             }
 
             for (int i = 0; i < coilIDCount; i++)
@@ -436,9 +448,10 @@ namespace Scanner.Controllers
                 {
                     if (model.CoilDetails[0].Flag == "UPLOAD")
                     {
+                        //model = (CoilMasters)Session["aaa"];
                         var date = DateTime.Now;
                         var UserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
-                        SqlCommand newCmd2 = new SqlCommand(("IF NOT EXISTS (SELECT * FROM GramOnline.dbo.TB_Y_X_COIL_TEST WHERE COILID = '" + coilIDs[i] + "') BEGIN INSERT INTO GramOnline.dbo.TB_Y_X_COIL_TEST (COILID, DATE_INSERT, UserName) VALUES ('" + coilIDs[i] + "', GETDATE(), '" + UserName + "') END"), newCon);
+                        SqlCommand newCmd2 = new SqlCommand(("IF NOT EXISTS (SELECT * FROM GramOnline.dbo.TB_Y_X_COIL_TEST WHERE COILID = '" + coilIDs[i] + "') BEGIN INSERT INTO GramOnline.dbo.TB_Y_X_COIL_TEST (COILID, TYPE, COLOR, WEIGHT, GAUGE, WIDTH, DATE_INSERT, UserName) VALUES ('" + coilIDs[i] + "' , '" + model.CoilDetails[i + 1].TYPE + "' , '" + model.CoilDetails[i + 1].COLOR + "' , " + model.CoilDetails[i + 1].WEIGHT + " , " + model.CoilDetails[i + 1].GAUGE + " , " + model.CoilDetails[i + 1].WIDTH + " , GETDATE(), '" + UserName + "') END"), newCon);
                         newCon.Open();
                         SqlDataReader rdr2 = newCmd2.ExecuteReader();
 
@@ -447,54 +460,79 @@ namespace Scanner.Controllers
                     }
                     else
                     {
+
                         CoilMaster modelDetail = new CoilMaster();
                         modelDetail.COILID = coilIDs[i];
                         modelDetail.Save = model.CoilDetails[0].Save;
-                        SqlCommand newCmd = new SqlCommand(("select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coilIDs[i] + "'"), newCon);
-                        newCon.Open();
-                        SqlDataReader rdr = newCmd.ExecuteReader();
-                        if (rdr.HasRows) // If the sql command doesn't return any record, display a message
-                        {
-                            rdr.Read();
-                            if (!rdr.IsDBNull(0))
-                                modelDetail.COILID = rdr.GetString(0);
-                            if (!rdr.IsDBNull(1))
-                                modelDetail.TYPE = rdr.GetString(1);
-                            if (!rdr.IsDBNull(2))
-                                modelDetail.COLOR = rdr.GetString(2);
-                            if (!rdr.IsDBNull(3))
-                                modelDetail.WEIGHT = rdr.GetDouble(3);
-                            if (!rdr.IsDBNull(4))
-                                modelDetail.GAUGE = rdr.GetDouble(4);
-                            if (!rdr.IsDBNull(5))
-                                modelDetail.WIDTH = rdr.GetDouble(5);
-                            if (!rdr.IsDBNull(6))
-                                modelDetail.ORDER = rdr.GetInt32(6);
-                            if (!rdr.IsDBNull(7))
-                                modelDetail.P_ORDER = rdr.GetString(7);
-                            if (!rdr.IsDBNull(8))
-                                modelDetail.MONTH_RECD = rdr.GetString(8);
-                            if (!rdr.IsDBNull(9))
-                                modelDetail.DATE_INWH = rdr.GetDateTime(9);
-                            if (!rdr.IsDBNull(10))
-                                modelDetail.DATE_TRANSFER = rdr.GetDateTime(10);
-                            if (!rdr.IsDBNull(11))
-                                modelDetail.LAST_STOCKTAKE_DATE = rdr.GetDateTime(11);
-                            if (!rdr.IsDBNull(12))
-                                modelDetail.STATUS = rdr.GetString(12);
-                            if (!rdr.IsDBNull(13))
-                                modelDetail.CLENGTH = rdr.GetInt32(13);
-                        }
-                        else
-                        {
-                            if (coilIDs.Count == 1)
-                                ViewBag.Error = "No information was found in the database.";
-                        }
-                        newCon.Close();
+
+                        string[] tokens = lines[i].Split('+');
+                        modelDetail.COILID = tokens[0];
+                        modelDetail.TYPE = tokens[1];
+                        modelDetail.COLOR = tokens[2];
+                        modelDetail.WEIGHT = Double.Parse(tokens[3]);
+                        modelDetail.GAUGE = Double.Parse(tokens[4]);
+                        modelDetail.WIDTH = Double.Parse(tokens[5]);
                         model.CoilDetails.Add(modelDetail);
+                        //model.CoilDetails = new List<CoilMaster>();
+                        //CoilMaster coilMaster = new CoilMaster();
+
+                        //coilMaster.COILID = coilIDs[i];
+
+                        //string[] tokens = lines[i].Split('+');
+                        //coilMaster.COILID = tokens[0];
+                        //coilMaster.TYPE = tokens[1];
+                        //coilMaster.COLOR = tokens[2];
+                        //coilMaster.WEIGHT = Double.Parse(tokens[3]);
+                        //coilMaster.GAUGE = Double.Parse(tokens[4]);
+                        //coilMaster.WIDTH = Double.Parse(tokens[5]);
+                        //model.CoilDetails.Add(coilMaster);
+
+                        //SqlCommand newCmd = new SqlCommand(("select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coilIDs[i] + "'"), newCon);
+                        //newCon.Open();
+                        //SqlDataReader rdr = newCmd.ExecuteReader();
+                        //if (rdr.HasRows) // If the sql command doesn't return any record, display a message
+                        //{
+                        //    rdr.Read();
+                        //    if (!rdr.IsDBNull(0))
+                        //        modelDetail.COILID = rdr.GetString(0);
+                        //    if (!rdr.IsDBNull(1))
+                        //        modelDetail.TYPE = rdr.GetString(1);
+                        //    if (!rdr.IsDBNull(2))
+                        //        modelDetail.COLOR = rdr.GetString(2);
+                        //    if (!rdr.IsDBNull(3))
+                        //        modelDetail.WEIGHT = rdr.GetDouble(3);
+                        //    if (!rdr.IsDBNull(4))
+                        //        modelDetail.GAUGE = rdr.GetDouble(4);
+                        //    if (!rdr.IsDBNull(5))
+                        //        modelDetail.WIDTH = rdr.GetDouble(5);
+                        //    if (!rdr.IsDBNull(6))
+                        //        modelDetail.ORDER = rdr.GetInt32(6);
+                        //    if (!rdr.IsDBNull(7))
+                        //        modelDetail.P_ORDER = rdr.GetString(7);
+                        //    if (!rdr.IsDBNull(8))
+                        //        modelDetail.MONTH_RECD = rdr.GetString(8);
+                        //    if (!rdr.IsDBNull(9))
+                        //        modelDetail.DATE_INWH = rdr.GetDateTime(9);
+                        //    if (!rdr.IsDBNull(10))
+                        //        modelDetail.DATE_TRANSFER = rdr.GetDateTime(10);
+                        //    if (!rdr.IsDBNull(11))
+                        //        modelDetail.LAST_STOCKTAKE_DATE = rdr.GetDateTime(11);
+                        //    if (!rdr.IsDBNull(12))
+                        //        modelDetail.STATUS = rdr.GetString(12);
+                        //    if (!rdr.IsDBNull(13))
+                        //        modelDetail.CLENGTH = rdr.GetInt32(13);
+                        //}
+                        //else
+                        //{
+                        //    if (coilIDs.Count == 1)
+                        //        ViewBag.Error = "No information was found in the database.";
+                        //}
+                        //newCon.Close();
+                        //model.CoilDetails.Add(modelDetail);
                     }
                 }
             }
+            Session["aaa"] = model.CoilDetails;
             return View(model);
         }
 
