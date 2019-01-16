@@ -63,7 +63,7 @@
                             <th style="width:50px">
                                 <span class="text">Width</span>
                             </th>
-                            <th style="width:50px">
+                            @*<th style="width:50px">
                                 <span class="text">Order</span>
                             </th>
                             <th style="width:50px">
@@ -80,13 +80,13 @@
                             </th>
                             <th style="width:180px">
                                 <span class="text">Last_stocktake_date</span>
-                            </th>
+                            </th>*@
                             <th style="width:50px">
                                 <span class="text">Status</span>
                             </th>
-                            <th style="width:50px">
+                            @*<th style="width:50px">
                                 <span class="text">Clength</span>
-                            </th>
+                            </th>*@
                         </tr>
                     </table>
                     <div class="inner_table" style="width:1500px; height:300px;">
@@ -116,7 +116,7 @@
                                             <td style="width:50px; background-color:#e2e2e2;">
                                                 @Html.TextBoxFor(model => model.CoilDetails[i + 1].WIDTH, new { @id = "WIDTH_" + i, style = "background-color:#e2e2e2;" })
                                             </td>
-                                            <td style="width:50px; background-color:#e2e2e2;">
+                                            @*<td style="width:50px; background-color:#e2e2e2;">
                                                 @Html.TextBoxFor(model => model.CoilDetails[i + 1].ORDER, new { @id = "ORDER_" + i, style = "background-color:#e2e2e2;" })
                                             </td>
                                             <td style="width:50px; background-color:#e2e2e2;">
@@ -133,13 +133,13 @@
                                             </td>
                                             <td style="width:180px; background-color:#e2e2e2;">
                                                 @Html.TextBoxFor(model => model.CoilDetails[i + 1].LAST_STOCKTAKE_DATE, new { @id = "LAST_STOCKTAKE_DATE_" + i, style = "background-color:#e2e2e2;" })
-                                            </td>
+                                            </td>*@
                                             <td style="width:50px; background-color:#e2e2e2;">
                                                 @Html.TextBoxFor(model => model.CoilDetails[i + 1].STATUS, new { @id = "STATUS_" + i, style = "background-color:#e2e2e2;" })
                                             </td>
-                                            <td style="width:50px; background-color:#e2e2e2;">
+                                            @*<td style="width:50px; background-color:#e2e2e2;">
                                                 @Html.TextBoxFor(model => model.CoilDetails[i + 1].CLENGTH, new { @id = "CLENGTH_" + i, style = "background-color:#e2e2e2;" })
-                                            </td>
+                                            </td>*@
                                         </tr>
                                         i++;
                                     }

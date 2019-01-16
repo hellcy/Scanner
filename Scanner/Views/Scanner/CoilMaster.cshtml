@@ -152,60 +152,60 @@
                 <div class="inner_table" style="width:1520px;">
                     @if (Model.errMsg == "")
                     {
-                    <table style="width:1520px; overflow-x: auto;">
-                        @for (int i = 0; i < Model.CoilDetails.Count; i++)
-                        {
-                        <tr>
-                            <td style="width:50px;">
-                                <a onclick="gotoPage('CoilMasterDetails','Scanner','ID=@Model.CoilDetails[i].COILID')">
-                                    @if (@Model.CoilDetails[i].COILID != null)
-                                    {@Model.CoilDetails[i].COILID}
-                                </a>
-                            </td>
-                            <td style="width:30px;">
-                                @if (@Model.CoilDetails[i].TYPE != null)
-                                {@Model.CoilDetails[i].TYPE}
-                            </td>
-                            <td style="width:30px;">
-                                @if (@Model.CoilDetails[i].COLOR != null)
-                                {@Model.CoilDetails[i].COLOR}
-                            </td>
-                            <td style="width:30px;">@Model.CoilDetails[i].WEIGHT.ToString()</td>
-                            <td style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
-                            <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
-                            <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
-                            <td style="width:50px;">
-                                @if (@Model.CoilDetails[i].P_ORDER != null)
-                                {@Model.CoilDetails[i].P_ORDER}
-                            </td>
-                            <td style="width:50px;">
-                                @if (@Model.CoilDetails[i].MONTH_RECD != null)
-                                {@Model.CoilDetails[i].MONTH_RECD}
-                            </td>
-                            <td style="width:70px;">@Model.CoilDetails[i].DATE_INWH.ToString()</td>
-                            <td style="width:70px;">@Model.CoilDetails[i].DATE_TRANSFER.ToString()</td>
-                            <td style="width:70px;">@Model.CoilDetails[i].LAST_STOCKTAKE_DATE.ToString()</td>
-                            <td style="width:30px;">
-                                @if (@Model.CoilDetails[i].STATUS != null)
-                                {@Model.CoilDetails[i].STATUS}
-                            </td>
-                            <td style="width:30px;">@Model.CoilDetails[i].CLENGTH.ToString()</td>
-                            <td style="width:30px;">
-                                @if (@Model.CoilDetails[i].ZINCCOAT != null)
-                                {@Model.CoilDetails[i].ZINCCOAT}
-                            </td>
-                        </tr>
-                        }
-                    </table>
+                        <table style="width:1520px; overflow-x: auto;">
+                            @for (int i = 0; i < Model.CoilDetails.Count; i++)
+                            {
+                                <tr>
+                                    <td style="width:50px;">
+                                        <a onclick="gotoPage('CoilMasterDetails','Scanner','ID=@Model.CoilDetails[i].COILID')">
+                                            @if (@Model.CoilDetails[i].COILID != null)
+                                            {@Model.CoilDetails[i].COILID}
+                                        </a>
+                                    </td>
+                                    <td class="context-menu_@Model.CoilDetails[i].TYPE" style="width:30px;">
+                                        @if (@Model.CoilDetails[i].TYPE != null)
+                                        {@Model.CoilDetails[i].TYPE}
+                                    </td>
+                                    <td class="context-menu_@Model.CoilDetails[i].COLOR" style="width:30px;">
+                                        @if (@Model.CoilDetails[i].COLOR != null)
+                                        {@Model.CoilDetails[i].COLOR}
+                                    </td>
+                                    <td style="width:30px;">@Model.CoilDetails[i].WEIGHT.ToString()</td>
+                                    <td class="context-menu_@Model.CoilDetails[i].GAUGE" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
+                                    <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
+                                    <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
+                                    <td style="width:50px;">
+                                        @if (@Model.CoilDetails[i].P_ORDER != null)
+                                        {@Model.CoilDetails[i].P_ORDER}
+                                    </td>
+                                    <td style="width:50px;">
+                                        @if (@Model.CoilDetails[i].MONTH_RECD != null)
+                                        {@Model.CoilDetails[i].MONTH_RECD}
+                                    </td>
+                                    <td style="width:70px;">@Model.CoilDetails[i].DATE_INWH.ToString()</td>
+                                    <td style="width:70px;">@Model.CoilDetails[i].DATE_TRANSFER.ToString()</td>
+                                    <td style="width:70px;">@Model.CoilDetails[i].LAST_STOCKTAKE_DATE.ToString()</td>
+                                    <td style="width:30px;">
+                                        @if (@Model.CoilDetails[i].STATUS != null)
+                                        {@Model.CoilDetails[i].STATUS}
+                                    </td>
+                                    <td style="width:30px;">@Model.CoilDetails[i].CLENGTH.ToString()</td>
+                                    <td style="width:30px;">
+                                        @if (@Model.CoilDetails[i].ZINCCOAT != null)
+                                        {@Model.CoilDetails[i].ZINCCOAT}
+                                    </td>
+                                </tr>
+                            }
+                        </table>
                     }
                 </div>
                 @{
-                var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
-                var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
-                var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
-                var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
-                var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
-                var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
+                    var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
+                    var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
+                    var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
+                    var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
+                    var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
+                    var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
                 }
                 <br />
                 <span style="float:right; font-weight:bold">
@@ -418,4 +418,79 @@
         $("#frmMain").attr('action', url);
         $("#frmMain").submit();
     }
+
+    $(function() {
+        //coil master type 
+        $.contextMenu({ selector: '.context-menu_FS', items: {name: {name: "Five Star Infill Sheet 0.32"}}});
+        $.contextMenu({ selector: '.context-menu_PO', items: {name: {name: "Post 0.9"}}});
+        $.contextMenu({ selector: '.context-menu_IS', items: {name: {name: "Infill Sheet 0.35"}}});
+        $.contextMenu({ selector: '.context-menu_SM', items: {name: {name: "Smart Slat 0.55"}}});
+        $.contextMenu({ selector: '.context-menu_RA', items: {name: {name: "Rail 0.8"}}});
+        $.contextMenu({ selector: '.context-menu_PL', items: {name: {name: "Plinth 0.8"}}});
+        $.contextMenu({ selector: '.context-menu_WC', items: {name: {name: "Infill Sheet 0.35"}}});
+        $.contextMenu({ selector: '.context-menu_RO', items: {name: {name: "Roof 0.42"}}});
+        $.contextMenu({ selector: '.context-menu_OS', items: {name: {name: "Smart Slat 0.55"}}});
+
+        $.contextMenu({ selector: '.context-menu_0.32000000000000001', items: {name: {name: "Five Star Infill Sheet 0.32"}}});
+        $.contextMenu({ selector: '.context-menu_0.9', items: {name: {name: "Post 0.9"}}});
+        $.contextMenu({ selector: '.context-menu_0.35', items: {name: {name: "Infill Sheet 0.35"}}});
+        $.contextMenu({ selector: '.context-menu_0.55000000000000004', items: {name: {name: "Smart Slat 0.55"}}});
+        //$.contextMenu({ selector: '.context-menu_0.8', items: {name: {name: ""}}});
+        $.contextMenu({ selector: '.context-menu_0.42', items: {name: {name: "Roof 0.42"}}});
+
+        //coil master color
+        $.contextMenu({ selector: '.context-menu_DSM', items: {name: {name: "DARK SMOKE"}}});
+        $.contextMenu({ selector: '.context-menu_WNB', items: {name: {name: "WOODGRAIN NUT BROWN"}}});
+        $.contextMenu({ selector: '.context-menu_WRU', items: {name: {name: "WOODGRAIN RUSSET"}}});
+        $.contextMenu({ selector: '.context-menu_GAL', items: {name: {name: "GALVANISED"}}});
+        $.contextMenu({ selector: '.context-menu_UNP', items: {name: {name: "UNPAINTED"}}});
+        $.contextMenu({ selector: '.context-menu_WOA', items: {name: {name: "WOODGRAIN OAK"}}});
+        $.contextMenu({ selector: '.context-menu_WAG', items: {name: {name: "WOODGRAIN ARMOUR GREY"}}});
+        $.contextMenu({ selector: '.context-menu_TBA', items: {name: {name: "TBA"}}});
+        $.contextMenu({ selector: '.context-menu_AGR', items: {name: {name: "ARMOUR GREY"}}});
+        $.contextMenu({ selector: '.context-menu_ARE', items: {name: {name: "AUTUMN RED"}}});
+        $.contextMenu({ selector: '.context-menu_BBR', items: {name: {name: "BOWRAL BROWN"}}});
+        $.contextMenu({ selector: '.context-menu_BEI', items: {name: {name: "BEIGE"}}});
+        $.contextMenu({ selector: '.context-menu_BGR', items: {name: {name: "BRUNSWICK GREEN"}}});
+        $.contextMenu({ selector: '.context-menu_BIR', items: {name: {name: "BIRCH"}}});
+        $.contextMenu({ selector: '.context-menu_BLA', items: {name: {name: "BLACK"}}});
+        $.contextMenu({ selector: '.context-menu_BRO', items: {name: {name: "BLUE ROCK"}}});
+        $.contextMenu({ selector: '.context-menu_BSH', items: {name: {name: "BRONZE SHEEN"}}});
+        $.contextMenu({ selector: '.context-menu_CGR', items: {name: {name: "CAULFIELD GREEN"}}});
+        $.contextMenu({ selector: '.context-menu_CHA', items: {name: {name: "CHARCOAL"}}});
+        $.contextMenu({ selector: '.context-menu_CLA', items: {name: {name: "CLARET"}}});
+        $.contextMenu({ selector: '.context-menu_COK', items: {name: {name: "COKE"}}});
+        $.contextMenu({ selector: '.context-menu_DJA', items: {name: {name: "DEEP JACARANDA"}}});
+        $.contextMenu({ selector: '.context-menu_GGR', items: {name: {name: "GULL GREY"}}});
+        $.contextMenu({ selector: '.context-menu_GMG', items: {name: {name: "GUN METAL GREEN"}}});
+        $.contextMenu({ selector: '.context-menu_GST', items: {name: {name: "GREY STONE"}}});
+        $.contextMenu({ selector: '.context-menu_HBR', items: {name: {name: "HAMMERSLY BROWN"}}});
+        $.contextMenu({ selector: '.context-menu_HGR', items: {name: {name: "HAWTHORN GREEN"}}});
+        $.contextMenu({ selector: '.context-menu_HRE', items: {name: {name: "HERITAGE RED"}}});
+        $.contextMenu({ selector: '.context-menu_IRO', items: {name: {name: "IRONBARK"}}});
+        $.contextMenu({ selector: '.context-menu_MBL', items: {name: {name: "MOUNTAIN BLUE"}}});
+        $.contextMenu({ selector: '.context-menu_MER', items: {name: {name: "MERINO"}}});
+        $.contextMenu({ selector: '.context-menu_MGR', items: {name: {name: "MIST GREEN"}}});
+        $.contextMenu({ selector: '.context-menu_MLO', items: {name: {name: "MERLOT"}}});
+        $.contextMenu({ selector: '.context-menu_MOC', items: {name: {name: "MOCCA"}}});
+        $.contextMenu({ selector: '.context-menu_MVS', items: {name: {name: "MOSS VALE SAND"}}});
+        $.contextMenu({ selector: '.context-menu_NBR', items: {name: {name: "NUT BROWN"}}});
+        $.contextMenu({ selector: '.context-menu_OAK', items: {name: {name: "OAK"}}});
+        $.contextMenu({ selector: '.context-menu_OGR', items: {name: {name: "OCEAN GREEN"}}});
+        $.contextMenu({ selector: '.context-menu_OWH', items: {name: {name: "OFF WHITE"}}});
+        $.contextMenu({ selector: '.context-menu_PGR', items: {name: {name: "PICTON GREEN"}}});
+        $.contextMenu({ selector: '.context-menu_PRI', items: {name: {name: "PRIMROSE"}}});
+        $.contextMenu({ selector: '.context-menu_PWH', items: {name: {name: "PEARL WHITE"}}});
+        $.contextMenu({ selector: '.context-menu_RIV', items: {name: {name: "RIVERGUM"}}});
+        $.contextMenu({ selector: '.context-menu_RUS', items: {name: {name: "RUSSET"}}});
+        $.contextMenu({ selector: '.context-menu_SAN', items: {name: {name: "SANDSTONE"}}});
+        $.contextMenu({ selector: '.context-menu_SCR', items: {name: {name: "SMOOTH CREAM"}}});
+        $.contextMenu({ selector: '.context-menu_SEC', items: {name: {name: "SECONDS"}}});
+        $.contextMenu({ selector: '.context-menu_SGR', items: {name: {name: "SLATE GREY"}}});
+        $.contextMenu({ selector: '.context-menu_SSH', items: {name: {name: "SILVER SHEEN"}}});
+        $.contextMenu({ selector: '.context-menu_WCO', items: {name: {name: "WEATHERED COPPER"}}});
+        $.contextMenu({ selector: '.context-menu_WHE', items: {name: {name: "WHEAT"}}});
+
+v
+    });
 </script>

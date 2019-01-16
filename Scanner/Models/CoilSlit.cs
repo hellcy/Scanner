@@ -36,6 +36,7 @@ namespace Scanner.Models
         public string RACK { get; set; }
         public Nullable<int> COLUMNS { get; set; }
         public Nullable<int> ROW { get; set; }
+        public Nullable<int> UNIQUELOCATION { get; set; }
 
         public int maxPages { get; set; }
         public int TotalRows { get; set; }
