@@ -19,7 +19,9 @@
         }
     }
 }
-@*This part is disabled because I don't need it for now.*@
+@*----------------------------------------------------This part is disabled because I don't need it for now.-------------------------------------------------*@
+@*-----This part is a search bar and a search icon on the top of the side menu. It will have confilts with coil ID uploading when I hit Tab button.----------*@
+
 @*<input type="text" name="mSearch" id="mSearch" value="" style="margin-top:5px;" onkeyup="checkMTxt(event.keyCode,0);" />
 <button class="btn btn-primary btn-sm" style="width:35px;height:30px;white-space: normal;margin-top:5px;" onclick="checkMTxt(13,0);"><b><span class='glyphicon glyphicon-search' /></b></button>
 <br />
@@ -83,7 +85,7 @@
                             <hr style="margin-top:0px;margin-bottom:5px;" />
                             @if (actName1 != CurrForm)
                             {
-                                <a onclick="gotoPage('@actName1','Order','');">
+                                <a onclick="gotoPage('@actName1','SideMenu','');">
                                     <table style="height:40px;width:100%;">
                                         <tr>
                                             <td valign="middle" style="text-align:left;">
@@ -133,7 +135,7 @@
                                     <li style="margin-left:5px;display:@display" id="@menu[i].SideMenuId">
                                         @if (actName2 != CurrForm)
                                         {
-                                            <a onclick="gotoPage('@actName2','Order','');">
+                                            <a onclick="gotoPage('@actName2','SideMenu','');">
                                                 <table style="height:40px;width:100%;">
                                                     <tr>
                                                         <td valign="middle" style="text-align:left;">
@@ -201,7 +203,7 @@
                                     <li style="margin-left:10px;display:@display" id="@menu[i].SideMenuId">
                                         @if (actName3 != CurrForm)
                                         {
-                                            <a onclick="gotoPage('@actName3','Order','');">
+                                            <a onclick="gotoPage('@actName3','SideMenu','');">
                                                 <table style="height:40px;width:100%;">
                                                     <tr>
                                                         <td valign="middle" style="text-align:left;">
@@ -320,7 +322,7 @@
                                 gotoPage('Index', 'Category', url);
                             }
                             else {
-                                gotoPage(url, "Order", "");
+                                gotoPage(url, "SideMenu", "");
                             }
                         }
                     }

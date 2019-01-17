@@ -218,7 +218,7 @@
                         @for (int i = 0; i < Model.workOrder_HDRs.Count; i++)
                         {
                         <tr>
-                            <td style="width:30px;"><a onclick="gotoPage('WorkOrderLines','Scanner','ID=@Model.workOrder_HDRs[i].SEQNO')">@Model.workOrder_HDRs[i].SEQNO.ToString()</a></td>
+                            <td style="width:30px;"><a onclick="gotoPage('WorkOrderLines','SideMenu','ID=@Model.workOrder_HDRs[i].SEQNO')">@Model.workOrder_HDRs[i].SEQNO.ToString()</a></td>
                             <td style="width:50px;">
                                 @if (@Model.workOrder_HDRs[i].BILLCODE != null)
                                 {@Model.workOrder_HDRs[i].BILLCODE.ToString()}
@@ -355,7 +355,7 @@
             }
 
             var url = '@Url.Action("-1", "-2")';
-            url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+            url = url.replace("-1", "WorkOrderHeaders").replace("-2", "SideMenu");
             $("#frmMain").attr('action', url);
             $("#frmMain").submit();
         }
@@ -414,7 +414,7 @@
             }
             $("#byClick").val("1");
             var url = '@Url.Action("-1", "-2")';
-            url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+            url = url.replace("-1", "WorkOrderHeaders").replace("-2", "SideMenu");
             $("#frmMain").attr('action', url);
             $("#frmMain").submit();
         }
@@ -445,7 +445,7 @@
 
             $("#byClick").val("1");
             var url = '@Url.Action("-1", "-2")';
-            url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+            url = url.replace("-1", "WorkOrderHeaders").replace("-2", "SideMenu");
             $("#frmMain").attr('action', url);
             $("#frmMain").submit();
         }
@@ -456,7 +456,7 @@
     function reloadWorkOrders() {
         $("#byClick").val("1");
         var url = '@Url.Action("-1", "-2")';
-        url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+        url = url.replace("-1", "WorkOrderHeaders").replace("-2", "SideMenu");
         $("#frmMain").attr('action', url);
         $("#frmMain").submit();
     }
@@ -479,7 +479,7 @@
 
         $("#byClick").val("1");
         var url = '@Url.Action("-1", "-2")';
-        url = url.replace("-1", "WorkOrderHeaders").replace("-2", "Scanner");
+        url = url.replace("-1", "WorkOrderHeaders").replace("-2", "SideMenu");
         $("#frmMain").attr('action', url);
         $("#frmMain").submit();
     }

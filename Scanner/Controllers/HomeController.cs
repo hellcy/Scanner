@@ -1176,73 +1176,6 @@ namespace Scanner.Controllers
             return View(req);
         }
 
-
-
-
-        public async void JustTest()
-        {
-            HttpClient client = new HttpClient();
-            IList<ItemDescription> itemDescriptions = new List<ItemDescription>();
-            ItemDescription item = new ItemDescription();
-            item.TYPE = "GramLine";
-            item.LENGTH = "1190";
-            item.COLOUR = "AUTUMN RED";
-            item.QTY = "1";
-            itemDescriptions.Add(item);
-
-            HttpResponseMessage response = await client.PostAsJsonAsync<IList<ItemDescription>>("http://localhost:58974/api/Values", itemDescriptions);
-            IList<ItemDescription> jsonData = await response.Content.ReadAsAsync<IList<ItemDescription>>();
-
-        }
-
-        public async void JustTest2()
-        {
-            HttpClient client = new HttpClient();
-            //IList<ItemDescription> itemDescriptions = new List<ItemDescription>();
-            //ItemDescription item = new ItemDescription();
-            //item.TYPE = "GramLine";
-            //item.LENGTH = "1190";
-            //item.COLOUR = "AUTUMNRED";
-            //item.QTY = "1";
-            //itemDescriptions.Add(item);
-
-            Order order = new Order();
-            order.ACCNO = "339";
-            order.BranchIDDealWith = "1";
-            order.Company = "BILL GIBSON FENCING PTY LIMITED";
-            order.Email = "c";
-            order.Mobile = "b";
-            order.OrderBy = "d";
-            order.OrderNo = "g";
-            order.Reference = "j";
-            order.OrderDate = DateTime.Now.ToShortDateString();
-
-            order.OrderDetails = new List<OrderDetail>();
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.COLOUR = "AUTUMN RED";
-            orderDetail.DESCRIPTION = "SPF® GramLine® SHEET  AUTUMN RED";
-            orderDetail.PRICE = "0";
-            orderDetail.QTY = "1";
-            orderDetail.STANDARD = "1190";
-            orderDetail.STOCKCODE = "SPGR11ARE";
-            orderDetail.WEIGHT = "3.34";
-            order.OrderDetails.Add(orderDetail);
-
-            orderDetail.COLOUR = "GALVANISED";
-            orderDetail.DESCRIPTION = "SPF® GramLine® SHEET  ALZN(GALVANISED)";
-            orderDetail.PRICE = "0";
-            orderDetail.QTY = "2";
-            orderDetail.STANDARD = "1790";
-            orderDetail.STOCKCODE = "SPGR17GAL";
-            orderDetail.WEIGHT = "10.3";
-            order.OrderDetails.Add(orderDetail);
-
-
-            HttpResponseMessage response = await client.PostAsJsonAsync<Order>("http://localhost:58974/api/Order", order);
-            string jsonData = await response.Content.ReadAsAsync<string>();
-
-        }
-
         private void resetRequest()
         {
             var authCookie = System.Web.HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -1356,44 +1289,10 @@ namespace Scanner.Controllers
 
         [SessionExpire]
         [Authorize]
-        public ActionResult Contact()
-        {
-            Session["CurrForm"] = "Contact";
-            ViewBag.Message = "";
-
-            Contact contact = new Contact();
-            contact.Name = ((User)Session["User"]).FirstName + " " + ((User)Session["User"]).LastName;
-            contact.Mobile = ((User)Session["User"]).Mobile;
-            contact.Email = ((User)Session["User"]).UserEmail;
-
-
-            string ConnStr = ConfigurationManager.ConnectionStrings["BridgeConn"].ToString();
-
-            IList<Bridge> bridges = new List<Bridge>();
-
-            var sql = "select *, dbo.fn_GetEvaluationVal(dbo.fn_SplitString(NHand,'.',0)) as S_SHL, dbo.fn_GetEvaluationVal(dbo.fn_SplitString(NHand,'.',1)) as H_SHL, dbo.fn_GetEvaluationVal(dbo.fn_SplitString(NHand,'.',2)) as D_SHL, dbo.fn_GetEvaluationVal(dbo.fn_SplitString(NHand,'.',3)) as C_SHL from [dbo].[View_Examples]  where isactive = 1 order by pos2";
-            using (var context = new DbContext(ConnStr))
-            {
-                bridges = context.Database.SqlQuery<Bridge>(sql).ToList<Bridge>();
-            }
-
-            ViewBag.Bridges = bridges;
-
-            return View(contact);
-        }
-
-
-        [SessionExpire]
-        [Authorize]
         public ActionResult Career()
         {
             Session["CurrForm"] = "Career";
             ViewBag.Message = "";
-
-            //Contact contact = new Contact();
-            //contact.Name = ((User)Session["User"]).FirstName + " " + ((User)Session["User"]).LastName;
-            //contact.Mobile = ((User)Session["User"]).Mobile;
-            //contact.Email = ((User)Session["User"]).UserEmail;
 
             return View();
         }

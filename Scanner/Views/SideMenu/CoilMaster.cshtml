@@ -157,7 +157,7 @@
                             {
                                 <tr>
                                     <td style="width:50px;">
-                                        <a onclick="gotoPage('CoilMasterDetails','Scanner','ID=@Model.CoilDetails[i].COILID')">
+                                        <a onclick="gotoPage('CoilMasterDetails','SideMenu','ID=@Model.CoilDetails[i].COILID')">
                                             @if (@Model.CoilDetails[i].COILID != null)
                                             {@Model.CoilDetails[i].COILID}
                                         </a>
@@ -171,7 +171,14 @@
                                         {@Model.CoilDetails[i].COLOR}
                                     </td>
                                     <td style="width:30px;">@Model.CoilDetails[i].WEIGHT.ToString()</td>
-                                    <td class="context-menu_@Model.CoilDetails[i].GAUGE" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
+                                    @if (Model.CoilDetails[i].GAUGE.ToString().Length == 3)
+                                    {
+                                        <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,1)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
+                                    }
+                                    @if (Model.CoilDetails[i].GAUGE.ToString().Length == 4)
+                                    {
+                                        <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,2)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
+                                    }
                                     <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
                                     <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
                                     <td style="width:50px;">
@@ -285,7 +292,7 @@
             }
 
             var url = '@Url.Action("-1", "-2")';
-            url = url.replace("-1", "CoilMaster").replace("-2", "Scanner");
+            url = url.replace("-1", "CoilMaster").replace("-2", "SideMenu");
             $("#frmMain").attr('action', url);
             $("#frmMain").submit();
         }
@@ -349,7 +356,7 @@
             }
             $("#byClick").val("1");
             var url = '@Url.Action("-1", "-2")';
-            url = url.replace("-1", "CoilMaster").replace("-2", "Scanner");
+            url = url.replace("-1", "CoilMaster").replace("-2", "SideMenu");
             $("#frmMain").attr('action', url);
             $("#frmMain").submit();
         }
@@ -380,7 +387,7 @@
 
             $("#byClick").val("1");
             var url = '@Url.Action("-1", "-2")';
-            url = url.replace("-1", "CoilMaster").replace("-2", "Scanner");
+            url = url.replace("-1", "CoilMaster").replace("-2", "SideMenu");
             $("#frmMain").attr('action', url);
             $("#frmMain").submit();
         }
@@ -391,7 +398,7 @@
     function reloadWorkOrders() {
         $("#byClick").val("1");
         var url = '@Url.Action("-1", "-2")';
-        url = url.replace("-1", "CoilMaster").replace("-2", "Scanner");
+        url = url.replace("-1", "CoilMaster").replace("-2", "SideMenu");
         $("#frmMain").attr('action', url);
         $("#frmMain").submit();
     }
@@ -414,13 +421,13 @@
 
         $("#byClick").val("1");
         var url = '@Url.Action("-1", "-2")';
-        url = url.replace("-1", "CoilMaster").replace("-2", "Scanner");
+        url = url.replace("-1", "CoilMaster").replace("-2", "SideMenu");
         $("#frmMain").attr('action', url);
         $("#frmMain").submit();
     }
 
     $(function() {
-        //coil master type 
+        //coil master type
         $.contextMenu({ selector: '.context-menu_FS', items: {name: {name: "Five Star Infill Sheet 0.32"}}});
         $.contextMenu({ selector: '.context-menu_PO', items: {name: {name: "Post 0.9"}}});
         $.contextMenu({ selector: '.context-menu_IS', items: {name: {name: "Infill Sheet 0.35"}}});
@@ -431,12 +438,13 @@
         $.contextMenu({ selector: '.context-menu_RO', items: {name: {name: "Roof 0.42"}}});
         $.contextMenu({ selector: '.context-menu_OS', items: {name: {name: "Smart Slat 0.55"}}});
 
-        $.contextMenu({ selector: '.context-menu_0.32000000000000001', items: {name: {name: "Five Star Infill Sheet 0.32"}}});
-        $.contextMenu({ selector: '.context-menu_0.9', items: {name: {name: "Post 0.9"}}});
-        $.contextMenu({ selector: '.context-menu_0.35', items: {name: {name: "Infill Sheet 0.35"}}});
-        $.contextMenu({ selector: '.context-menu_0.55000000000000004', items: {name: {name: "Smart Slat 0.55"}}});
-        //$.contextMenu({ selector: '.context-menu_0.8', items: {name: {name: ""}}});
-        $.contextMenu({ selector: '.context-menu_0.42', items: {name: {name: "Roof 0.42"}}});
+        //coil master gauge
+        $.contextMenu({ selector: '.context-menu_32', items: {name: {name: "Five Star Infill Sheet 0.32"}}});
+        $.contextMenu({ selector: '.context-menu_9', items: {name: {name: "Post 0.9"}}});
+        $.contextMenu({ selector: '.context-menu_35', items: {name: {name: "Infill Sheet 0.35"}}});
+        $.contextMenu({ selector: '.context-menu_55', items: {name: {name: "Smart Slat 0.55"}}});
+        $.contextMenu({ selector: '.context-menu_8', items: {name: {name: "Plinth/Rail 0.8"}}});
+        $.contextMenu({ selector: '.context-menu_42', items: {name: {name: "Roof 0.42"}}});
 
         //coil master color
         $.contextMenu({ selector: '.context-menu_DSM', items: {name: {name: "DARK SMOKE"}}});
@@ -491,6 +499,23 @@
         $.contextMenu({ selector: '.context-menu_WCO', items: {name: {name: "WEATHERED COPPER"}}});
         $.contextMenu({ selector: '.context-menu_WHE', items: {name: {name: "WHEAT"}}});
 
-v
+        // Two-color coils
+        $.contextMenu({ selector: '.context-menu_BISC', items: {name: {name: "BIRCH AND SMOOTH CREAM"}}});
+        $.contextMenu({ selector: '.context-menu_BRWH', items: {name: {name: "BLUE ROCK AND WHEAT"}}});
+        $.contextMenu({ selector: '.context-menu_BBMV', items: {name: {name: "BOWRAL BROWN AND MOSS VALE SAND"}}});
+        $.contextMenu({ selector: '.context-menu_DJMO', items: {name: {name: "DEEP JACARANDA AND MOCCA"}}});
+        $.contextMenu({ selector: '.context-menu_IRGR', items: {name: {name: "IRONBARK AND GULL GREY?"}}});
+        $.contextMenu({ selector: '.context-menu_GMME', items: {name: {name: "GUN METAL GREEN AND MERINO"}}});
+        $.contextMenu({ selector: '.context-menu_CORI', items: {name: {name: "COKE AND RIVERGUM"}}});
+        $.contextMenu({ selector: '.context-menu_GGMB', items: {name: {name: "GULL GREY AND MOUNTAIN BLUE"}}});
+        $.contextMenu({ selector: '.context-menu_AGHR', items: {name: {name: "ARMOUR GREY AND HERITAGE RED"}}});
+        $.contextMenu({ selector: '.context-menu_PRGR', items: {name: {name: "PRIMROSE AND GULL GREY?"}}});
+        $.contextMenu({ selector: '.context-menu_BLGS', items: {name: {name: "BLACK AND GREY STONE"}}});
+        $.contextMenu({ selector: '.context-menu_BEMG', items: {name: {name: "BEIGE AND MIST GREEN"}}});
+
+        $.contextMenu({ selector: '.context-menu_PAL', items: {name: {name: "???"}}});
+        $.contextMenu({ selector: '.context-menu_BOL', items: {name: {name: "???"}}});
+
+
     });
 </script>

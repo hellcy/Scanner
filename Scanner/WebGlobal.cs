@@ -20,8 +20,8 @@ namespace Scanner
         public static DataTable Plinths { get; set; }
         public static DataTable SmartSlatAng { get; set; }
 
-        public static Fence fence { get; set; }
-        public static NewOrder newOrder { get; set; }
+        //public static Fence fence { get; set; }
+        //public static NewOrder newOrder { get; set; }
 
         public static DataTable dt_OrderDetails { get; set; }
 

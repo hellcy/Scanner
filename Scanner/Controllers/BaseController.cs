@@ -11,99 +11,6 @@ namespace Scanner.Controllers
 {
     public class BaseController : Controller
     {
-        public void loadNewTable(string currForm)
-        {
-            try
-            {
-                if (Session[currForm] == null)
-                {
-                    Session[currForm] = new DataTable();
-                    Session[currForm + "Flags"] = new DataTable();
-                    Session["fence"] = new Fence();
-
-                    using (var context = new DbContext(Global.ConnStr))
-                    {
-                        object[] parameters = { currForm };
-                        ((Fence)Session["fence"]).colours = context.Database.SqlQuery<string>("proc_GetColours {0}", parameters).ToList<string>();
-                        ((Fence)Session["fence"]).standards = context.Database.SqlQuery<string>("proc_GetStandards {0}", parameters).ToList<string>();
-                        ((Fence)Session["fence"]).isNorms = context.Database.SqlQuery<bool>("proc_GetIsNorms {0}", parameters).ToList<bool>();
-                        ((Fence)Session["fence"]).Messages = context.Database.SqlQuery<string>("proc_GetMessages {0}", parameters).ToList<string>();
-                        Session["forceBlock"] = context.Database.SqlQuery<string>("proc_GetForceBlock {0}", parameters).ToList<string>()[0];
-                    }
-
-                    ((Fence)Session["fence"]).standards.Insert(0, "COLOUR");
-                    foreach (var heading in ((Fence)Session["fence"]).standards)
-                    {
-                        ((DataTable)Session[currForm]).Columns.Add(heading);
-                        ((DataTable)Session[currForm + "Flags"]).Columns.Add(heading);
-                    }
-
-                    if (currForm != "Miscellaneous")
-                    {
-                        DataRow dr;
-                        dr = ((DataTable)Session[currForm + "Flags"]).NewRow();
-                        dr[0] = "";
-
-                        int ni = 1;
-                        foreach (var isNorm in ((Fence)Session["fence"]).isNorms)
-                        {
-                            dr[ni] = isNorm;
-                            ni++;
-                        }
-                        ((DataTable)Session[currForm + "Flags"]).Rows.Add(dr);
-
-
-                        dr = ((DataTable)Session[currForm + "Flags"]).NewRow();
-                        dr[0] = "";
-
-                        ni = 1;
-                        foreach (var Message in ((Fence)Session["fence"]).Messages)
-                        {
-                            dr[ni] = Message;
-                            ni++;
-                        }
-
-                        ((DataTable)Session[currForm + "Flags"]).Rows.Add(dr);
-
-                        foreach (var colour in ((Fence)Session["fence"]).colours)
-                        {
-                            dr = ((DataTable)Session[currForm]).NewRow();
-                            dr[0] = colour;
-                            for (int i = 1; i < ((DataTable)Session[currForm]).Columns.Count; i++)
-                            {
-                                dr[i] = "";
-                            }
-                            ((DataTable)Session[currForm]).Rows.Add(dr);
-                        }
-                    }
-                }
-                else
-                {
-                    using (var context = new DbContext(Global.ConnStr))
-                    {
-                        object[] parameters = { currForm };
-                        Session["forceBlock"] = context.Database.SqlQuery<string>("proc_GetForceBlock {0}", parameters).ToList<string>()[0];
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Session["fence"] = null;
-                using (var context = new DbContext(Global.ConnStr))
-                {
-                    object[] parameters = {
-                            WebConfigurationManager.AppSettings["GramAdminEmails"],
-                            "Error: Can not load table"+currForm,
-                            e.Message.Replace(Environment.NewLine,"<br>"),
-                            "",
-                            "",
-                            ""
-                        };
-                    context.Database.ExecuteSqlCommand("proc_SendIssueNotification {0},{1},{2},{3},{4},{5}", parameters);
-                }
-            }
-        }
-
         public void setFromOrderForm(string orderForm, string fromForm, string C_X, string C_Y, string val)
         {
             if (Session["FromFormClick"] == null)
@@ -137,22 +44,7 @@ namespace Scanner.Controllers
         {
             if ((Session["newOrder"] != null) && (Request.Form["Company"] != null))
             {
-                ((NewOrder)Session["newOrder"]).Head.Mobile = Request.Form["Mobile"].ToString();
-                ((NewOrder)Session["newOrder"]).Head.Company = Request.Form["Company"].ToString();
-                ((NewOrder)Session["newOrder"]).Head.OrderBy = Request.Form["Orderby"].ToString();
-                ((NewOrder)Session["newOrder"]).Head.Email = Request.Form["Email"].ToString();
-                ((NewOrder)Session["newOrder"]).Head.CustomerOrderNo = Request.Form["CustomerOrderNo"].ToString();
-                ((NewOrder)Session["newOrder"]).Head.PickupBy = Request.Form["PickupBy"].ToString();
-                ((NewOrder)Session["newOrder"]).Head.DispatchDate = Request.Form["DispatchDate"].ToString();
-                ((NewOrder)Session["newOrder"]).Head.RequestForDelivery = (!string.IsNullOrEmpty(((NewOrder)Session["newOrder"]).Head.DispatchDate));
-                ((NewOrder)Session["newOrder"]).Head.Reference = Request.Form["Reference"].ToString();
-                ((NewOrder)Session["newOrder"]).Head.DriverLic = (Request.Form["DriverLic"] != null) ? Request.Form["DriverLic"].ToString() : "";
-                ((NewOrder)Session["newOrder"]).Head.ABN = (Request.Form["ABN"] != null) ? Request.Form["ABN"].ToString() : "";
-                ((NewOrder)Session["newOrder"]).Head.Address = (Request.Form["Address"] != null) ? Request.Form["Address"].ToString() : "";
-                ((NewOrder)Session["newOrder"]).Head.City = (Request.Form["City"] != null) ? Request.Form["City"].ToString() : "";
-                ((NewOrder)Session["newOrder"]).Head.State = (Request.Form["State"] != null) ? Request.Form["State"].ToString() : "";
-                ((NewOrder)Session["newOrder"]).Head.Postcode = (Request.Form["Postcode"] != null) ? Request.Form["Postcode"].ToString() : "";
-                ((NewOrder)Session["newOrder"]).Head.Country = (Request.Form["Country"] != null) ? Request.Form["Country"].ToString() : "";
+
             }
 
             if (Request.Form["uploadedFiles"] != null)
@@ -302,10 +194,6 @@ namespace Scanner.Controllers
                     var rail2370 = Request.Form["rail2370"].ToString();
                     var rail3100 = Request.Form["rail3100"].ToString();
                     var screws = Request.Form["screws"].ToString();
-
-                    loadNewTable(sheetType);
-                    loadNewTable("RailsPosts");
-                    loadNewTable("Screws");
 
                     for (int i = 0; i < ((DataTable)Session[sheetType]).Rows.Count; i++)
                     {
