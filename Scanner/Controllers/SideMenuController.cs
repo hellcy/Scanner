@@ -14,6 +14,9 @@ using static Scanner.FilterConfig;
 using System.IO;
 using Zen.Barcode;
 using System.Drawing;
+using System.Data.OleDb;
+using OfficeOpenXml;
+using CsvHelper;
 
 namespace Scanner.Controllers
 {
@@ -92,6 +95,86 @@ namespace Scanner.Controllers
         {
             ViewBag.Title = "Coil Master Table";
             Session["CurrForm"] = "Option_1";
+            if (Request != null)
+            {
+                HttpPostedFileBase file = Request.Files["UploadedFile"];
+
+                if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName))
+                {
+                    string fileName = file.FileName;
+                    string extension = System.IO.Path.GetExtension(fileName).ToLower();
+                    string fileContentType = file.ContentType;
+                    byte[] fileBytes = new byte[file.ContentLength];
+                    var data = file.InputStream.Read(fileBytes, 0, Convert.ToInt32(file.ContentLength));
+
+                    if (extension.Equals(".xlsx"))
+                    {
+                        var package = new ExcelPackage(file.InputStream);
+
+                        ExcelWorksheet workSheet = package.Workbook.Worksheets.First();
+
+                        for (int i = workSheet.Dimension.Start.Row;
+                                 i <= workSheet.Dimension.End.Row;
+                                 i++)
+                        {
+                            for (int j = workSheet.Dimension.Start.Column;
+                                     j <= workSheet.Dimension.End.Column;
+                                     j++)
+                            {
+                                object cellValue = workSheet.Cells[i, j].Value;
+                                master.excelCoilIDs.Add(Convert.ToString(cellValue));
+                            }
+                        }
+                    }
+                    else if (extension.Equals(".csv"))
+                    {
+                        Guid gid = Guid.NewGuid();
+                        file.SaveAs(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"));
+
+                        string[] lineArr;
+                        if ((System.IO.File.Exists(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"))) == true)
+                        {
+                            foreach (string line in System.IO.File.ReadLines(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv")))
+                            {
+                                lineArr = line.Split(',');
+                                master.excelCoilIDs.Add(lineArr[0]);
+                            }
+                            System.IO.File.Delete(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"));
+                        }
+                    }
+
+                    for (int i = 0; i < master.excelCoilIDs.Count; i++)
+                    {
+                        var excelCoilIDs = new SqlParameter("@excelCoilIDs_sql", master.excelCoilIDs[i]);
+
+                        var excel_sql = "update GRAM_SYD_LIVE.dbo.X_COIL_MASTER set status = 'D' where COILID = '" + master.excelCoilIDs[i] + "'";
+
+                        try
+                        {
+                            using (var context = new DbContext(Global.ConnStr))
+                            {
+                                context.Database.ExecuteSqlCommand(excel_sql);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            master.totalPages = 0;
+                            master.totalRows = 0;
+                            master.CoilDetails = null;
+                            master.errMsg = e.Message.ToString().Replace("'", "\"");
+                            if (e.Message.Equals("The specified cast from a materialized 'System.String' type to the 'System.Int32' type is not valid."))
+                            {
+                                master.errMsg = "No Record Found.";
+                            }
+                        }
+                    }
+                }
+            }
+
+            //if (master.FilePath != null)
+            //{
+                
+            //}
 
             if (string.IsNullOrEmpty(master.sortCol))
             {

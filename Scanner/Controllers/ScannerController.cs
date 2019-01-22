@@ -15,6 +15,7 @@ using System.Drawing;
 using System.IO;
 using System.Drawing.Printing;
 
+
 namespace Scanner.Controllers
 {
     public class ScannerController : BaseController

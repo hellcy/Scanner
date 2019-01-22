@@ -68,10 +68,10 @@
         formClass = "";
     }
 
-    if (ViewBag.Title == "Coil Slit")
+    if (ViewBag.Title == "Sliting")
     {
-        ctrlName = "SideMenu";
-        actName = "CoilSlit";
+        ctrlName = "Scanner";
+        actName = "Sliting";
         formId = "frmMain";
         formClass = "";
     }
@@ -838,7 +838,7 @@
 </head>
 
 <body onload="startTime()" style="width:100% !important;">
-    @using (Html.BeginForm(actName, ctrlName, FormMethod.Post, new { @id = formId, @class = formClass }))
+    @using (Html.BeginForm(actName, ctrlName, FormMethod.Post, new { @id = formId, @class = formClass, enctype = "multipart/form-data" }))
     {
         @*<div class="wrapper2"  style="width:100%">
             <div id="page" class="hfeed">
