@@ -68,23 +68,23 @@
     var ServerSEQNO = "";
     var btnPanelDisp = "";
 
-    NewOrder newOrder = null;
-    if (Session["newOrder"] != null)
-    {
-        newOrder = (NewOrder)Session["newOrder"];
-        orderId = newOrder.Head.Id.ToString();
-        ServerSEQNO = (string.IsNullOrEmpty(newOrder.Head.ServerSEQNO)) ? "" : newOrder.Head.ServerSEQNO;
-        status = newOrder.Head.Status;
-        SubmittedBy = newOrder.Head.SubmittedBy;
-        HandleBy = newOrder.Head.HandleBy;
-        CreatedDate = (String.IsNullOrEmpty(newOrder.Head.OrderDate)) ? "" : newOrder.Head.OrderDate;
-        ReadyToSubmitDate = (String.IsNullOrEmpty(newOrder.Head.ReadyToSubmitDate)) ? "" : newOrder.Head.ReadyToSubmitDate;
-        SubmitDate = (String.IsNullOrEmpty(newOrder.Head.SubmitDate)) ? "" : newOrder.Head.SubmitDate;
-        if (!string.IsNullOrEmpty(newOrder.Head.Message))
-        {
-            newOrderDisp = "none";
-        }
-    }
+    //NewOrder newOrder = null;
+    //if (Session["newOrder"] != null)
+    //{
+    //    newOrder = (NewOrder)Session["newOrder"];
+    //    orderId = newOrder.Head.Id.ToString();
+    //    ServerSEQNO = (string.IsNullOrEmpty(newOrder.Head.ServerSEQNO)) ? "" : newOrder.Head.ServerSEQNO;
+    //    status = newOrder.Head.Status;
+    //    SubmittedBy = newOrder.Head.SubmittedBy;
+    //    HandleBy = newOrder.Head.HandleBy;
+    //    CreatedDate = (String.IsNullOrEmpty(newOrder.Head.OrderDate)) ? "" : newOrder.Head.OrderDate;
+    //    ReadyToSubmitDate = (String.IsNullOrEmpty(newOrder.Head.ReadyToSubmitDate)) ? "" : newOrder.Head.ReadyToSubmitDate;
+    //    SubmitDate = (String.IsNullOrEmpty(newOrder.Head.SubmitDate)) ? "" : newOrder.Head.SubmitDate;
+    //    if (!string.IsNullOrEmpty(newOrder.Head.Message))
+    //    {
+    //        newOrderDisp = "none";
+    //    }
+    //}
 
     switch (CurrForm)
     {
@@ -171,16 +171,16 @@
         Session["JustViewPrint"] = null;
     }
 
-    if (Session["newOrder"] != null)
-    {
-        if (!string.IsNullOrEmpty(newOrder.Head.Message))
-        {
-            if (newOrder.Head.Message.IndexOf("Reference No") > 0)
-            {
-                newOrderDisp = "none";
-            }
-        }
-    }
+    //if (Session["newOrder"] != null)
+    //{
+    //    if (!string.IsNullOrEmpty(newOrder.Head.Message))
+    //    {
+    //        if (newOrder.Head.Message.IndexOf("Reference No") > 0)
+    //        {
+    //            newOrderDisp = "none";
+    //        }
+    //    }
+    //}
 
     if (Session["needAdvice"] != null)
     {
