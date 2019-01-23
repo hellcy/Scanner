@@ -392,6 +392,7 @@
     <Content Include="Views\SideMenu\WorkOrderLines.cshtml" />
     <Content Include="Views\SideMenu\CoilSlit.cshtml" />
     <Content Include="Views\SideMenu\CoilMasterDetails.cshtml" />
+    <Content Include="Views\SideMenu\CoilReadFile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

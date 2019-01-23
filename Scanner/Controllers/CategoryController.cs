@@ -35,7 +35,7 @@ namespace Scanner.Controllers
                 {
                     if (rqcatId == menu.SideMenuId)
                     {
-                        return Redirect($"{Url.RouteUrl(new { controller = "Order", action = menu.lv1.Split('!')[1] })}");
+                        return Redirect($"{Url.RouteUrl(new { controller = "SideMenu", action = menu.lv1.Split('!')[1] })}");
                     }
                 }
             }

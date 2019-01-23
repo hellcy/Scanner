@@ -1,0 +1,93 @@
+﻿@model Scanner.Models.CoilMasters
+@{
+    ViewBag.Title = "CoilReadFile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px;vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
+            <div class="TwrapOverFlow" style="width:1450px;">
+                <span style="float:right; font-weight:bold">Total Records : @Model.excelRecords.Count,&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
+                <table class="head" style="width:1450px;">
+                    <tr>
+                        <td style="width:50px;font-weight:bold;">@Model.excelFileName</td>
+                    </tr>
+                </table>
+                <div class="inner_table" style="width:1450px;">
+                    @if (Model.errMsg == null)
+                    {
+                        <table style="width:1450px; overflow-x: auto;">
+                            @for (int i = 0; i < Model.excelRecords.Count; i++)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < Model.excelRecords[i].Count - 1; j++)
+                                    {
+                                        if (Model.excelRecords[i].Last() == "1")
+                                        {
+                                            <td style="width:50px;">@Model.excelRecords[i][j].ToString()</td>}
+                                        else
+                                        {
+                                            <td style="width:50px;"> <span style="color: red;">@Model.excelRecords[i][j].ToString() </span></td>}
+                                    }
+                                </tr>
+                            }
+                        </table>
+                    }
+                </div>
+            </div>
+            <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('CoilMaster','SideMenu','');" />&nbsp;&nbsp;
+            <div style="float:right;">
+                <span style="font-size:200%; color:red; "> @if (Model.message != null) { @Model.message}</span>
+                <input type="submit" id="updateButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="update()" />
+            </div>
+            <div>
+                @Html.TextBoxFor(model => model.updateFlag, new { id = "updateFlag", type = "hidden" })
+            </div>
+            @*@Html.Partial("_BottomPanel")*@
+        </td>
+    </tr>
+</table>
+<script language="javascript">
+    $("#updateFlag").val();
+    var loadErrMsg = '@Html.Raw(Model.errMsg)';
+
+    if (loadErrMsg != "") {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+            message: "<font style='font-size:25px;'>" + loadErrMsg + "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+    function clearText() {
+        $('#categorySort').val('');
+        $('#statusSort').val('-1');
+        $('#whereStr').val('');
+    }
+
+    function reloadWorkOrders() {
+        $("#byClick").val("1");
+        var url = '@Url.Action("-1", "-2")';
+        url = url.replace("-1", "CoilReadFile").replace("-2", "SideMenu");
+        $("#frmMain").attr('action', url);
+        $("#frmMain").submit();
+    }
+
+    function update() {
+        $("#updateFlag").val("update");
+        reloadWorkOrders();
+    }
+
+</script>

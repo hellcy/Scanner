@@ -23,9 +23,9 @@
                     <td><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
                 </tr>
             </table>
-            <div class="TwrapOverFlow" style="width:1520px;">
+            <div class="TwrapOverFlow" style="width:1450px;">
                 <span style="float:right; font-weight:bold">Total Coils : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
-                <table class="head" style="width:1520px;">
+                <table class="head" style="width:1450px;">
                     <tr>
                         @if (Model.sortCol == "COILID")
                         {
@@ -85,11 +85,11 @@
                         }
                         @if (Model.sortCol == "P_ORDER")
                         {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('P_ORDER','String')">P_ORDER<span id="P_ORDER_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            <td style="width:40px;font-weight:bold;"><a onclick="orderToggle('P_ORDER','String')">P_ORDER<span id="P_ORDER_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
                         }
                         else
                         {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('P_ORDER','String')">P_ORDER<span id="P_ORDER_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            <td style="width:40px;font-weight:bold;"><a onclick="orderToggle('P_ORDER','String')">P_ORDER<span id="P_ORDER_ord" style="float:right;color:green;display:none;"></span></a></td>
                         }
                         @if (Model.sortCol == "MONTH_RECD")
                         {
@@ -149,10 +149,10 @@
                         }
                     </tr>
                 </table>
-                <div class="inner_table" style="width:1520px;">
+                <div class="inner_table" style="width:1450px;">
                     @if (Model.errMsg == "")
                     {
-                        <table style="width:1520px; overflow-x: auto;">
+                        <table style="width:1450px; overflow-x: auto;">
                             @for (int i = 0; i < Model.CoilDetails.Count; i++)
                             {
                                 <tr>
@@ -181,7 +181,7 @@
                                     }
                                     <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
                                     <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
-                                    <td style="width:50px;">
+                                    <td style="width:40px;">
                                         @if (@Model.CoilDetails[i].P_ORDER != null)
                                         {@Model.CoilDetails[i].P_ORDER}
                                     </td>
@@ -242,11 +242,12 @@
                         <label for="UploadedFile" class="btn btn-primary btn-lg" style="height:40px; width: 120px; margin-bottom:10px;margin-top:10px;">
                             SELECT FILE
                         </label>
-                        <span id="file-selected"></span>
+                        <span id="file-selected"></span>&nbsp;&nbsp;
                         <input type="file" id="UploadedFile" name="UploadedFile" style="display: none " />
                     </td>
                     <td>
-                        <input type="button" id="CHANGESTATUS" value="CHANGE STATUS" class="btn btn-primary btn-lg" style="height:40px; width: 200px; margin-bottom:10px;margin-top:10px;" onclick="changeStatus()" />&nbsp;&nbsp;
+                        <input type="button" id="Open" value="Open" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="readFile()" />
+                        <div>@Html.TextBoxFor(model => model.openFileFlag, new { id = "openFileFlag", type = "hidden" })</div>
                     </td>
                 </tr>
             </table>
@@ -255,6 +256,7 @@
     </tr>
 </table>
 <script language="javascript">
+    $('#printFlag').val('');
 
     $('#UploadedFile').bind('change', function() { var fileName = ''; fileName = document.getElementById("UploadedFile").files[0].name; $('#file-selected').html(fileName); })
 
@@ -313,11 +315,6 @@
             $("#frmMain").attr('action', url);
             $("#frmMain").submit();
         }
-    }
-
-    function clearText() {
-        $('#whereStr').val('');
-        submitNavpage(1);
     }
 
     $('#pageNum').keypress(function (e) {
@@ -443,7 +440,8 @@
         $("#frmMain").submit();
     }
 
-    function changeStatus() {
+    function readFile() {
+        $('#openFileFlag').val('open');
         reloadWorkOrders();
     }
 

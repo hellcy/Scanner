@@ -17,6 +17,7 @@ using System.Drawing;
 using System.Data.OleDb;
 using OfficeOpenXml;
 using CsvHelper;
+using System.Configuration;
 
 namespace Scanner.Controllers
 {
@@ -99,9 +100,10 @@ namespace Scanner.Controllers
             {
                 HttpPostedFileBase file = Request.Files["UploadedFile"];
 
-                if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName))
+                if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName) && master.openFileFlag == "open")
                 {
                     string fileName = file.FileName;
+                    master.excelFileName = fileName;
                     string extension = System.IO.Path.GetExtension(fileName).ToLower();
                     string fileContentType = file.ContentType;
                     byte[] fileBytes = new byte[file.ContentLength];
@@ -117,13 +119,17 @@ namespace Scanner.Controllers
                                  i <= workSheet.Dimension.End.Row;
                                  i++)
                         {
+                            master.excelRecords.Add(new List<string>());
+                            object firstColumnCell = null;
                             for (int j = workSheet.Dimension.Start.Column;
                                      j <= workSheet.Dimension.End.Column;
                                      j++)
                             {
+                                firstColumnCell = workSheet.Cells[i, 1].Value;
                                 object cellValue = workSheet.Cells[i, j].Value;
-                                master.excelCoilIDs.Add(Convert.ToString(cellValue));
+                                master.excelRecords[i - 1].Add(Convert.ToString(cellValue));
                             }
+                            master.excelCoilIDs.Add(Convert.ToString(firstColumnCell));
                         }
                     }
                     else if (extension.Equals(".csv"))
@@ -137,44 +143,18 @@ namespace Scanner.Controllers
                             foreach (string line in System.IO.File.ReadLines(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv")))
                             {
                                 lineArr = line.Split(',');
+                                master.excelRecords.Add(lineArr.ToList());
                                 master.excelCoilIDs.Add(lineArr[0]);
                             }
                             System.IO.File.Delete(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"));
                         }
                     }
 
-                    for (int i = 0; i < master.excelCoilIDs.Count; i++)
-                    {
-                        var excelCoilIDs = new SqlParameter("@excelCoilIDs_sql", master.excelCoilIDs[i]);
+                    Session["readExcelFile"] = master;
+                    return RedirectToAction("CoilReadFile");
 
-                        var excel_sql = "update GRAM_SYD_LIVE.dbo.X_COIL_MASTER set status = 'D' where COILID = '" + master.excelCoilIDs[i] + "'";
-
-                        try
-                        {
-                            using (var context = new DbContext(Global.ConnStr))
-                            {
-                                context.Database.ExecuteSqlCommand(excel_sql);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            master.totalPages = 0;
-                            master.totalRows = 0;
-                            master.CoilDetails = null;
-                            master.errMsg = e.Message.ToString().Replace("'", "\"");
-                            if (e.Message.Equals("The specified cast from a materialized 'System.String' type to the 'System.Int32' type is not valid."))
-                            {
-                                master.errMsg = "No Record Found.";
-                            }
-                        }
-                    }
                 }
             }
-
-            //if (master.FilePath != null)
-            //{
-                
-            //}
 
             if (string.IsNullOrEmpty(master.sortCol))
             {
@@ -378,6 +358,82 @@ namespace Scanner.Controllers
             }
 
             return View(coil);
+        }
+
+        [SessionExpire]
+        [Authorize]
+        public ActionResult CoilReadFile()
+        {
+            CoilMasters master = new CoilMasters();
+
+            if (Session["readExcelFile"] != null) {
+                master = (CoilMasters) Session["readExcelFile"];
+                //Session["readExcelFile"] = null;
+            }
+
+            string ConnStr = ConfigurationManager.ConnectionStrings["GramLineConn"].ToString();
+            using (SqlConnection newCon = new SqlConnection(ConnStr))
+            {
+                string notFound;
+                for (int i = 0; i < master.excelCoilIDs.Count; i++)
+                {
+                    var excelCoilIDs = new SqlParameter("@excelCoilIDs_sql", master.excelCoilIDs[i]);
+                    SqlCommand sqlCommand = new SqlCommand("select count(COILID) FROM GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + master.excelCoilIDs[i] + "'", newCon);
+                    newCon.Open();
+
+                    notFound = Convert.ToString(sqlCommand.ExecuteScalar());
+                    newCon.Close();
+
+                    master.excelRecords[i].Add(notFound);
+                }
+            }
+            
+            return View(master);
+        }
+
+        /*
+
+             */
+        [SessionExpire]
+        [HttpPost]
+        [Authorize]
+        public ActionResult CoilReadFile(CoilMasters master)
+        {
+            if (master.updateFlag == "update")
+            {
+                if (Session["readExcelFile"] != null)
+                {
+                    master = (CoilMasters)Session["readExcelFile"];
+                    //Session["readExcelFile"] = null;
+                }
+                for (int i = 0; i < master.excelCoilIDs.Count; i++)
+                {
+                    var excelCoilIDs = new SqlParameter("@excelCoilIDs_sql", master.excelCoilIDs[i]);
+
+                    var excel_sql = "update GRAM_SYD_LIVE.dbo.X_COIL_MASTER set status = 'D' where COILID = '" + master.excelCoilIDs[i] + "'";
+
+                    try
+                    {
+                        using (var context = new DbContext(Global.ConnStr))
+                        {
+                            context.Database.ExecuteSqlCommand(excel_sql);
+                        }
+                        master.message = "Database updated!";
+                    }
+                    catch (Exception e)
+                    {
+                        master.totalPages = 0;
+                        master.totalRows = 0;
+                        master.CoilDetails = null;
+                        master.errMsg = e.Message.ToString().Replace("'", "\"");
+                        if (e.Message.Equals("The specified cast from a materialized 'System.String' type to the 'System.Int32' type is not valid."))
+                        {
+                            master.errMsg = "No Record Found.";
+                        }
+                    }
+                }
+            }
+            return View(master);
         }
 
         [SessionExpire]

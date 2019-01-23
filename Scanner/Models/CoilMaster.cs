@@ -51,6 +51,7 @@ namespace Scanner.Models
         public CoilMasters()
         {
             excelCoilIDs = new List<string>();
+            excelRecords = new List<IList<string>>();
         }
         public IList<CoilMaster> CoilDetails { get; set; } = null;
         public CoilMaster CoilDetail { get; set; } = null;
@@ -69,5 +70,11 @@ namespace Scanner.Models
         public string selStr { get; set; }
         public string FilePath { get; set; }
         public IList<string> excelCoilIDs { get; set; }
+        public IList<IList<string>> excelRecords { get; set; }
+        public string excelFileName { get; set; }
+        public string openFileFlag { get; set; }
+        public string updateFlag { get; set; }
+        public string message { get; set; }
+
     }
 }

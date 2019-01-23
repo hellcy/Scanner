@@ -351,7 +351,7 @@ namespace Scanner.Controllers
                         Session["TradeType"] = "3";
                     }
 
-                    return RedirectToAction("Index","Order");
+                    return RedirectToAction("Index","SideMenu");
                 }
                 else
                 {
@@ -462,7 +462,7 @@ namespace Scanner.Controllers
                         }
                     }
 
-                    return RedirectToAction("Index", "Order");
+                    return RedirectToAction("Index", "SideMenu");
                 }
                 else
                 {
@@ -1078,7 +1078,7 @@ namespace Scanner.Controllers
                                     LoginUser login = new LoginUser();
                                     Session["User"] = login.IsValid(user.UserEmail, user.Password);
                                     FormsAuthentication.SetAuthCookie(user.UserName, false);
-                                    return RedirectToAction("Index", "Order");
+                                    return RedirectToAction("Index", "SideMenu");
                                 }
 
                                 user.isUpdate = -2;
