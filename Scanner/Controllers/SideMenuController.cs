@@ -96,6 +96,8 @@ namespace Scanner.Controllers
         {
             ViewBag.Title = "Coil Master Table";
             Session["CurrForm"] = "Option_1";
+
+            // read .xlsx or .csv file
             if (Request != null)
             {
                 HttpPostedFileBase file = Request.Files["UploadedFile"];
@@ -178,7 +180,8 @@ namespace Scanner.Controllers
 
             if (master.sortCol != "COILID" && master.sortCol != "TYPE" && master.sortCol != "COLOR" && master.sortCol != "WEIGHT" && master.sortCol != "GAUGE" &&
                 master.sortCol != "WIDTH" && master.sortCol != "[ORDER]" && master.sortCol != "P_ORDER" && master.sortCol != "MONTH_RECD" && master.sortCol != "DATE_INWH" &&
-                master.sortCol != "DATE_TRANSFER" && master.sortCol != "LAST_STOCKTAKE_DATE" && master.sortCol != "STATUS" && master.sortCol != "CLENGTH" && master.sortCol != "ZINCCOAT")
+                master.sortCol != "DATE_TRANSFER" && master.sortCol != "LAST_STOCKTAKE_DATE" && master.sortCol != "STATUS" && master.sortCol != "CLENGTH" && master.sortCol != "ZINCCOAT" &&
+                master.sortCol != "LOCATION" && master.sortCol != "INV_NO" && master.sortCol != "INV_DATE" && master.sortCol != "UNITPRICE")
             {
                 master.sortCol = "DefaultSort";
             }
@@ -300,6 +303,7 @@ namespace Scanner.Controllers
             string new_DATE_INWH = "";
             string new_DATE_TRANSFER = "";
             string new_LAST_STOCKTAKE_DATE = "";
+            string new_INV_DATE = "";
             string[] tmpArr;
 
             try
@@ -326,6 +330,11 @@ namespace Scanner.Controllers
                                 tmpArr = coil.CoilDetails[0].LAST_STOCKTAKE_DATE.ToString().Split(' ');
                                 new_LAST_STOCKTAKE_DATE = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
                             }
+                            if (coil.CoilDetails[0].INV_DATE != null)
+                            {
+                                tmpArr = coil.CoilDetails[0].INV_DATE.ToString().Split(' ');
+                                new_INV_DATE = tmpArr[0].Split('/')[2] + "/" + tmpArr[0].Split('/')[1] + "/" + tmpArr[0].Split('/')[0] + " " + tmpArr[1];
+                            }
 
                             var sql_update = "update GRAM_SYD_LIVE.dbo.X_COIL_MASTER set " +
                                 "TYPE = " + ((coil.CoilDetails[0].TYPE == null) ? "null" : "'" + coil.CoilDetails[0].TYPE + "'") + ", " +
@@ -341,7 +350,11 @@ namespace Scanner.Controllers
                                 "LAST_STOCKTAKE_DATE = " + ((coil.CoilDetails[0].LAST_STOCKTAKE_DATE == null) ? "null" : "'" + new_LAST_STOCKTAKE_DATE + "'") + ", " +
                                 "STATUS = " + ((coil.CoilDetails[0].STATUS == null) ? "null" : "'" + coil.CoilDetails[0].STATUS + "'") + ", " +
                                 "CLENGTH = " + ((coil.CoilDetails[0].CLENGTH == null) ? "null" : coil.CoilDetails[0].CLENGTH.ToString()) + ", " +
-                                "ZINCCOAT = " + ((coil.CoilDetails[0].ZINCCOAT == null) ? "null" : "'" + coil.CoilDetails[0].ZINCCOAT + "'") +
+                                "ZINCCOAT = " + ((coil.CoilDetails[0].ZINCCOAT == null) ? "null" : "'" + coil.CoilDetails[0].ZINCCOAT + "'") + ", " +
+                                "LOCATION = " + ((coil.CoilDetails[0].LOCATION == null) ? "null" : "'" + coil.CoilDetails[0].LOCATION + "'") + ", " +
+                                "INV_NO = " + ((coil.CoilDetails[0].INV_NO == null) ? "null" : "'" + coil.CoilDetails[0].INV_NO + "'") + ", " +
+                                "INV_DATE = " + ((coil.CoilDetails[0].INV_DATE == null) ? "null" : "'" + new_INV_DATE + "'") + ", " +
+                                "UNITPRICE = " + ((coil.CoilDetails[0].UNITPRICE == null) ? "null" : coil.CoilDetails[0].UNITPRICE.ToString()) +
                                 " where COILID = " + "'" + coil.CoilDetails[0].COILID + "';";
 
                             sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + coil.CoilDetails[0].COILID + "';";

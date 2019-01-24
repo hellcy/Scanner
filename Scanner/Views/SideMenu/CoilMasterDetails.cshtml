@@ -50,8 +50,6 @@
                         <td style="font-weight:bold;">P_ORDER</td>
                         <td>@Html.TextBoxFor(model => model.CoilDetails[0].P_ORDER, new { @id = "P_ORDER", style = "background-color:#e2e2e2;" })</td>
                     </tr>
-                </table>
-                <table class="col-md-6">
                     <tr>
                         <td style="font-weight:bold;">MONTH_RECD</td>
                         <td>@Html.TextBoxFor(model => model.CoilDetails[0].MONTH_RECD, new { @id = "MONTH_RECD", style = "background-color:#e2e2e2;" })</td>
@@ -60,6 +58,8 @@
                         <td style="font-weight:bold;">DATE_INWH</td>
                         <td>@Html.TextBoxFor(model => model.CoilDetails[0].DATE_INWH, new { @id = "DATE_INWH", style = "background-color:#e2e2e2;" })</td>
                     </tr>
+                </table>
+                <table class="col-md-6">
                     <tr>
                         <td style="font-weight:bold;">DATE_TRANSFER</td>
                         <td>@Html.TextBoxFor(model => model.CoilDetails[0].DATE_TRANSFER, new { @id = "DATE_TRANSFER", style = "background-color:#e2e2e2;" })</td>
@@ -79,6 +79,22 @@
                     <tr>
                         <td style="font-weight:bold;">ZINCCOAT</td>
                         <td>@Html.TextBoxFor(model => model.CoilDetails[0].ZINCCOAT, new { @id = "ZINCCOAT", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">LOCATION</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].LOCATION, new { @id = "LOCATION", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">INV_NO</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].INV_NO, new { @id = "INV_NO", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">INV_DATE</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].INV_DATE, new { @id = "INV_DATE", style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">UNITPRICE</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].UNITPRICE, new { @id = "UNITPRICE", style = "background-color:#e2e2e2;" })</td>
                     </tr>
                 </table>
             </div>

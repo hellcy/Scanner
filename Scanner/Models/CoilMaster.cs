@@ -39,6 +39,10 @@ namespace Scanner.Models
         public string STATUS { get; set; }
         public Nullable<int> CLENGTH { get; set; }
         public string ZINCCOAT { get; set; }
+        public string LOCATION { get; set; }
+        public string INV_NO { get; set; }
+        public Nullable<DateTime> INV_DATE { get; set; }
+        public Nullable<double> UNITPRICE { get; set; }
         public string Flag { get; set; }
         public int Count { get; set; }
         public int maxPages { get; set; }
