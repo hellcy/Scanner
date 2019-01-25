@@ -86,7 +86,7 @@ namespace Scanner.Controllers
         public ActionResult CoilMaster()
         {
             CoilMasters master = new CoilMasters();
-            return View(master);
+            return CoilMaster(master);
         }
 
         [SessionExpire]
@@ -134,7 +134,7 @@ namespace Scanner.Controllers
                             master.excelCoilIDs.Add(Convert.ToString(firstColumnCell));
                         }
                     }
-                    else if (extension.Equals(".csv"))
+                    else if (extension.Equals(".csv") || extension.Equals(".txt"))
                     {
                         Guid gid = Guid.NewGuid();
                         file.SaveAs(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"));
@@ -454,7 +454,7 @@ namespace Scanner.Controllers
         public ActionResult CoilSlit()
         {
             CoilSlits slit = new CoilSlits();
-            return View();
+            return CoilSlit(slit);
         }
 
         /*
@@ -780,7 +780,7 @@ namespace Scanner.Controllers
         {
             WorkOrder_HDRs orders = new WorkOrder_HDRs();
             orders.statusSort = -1;
-            return View(orders);
+            return WorkOrderHeaders(orders);
         }
 
         /*
