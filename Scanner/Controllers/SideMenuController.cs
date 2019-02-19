@@ -14,9 +14,7 @@ using static Scanner.FilterConfig;
 using System.IO;
 using Zen.Barcode;
 using System.Drawing;
-using System.Data.OleDb;
 using OfficeOpenXml;
-using CsvHelper;
 using System.Configuration;
 
 namespace Scanner.Controllers
@@ -31,6 +29,24 @@ namespace Scanner.Controllers
             MemoryStream ms = new MemoryStream();
             img.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
             return ms.ToArray();
+        }
+
+        // resize the image size, for barcode
+        public static Image ScaleImage(Image image, int maxWidth, int maxHeight)
+        {
+            var ratioX = (double)maxWidth / image.Width;
+            var ratioY = (double)maxHeight / image.Height;
+            var ratio = Math.Min(ratioX, ratioY);
+
+            var newWidth = (int)(image.Width * ratio);
+            var newHeight = (int)(image.Height * ratio);
+
+            var newImage = new Bitmap(newWidth, newHeight);
+
+            using (var graphics = Graphics.FromImage(newImage))
+                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+
+            return newImage;
         }
 
         [SessionExpire]
@@ -54,13 +70,6 @@ namespace Scanner.Controllers
                 }
                 fillCurrTable(Request.Form["frmName"].ToString(), rowsCnt);
             }
-            else
-            {
-                if ((Session["newOrder"] != null) && (Request.Form["Company"] != null))
-                {
-
-                }
-            }
             Session["CurrForm"] = "Home";
             return View();
         }
@@ -79,7 +88,6 @@ namespace Scanner.Controllers
                 context.Database.ExecuteSqlCommand(sql);
             }
         }
-
 
         [SessionExpire]
         [Authorize]
@@ -101,7 +109,10 @@ namespace Scanner.Controllers
             if (Request != null)
             {
                 HttpPostedFileBase file = Request.Files["UploadedFile"];
-
+                if ((master.openFileFlag == "open") && (string.IsNullOrEmpty(file.FileName)))
+                {
+                    master.message = "Please select a file.";
+                }
                 if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName) && master.openFileFlag == "open")
                 {
                     string fileName = file.FileName;
@@ -114,18 +125,13 @@ namespace Scanner.Controllers
                     if (extension.Equals(".xlsx"))
                     {
                         var package = new ExcelPackage(file.InputStream);
-
                         ExcelWorksheet workSheet = package.Workbook.Worksheets.First();
 
-                        for (int i = workSheet.Dimension.Start.Row;
-                                 i <= workSheet.Dimension.End.Row;
-                                 i++)
+                        for (int i = workSheet.Dimension.Start.Row; i <= workSheet.Dimension.End.Row; i++)
                         {
                             master.excelRecords.Add(new List<string>());
                             object firstColumnCell = null;
-                            for (int j = workSheet.Dimension.Start.Column;
-                                     j <= workSheet.Dimension.End.Column;
-                                     j++)
+                            for (int j = workSheet.Dimension.Start.Column; j <= workSheet.Dimension.End.Column; j++)
                             {
                                 firstColumnCell = workSheet.Cells[i, 1].Value;
                                 object cellValue = workSheet.Cells[i, j].Value;
@@ -151,10 +157,13 @@ namespace Scanner.Controllers
                             System.IO.File.Delete(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"));
                         }
                     }
-
+                    else if (extension.Equals(".xls"))
+                    {
+                        Guid gid = Guid.NewGuid();
+                        file.SaveAs(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".xls"));
+                    }
                     Session["readExcelFile"] = master;
                     return RedirectToAction("CoilReadFile");
-
                 }
             }
 
@@ -167,10 +176,8 @@ namespace Scanner.Controllers
                     {
                         rowsCnt = Convert.ToInt32(Request.Form["rows"]);
                     }
-
                     fillCurrTable(Request.Form["frmName"].ToString(), rowsCnt);
                 }
-
                 master.sortCol = "DefaultSort";
                 master.sortColType = "Number";
                 master.rowsPerPage = 15;
@@ -195,7 +202,6 @@ namespace Scanner.Controllers
             {
                 master.whereStr = "";
             }
-
             var Role = new SqlParameter("@Role", ((Scanner.Models.User)Session["User"]).Role);
             var UserName = new SqlParameter("@UserName", ((Scanner.Models.User)Session["User"]).UserName);
             var pageNum = new SqlParameter("@pageNum", (master.pageNum == 0) ? 1 : master.pageNum);
@@ -208,10 +214,8 @@ namespace Scanner.Controllers
                 new SqlParameter("@orderBy", "desc") :
                 new SqlParameter("@orderBy", "asc");
 
-
             var table = new SqlParameter("@table", "GRAM_SYD_LIVE.dbo.X_COIL_MASTER");
             var selStr = new SqlParameter("@selStr", "");
-
 
             // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_Y_GetSideMenu_v2").ToList<SideMenu>();
             var sql = "exec GramOnline.dbo.proc_Y_GetCoilMasters " +
@@ -273,6 +277,38 @@ namespace Scanner.Controllers
 
             if (oldMsg != "")
                 master.errMsg = oldMsg;
+
+            //int test = master.CoilDetails.Count;
+            CodeQrBarcodeDraw QRcode = BarcodeDrawFactory.CodeQr; // to generate QR code
+            Code128BarcodeDraw barcode128 = BarcodeDrawFactory.Code128WithChecksum; // to generate barcode
+            Code93BarcodeDraw barcode93 = BarcodeDrawFactory.Code93WithChecksum; // test
+            Image img_QRcode = null;
+            Image img_Barcode = null;
+            byte[] imgBytes;
+            string imgString;
+
+            if (master.CoilDetails != null)
+            {
+                master.CoilMasterLabels = new string[master.CoilDetails.Count];
+                master.QRcodes = new string[master.CoilDetails.Count];
+                master.Barcodes = new string[master.CoilDetails.Count];
+                for (int i = 0; i < master.CoilDetails.Count; i++)
+                {
+                    master.CoilMasterLabels[i] = master.CoilDetails[i].COILID + "+" + master.CoilDetails[i].TYPE + "+" + master.CoilDetails[i].COLOR + "+" + master.CoilDetails[i].WEIGHT + "+" + master.CoilDetails[i].GAUGE + "+" + master.CoilDetails[i].WIDTH;
+                    BarcodeMetrics QRcodeMetrics = QRcode.GetDefaultMetrics(150);
+                    QRcodeMetrics.Scale = 3; //qrcode size
+                    img_QRcode = QRcode.Draw(master.CoilMasterLabels[i], QRcodeMetrics);
+                    imgBytes = turnImageToByteArray(img_QRcode);
+                    imgString = Convert.ToBase64String(imgBytes);
+                    master.QRcodes[i] = String.Format("<img src=\"data:image/png;base64,{0}\"/>", imgString);
+
+                    img_Barcode = barcode128.Draw(master.CoilMasterLabels[i], 100); // barcode height and scale
+                    //var newImage = ScaleImage(img_Barcode, 500, 100);
+                    imgBytes = turnImageToByteArray(img_Barcode);
+                    imgString = Convert.ToBase64String(imgBytes);
+                    master.Barcodes[i] = String.Format("<img src=\"data:image/png;base64,{0}\"/>", imgString);
+                }
+            }
 
             return View(master);
         }
@@ -405,7 +441,8 @@ namespace Scanner.Controllers
         }
 
         /*
-
+        Can be accessed via coil master page, added 2 button at the bottom of the page, user can select a file and open it, the content will be displayed in a new page. Coils that are not 
+        found in the table will be marked as RED in the content.
              */
         [SessionExpire]
         [HttpPost]
@@ -928,24 +965,6 @@ namespace Scanner.Controllers
                 orders.errMsg = oldMsg;
 
             return View(orders);
-        }
-
-        [SessionExpire]
-        [Authorize]
-        public ActionResult Option_2()
-        {
-            ViewBag.Title = "Option_2";
-            Session["CurrForm"] = "Option_2";
-            return View();
-        }
-
-        [SessionExpire]
-        [Authorize]
-        public ActionResult Option_3()
-        {
-            ViewBag.Title = "Option_3";
-            Session["CurrForm"] = "Option_3";
-            return View();
         }
 
         [SessionExpire]

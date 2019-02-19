@@ -1,20 +1,20 @@
 ﻿@using Scanner.Models
 @{
-                /**/
+    /**/
 
-                ViewBag.Title = "Options Menu";
-                IList<SideMenu> menu = ((List<SideMenu>)Session["SideMenu"]);
-                var user = (User)Session["User"];
-                var clnCnt = 0;
+    ViewBag.Title = "Options Menu";
+    IList<SideMenu> menu = ((List<SideMenu>)Session["SideMenu"]);
+    var user = (User)Session["User"];
+    var clnCnt = 0;
 
-                int isFront = 0;
-                if (Session["TradeType"] != null)
-                {
-                    if (Convert.ToUInt32(Session["TradeType"]) > 0)
-                    {
-                        isFront = 1;
-                    }
-                }
+    int isFront = 0;
+    if (Session["TradeType"] != null)
+    {
+        if (Convert.ToUInt32(Session["TradeType"]) > 0)
+        {
+            isFront = 1;
+        }
+    }
 
 }
 
@@ -38,7 +38,6 @@
                     {
                         display = "none";
                     }
-
 
                     if (!string.IsNullOrEmpty(cat.lv1))
                     {
@@ -72,7 +71,6 @@
     if (Session["errorMessage"] != null)
     {
         <script language="javascript">
-
             var rmsg = "@Html.Raw(Session["errorMessage"].ToString())";
             BootstrapDialog.show({
                 //size: BootstrapDialog.SIZE_WIDE,
@@ -86,7 +84,6 @@
                     }
                 }]
             });
-
         </script>
         Session["errorMessage"] = null;
     }

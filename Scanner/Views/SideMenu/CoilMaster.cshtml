@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = "Coil Master";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+
 }
 <table class="bodyTable">
     <tr>
@@ -187,63 +189,63 @@
                         <table style="width:1560px; overflow-x: auto;">
                             @for (int i = 0; i < Model.CoilDetails.Count; i++)
                             {
-                            <tr>
-                                <td style="width:50px;">
-                                    <a onclick="gotoPage('CoilMasterDetails','SideMenu','ID=@Model.CoilDetails[i].COILID')">
-                                        @if (@Model.CoilDetails[i].COILID != null)
-                                        {@Model.CoilDetails[i].COILID}
-                                    </a>
-                                </td>
-                                <td class="context-menu_@Model.CoilDetails[i].TYPE" style="width:30px;">
-                                    @if (@Model.CoilDetails[i].TYPE != null)
-                                    {@Model.CoilDetails[i].TYPE}
-                                </td>
-                                <td class="context-menu_@Model.CoilDetails[i].COLOR" style="width:30px;">
-                                    @if (@Model.CoilDetails[i].COLOR != null)
-                                    {@Model.CoilDetails[i].COLOR}
-                                </td>
-                                <td style="width:30px;">@Model.CoilDetails[i].WEIGHT.ToString()</td>
-                                @if (Model.CoilDetails[i].GAUGE.ToString().Length == 3)
-                                {
-                                    <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,1)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
-                                }
-                                @if (Model.CoilDetails[i].GAUGE.ToString().Length == 4)
-                                {
-                                    <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,2)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
-                                }
-                                <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
-                                <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
-                                <td style="width:40px;">
-                                    @if (@Model.CoilDetails[i].P_ORDER != null)
-                                    {@Model.CoilDetails[i].P_ORDER}
-                                </td>
-                                <td style="width:50px;">
-                                    @if (@Model.CoilDetails[i].MONTH_RECD != null)
-                                    {@Model.CoilDetails[i].MONTH_RECD}
-                                </td>
-                                <td style="width:70px;">@Model.CoilDetails[i].DATE_INWH.ToString()</td>
-                                <td style="width:70px;">@Model.CoilDetails[i].DATE_TRANSFER.ToString()</td>
-                                <td style="width:70px;">@Model.CoilDetails[i].LAST_STOCKTAKE_DATE.ToString()</td>
-                                <td style="width:30px;">
-                                    @if (@Model.CoilDetails[i].STATUS != null)
-                                    {@Model.CoilDetails[i].STATUS}
-                                </td>
-                                <td style="width:30px;">@Model.CoilDetails[i].CLENGTH.ToString()</td>
-                                <td style="width:30px;">
-                                    @if (@Model.CoilDetails[i].ZINCCOAT != null)
-                                    {@Model.CoilDetails[i].ZINCCOAT}
-                                </td>
-                                <td style="width:50px;">
-                                    @if (@Model.CoilDetails[i].LOCATION != null)
-                                    {@Model.CoilDetails[i].LOCATION}
-                                </td>
-                                <td style="width:50px;">
-                                    @if (@Model.CoilDetails[i].INV_NO != null)
-                                    {@Model.CoilDetails[i].INV_NO}
-                                </td>
-                                <td style="width:70px;">@Model.CoilDetails[i].INV_DATE.ToString()</td>
-                                <td style="width:30px;">@Model.CoilDetails[i].UNITPRICE.ToString()</td>
-                            </tr>
+                                <tr>
+                                    <td style="width:50px;">
+                                        <a onclick="gotoPage('CoilMasterDetails','SideMenu','ID=@Model.CoilDetails[i].COILID')">
+                                            @if (@Model.CoilDetails[i].COILID != null)
+                                            {@Model.CoilDetails[i].COILID}
+                                        </a>
+                                    </td>
+                                    <td class="context-menu_@Model.CoilDetails[i].TYPE" style="width:30px;">
+                                        @if (@Model.CoilDetails[i].TYPE != null)
+                                        {@Model.CoilDetails[i].TYPE}
+                                    </td>
+                                    <td class="context-menu_@Model.CoilDetails[i].COLOR" style="width:30px;">
+                                        @if (@Model.CoilDetails[i].COLOR != null)
+                                        {@Model.CoilDetails[i].COLOR}
+                                    </td>
+                                    <td style="width:30px;">@Model.CoilDetails[i].WEIGHT.ToString()</td>
+                                    @if (Model.CoilDetails[i].GAUGE.ToString().Length == 3)
+                                    {
+                                        <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,1)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
+                                    }
+                                    @if (Model.CoilDetails[i].GAUGE.ToString().Length == 4)
+                                    {
+                                        <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,2)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
+                                    }
+                                    <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
+                                    <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
+                                    <td style="width:40px;">
+                                        @if (@Model.CoilDetails[i].P_ORDER != null)
+                                        {@Model.CoilDetails[i].P_ORDER}
+                                    </td>
+                                    <td style="width:50px;">
+                                        @if (@Model.CoilDetails[i].MONTH_RECD != null)
+                                        {@Model.CoilDetails[i].MONTH_RECD}
+                                    </td>
+                                    <td style="width:70px;">@Model.CoilDetails[i].DATE_INWH.ToString()</td>
+                                    <td style="width:70px;">@Model.CoilDetails[i].DATE_TRANSFER.ToString()</td>
+                                    <td style="width:70px;">@Model.CoilDetails[i].LAST_STOCKTAKE_DATE.ToString()</td>
+                                    <td style="width:30px;">
+                                        @if (@Model.CoilDetails[i].STATUS != null)
+                                        {@Model.CoilDetails[i].STATUS}
+                                    </td>
+                                    <td style="width:30px;">@Model.CoilDetails[i].CLENGTH.ToString()</td>
+                                    <td style="width:30px;">
+                                        @if (@Model.CoilDetails[i].ZINCCOAT != null)
+                                        {@Model.CoilDetails[i].ZINCCOAT}
+                                    </td>
+                                    <td style="width:50px;">
+                                        @if (@Model.CoilDetails[i].LOCATION != null)
+                                        {@Model.CoilDetails[i].LOCATION}
+                                    </td>
+                                    <td style="width:50px;">
+                                        @if (@Model.CoilDetails[i].INV_NO != null)
+                                        {@Model.CoilDetails[i].INV_NO}
+                                    </td>
+                                    <td style="width:70px;">@Model.CoilDetails[i].INV_DATE.ToString()</td>
+                                    <td style="width:30px;">@Model.CoilDetails[i].UNITPRICE.ToString()</td>
+                                </tr>
                             }
                         </table>
                     }
@@ -255,6 +257,8 @@
                     var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
                     var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
                     var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
+                    var selAll = "";
+                    if (Model.totalRows > 0) { selAll = (Model.rowsPerPage == Model.totalRows) ? "selected " : ""; }
                 }
                 <br />
                 <span style="float:right; font-weight:bold">
@@ -266,6 +270,7 @@
                         <option value=100 @sel100>100</option>
                         <option value=150 @sel150>150</option>
                         <option value=200 @sel200>200</option>
+                        <option value=@Model.totalRows @selAll>All</option>
                     </select>
                     &nbsp;&nbsp;
                     <a onclick="backNavpage()"><span class="glyphicon glyphicon-backward"></span></a>&nbsp;
@@ -289,10 +294,16 @@
                     </td>
                     <td>
                         <input type="button" id="Open" value="Open" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="readFile()" />
+                        <span style="font-size:100%; color:red; "> @if (Model.message != null)
+                        {@Model.message}</span>
                         <div>@Html.TextBoxFor(model => model.openFileFlag, new { id = "openFileFlag", type = "hidden" })</div>
                     </td>
                 </tr>
             </table>
+            <div>
+                <input type="button" id="PRINT" value="PRINT" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="PrintCoilMasterLabel()" />
+                <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
+            </div>
             @*@Html.Partial("_BottomPanel")*@
         </td>
     </tr>
@@ -483,6 +494,42 @@
     function readFile() {
         $('#openFileFlag').val('open');
         reloadWorkOrders();
+    }
+
+    function PrintCoilMasterLabel()
+    {
+        var mywindow = window.open('', 'PRINT', 'height=600,width=700');
+        mywindow.document.write('<html><head><title>SLIT LABEL PRINT PREVIEW (Print By:@loginUserName)</title>');
+        mywindow.document.write('</head><body>');
+
+        /* Printing Settings
+        * Browser: Chrome
+        * Layout: Landscape
+        * Paper Size: User Defined
+        * Margins: Default
+        * Scale: 100 
+        */
+
+        //For big label, 1.5cm margin-top on printer preference
+        //mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilMasterLabels.Count; i++){<br/><br/><br/><br/><br/><br/><table><tr><td>@Html.Raw(Model.QRcodes[i])</td><td><div>&emsp;@Html.Raw(Model.Barcodes[i])</div><div style="font-size:150%">&emsp;@Html.Raw(Model.CoilMasterLabels[i])</div></td></tr></table><br/><br/><br/>}}');
+            
+        //For Coil Master and Slit label, no margin on printer preference
+        //mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilMasterLabels.Count; i++){<table><tr><td>@Html.Raw(Model.QRcodes[i])</td><td><div style="float:right;">@Html.Raw(Model.Barcodes[i])</div><div style="font-size:150%;float:right;">@Html.Raw(Model.CoilMasterLabels[i])</div><div style="font-size:600%;font-weight:bold;">@Html.Raw(Model.CoilDetails[i].COLOR) <span style="font-size:30%;font-weight: bold;">@Html.Raw(Model.CoilDetails[i].TYPE)</span></div></td></tr></table><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>}}');
+        
+        //For Coil Master and Slit label, no margin on printer preference, choose NONE for margin
+        mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilMasterLabels.Count; i++){<br/><br/><br/><table><tr><td><div style="margin-left:10px;">@Html.Raw(Model.QRcodes[i])</div></td><td><div style="font-size:400%;font-weight:bold;">@Html.Raw(Model.CoilDetails[i].COLOR) <div style="font-size:50%;font-weight: bold;">@Html.Raw(Model.CoilDetails[i].TYPE)</div></td><td><div style="float:right;margin-right:10px;">@Html.Raw(Model.Barcodes[i])</div><div style="font-size:150%;float:right;margin-right:10px;">@Html.Raw(Model.CoilMasterLabels[i])</div></td></tr></table><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>}}');
+    
+
+        mywindow.document.write('</body></html>');
+        mywindow.document.close();
+        setTimeout(function ()
+        {
+            mywindow.focus();
+            mywindow.print();
+            mywindow.close();
+        }, 0);
+        $('#printFlag').val('print');
+        //$("#frmMain").submit();
     }
 
     $(function() {

@@ -79,6 +79,10 @@ namespace Scanner.Models
         public string openFileFlag { get; set; }
         public string updateFlag { get; set; }
         public string message { get; set; }
+        public string printFlag { get; set; }
 
+        public IList<String> CoilMasterLabels { get; set; } = null;
+        public IList<String> QRcodes { get; set; } = null;
+        public IList<String> Barcodes { get; set; } = null;
     }
 }
