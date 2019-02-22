@@ -27,6 +27,10 @@ namespace Scanner.Controllers
         {
             // Global.Execute(@"C:\Bridge\Software\BridgeMann\DF", @"C:\Bridge\Software\BridgeMann\DF\DF.exe","GRAM", @"engineering", "fence");       
             LoginUser user = new LoginUser();
+             Guid g;
+            // Create and display the value of two GUIDs.
+            g = Guid.NewGuid();
+
 
             Session["aebn"] = "0";
             if (Request.QueryString["aebn"] != null)

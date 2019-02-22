@@ -228,6 +228,7 @@
     <Compile Include="Global.cs" />
     <Compile Include="Models\ACCGroup.cs" />
     <Compile Include="Models\CoilSlit.cs" />
+    <Compile Include="Models\CollectedOrders.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\LoginUser.cs" />
     <Compile Include="Models\PasswordReq.cs" />
