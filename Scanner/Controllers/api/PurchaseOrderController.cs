@@ -13,25 +13,25 @@ using System.Web.Script.Serialization;
 
 namespace Scanner.Controllers.api
 {
-    public class JobOrderController : ApiController
+    public class PurchaseOrderController : ApiController
     {
         // GET: api/JobOrder
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2", "value3" };
+            return new string[] { "value1", "value2", "purchase" };
         }
-        
+
         // GET: api/JobOrder/5
         public JObject Get(int HDR_SEQNO)
         {
-            
-            IList<CollectedOrder> results = new List<CollectedOrder>();
+
+            IList<ReceivedOrder> results = new List<ReceivedOrder>();
             try
             {
                 using (var context = new DbContext(Global.ConnStr))
                 {
                     object[] parameters = { HDR_SEQNO };
-                    results = context.Database.SqlQuery<CollectedOrder>("GramOnline.dbo.proc_Y_App_GetJobOrder {0}", parameters).ToList<CollectedOrder>();
+                    results = context.Database.SqlQuery<ReceivedOrder>("GramOnline.dbo.proc_Y_App_GetPurchaseOrder {0}", parameters).ToList<ReceivedOrder>();
                 }
             }
             catch (Exception e)
@@ -45,16 +45,16 @@ namespace Scanner.Controllers.api
         }
 
         // POST: api/JobOrder
-        
+
         public JObject Post(JObject results)
         {
             JsonSerializer serializer = new JsonSerializer();
-            CollectedOrders collectedOrders = (CollectedOrders)serializer.Deserialize(new JTokenReader(results), typeof(CollectedOrders));
+            ReceivedOrders receivedOrders = (ReceivedOrders)serializer.Deserialize(new JTokenReader(results), typeof(ReceivedOrders));
             int size = 0;
-            // Works to be done: Now collectedOrders contains all the data collected after dispatch-------------------------------------------------------------------
+            // Works to be done: Now receivedOrders contains all the data collected -------------------------------------------------------------------
             // Get all the object members and pass them to a procedure as parameters
             // using a for loop to call that procedure and update a newly created table in SQL database
-            foreach (CollectedOrder order in collectedOrders.results)
+            foreach (ReceivedOrder order in receivedOrders.results)
             {
                 size++;
             }

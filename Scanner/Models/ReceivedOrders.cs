@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
 namespace Scanner.Models
 {
-    public class CollectedOrder
+    public class ReceivedOrder
     {
-        public CollectedOrder()
+        public ReceivedOrder()
         {
             DESCRIPTION = "";
-            Bundle = "";
             STOCKCODE = "";
         }
         public Nullable<DateTime> ORDERDATE { get; set; }
@@ -22,12 +20,11 @@ namespace Scanner.Models
         public Nullable<double> ORD_QUANT { get; set; }
         public Nullable<int> SEQNO { get; set; }
 
-        public Nullable<double> QTYCollected { get; set; }
-        public string Bundle { get; set; }
+        public Nullable<double> QTYReceived { get; set; }
     }
 
-    public class CollectedOrders
+    public class ReceivedOrders
     {
-        public IList<CollectedOrder> results { get; set; }
+        public IList<ReceivedOrder> results { get; set; }
     }
 }
