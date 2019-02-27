@@ -25,6 +25,8 @@ namespace Scanner.Models
 
     public class ReceivedOrders
     {
+        public Nullable<DateTime> ReceivedTime { get; set; }
+        public string USERNAME { get; set; }
         public IList<ReceivedOrder> results { get; set; }
     }
 }

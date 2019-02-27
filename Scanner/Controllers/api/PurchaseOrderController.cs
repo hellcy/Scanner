@@ -48,6 +48,7 @@ namespace Scanner.Controllers.api
 
         public JObject Post(JObject results)
         {
+            DateTime now = DateTime.Now;
             JsonSerializer serializer = new JsonSerializer();
             ReceivedOrders receivedOrders = (ReceivedOrders)serializer.Deserialize(new JTokenReader(results), typeof(ReceivedOrders));
             int size = 0;
@@ -56,9 +57,21 @@ namespace Scanner.Controllers.api
             // using a for loop to call that procedure and update a newly created table in SQL database
             foreach (ReceivedOrder order in receivedOrders.results)
             {
+                try
+                {
+                    using (var context = new DbContext(Global.ConnStr))
+                    {
+
+                        object[] parameters = { receivedOrders.USERNAME, order.SEQNO, order.HDR_SEQNO, order.ACCNO, order.STOCKCODE, order.DESCRIPTION, order.ORD_QUANT, order.ORDERDATE, order.QTYReceived, now};
+                        context.Database.ExecuteSqlCommand("GramOnline.dbo.proc_Y_App_UpdatePurchaseOrderQtyReceived {0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", parameters);
+                    }
+                }
+                catch (Exception e)
+                {
+                    results = null;
+                }
                 size++;
             }
-
 
             return results;
         }
