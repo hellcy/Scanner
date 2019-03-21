@@ -49,7 +49,7 @@ namespace Scanner.Controllers
         public ActionResult Coil()
         {
             CoilMasters details = new CoilMasters();
-            details.CoilDetails = new List<CoilMaster>();
+            //details.CoilDetails = new List<CoilMaster>();
             return View(details);
         }
 

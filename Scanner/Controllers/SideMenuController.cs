@@ -1046,5 +1046,52 @@ namespace Scanner.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult Arithmetic()
+        {
+            Arithmetics arithmetics = new Arithmetics();
+            CoilMasters coilMasters = new CoilMasters();
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    Arithmetic arithmetic = new Arithmetic();
+            //    arithmetics.arithmetics.Add(arithmetic);
+            //}
+            //arithmetics.arithmetics[0].prime = "";
+            return View(arithmetics);
+        }
+
+        [HttpPost]
+        public ActionResult Arithmetic(Arithmetics arithmetics)
+        {
+            ViewBag.Title = "Arithmetic";
+            Session["CurrForm"] = "Arithmetic";
+
+
+            for (int i = 0; i < 100; i++)
+            {
+                if (IsPrime(i + 1) && arithmetics.ArithmeticsList[i] != null)
+                {
+                    arithmetics.ArithmeticsList[i].Prime = "prime";
+                }
+            }
+
+            return View(arithmetics);
+        }
+
+        public static bool IsPrime(int number)
+        {
+            if (number <= 1) return false;
+            if (number == 2) return true;
+            if (number % 2 == 0) return false;
+
+            var boundary = (int)Math.Floor(Math.Sqrt(number));
+
+            for (int i = 3; i <= boundary; i += 2)
+                if (number % i == 0)
+                    return false;
+
+            return true;
+        }
+
     }
 }

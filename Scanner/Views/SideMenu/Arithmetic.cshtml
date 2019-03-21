@@ -1,0 +1,122 @@
+﻿@model Scanner.Models.Arithmetics
+@{
+    ViewBag.Title = "Arithmetic";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<table class="bodyTable">
+    <tr>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
+            <div class="col-md-12 inner_table">
+                <table class="col-md-10">
+                    <tr>
+                        <td style="width:200px;font-weight:bold;">Even Number: </td>
+                        <td>An even number is an integer which is "evenly divisible" by two. This means that if the integer is divided by 2, it yields no remainder.</td>
+                    </tr>
+                    <tr>
+                        <td style="width:200px;font-weight:bold;">Odd Number: </td>
+                        <td>An odd number is an integer which is not a multiple of two; A number that when divided by two, leaves a remainder. If it is divided by two the result is a fraction.</td>
+                    </tr>
+                    <tr>
+                        <td style="width:200px;font-weight:bold;">Prime Number: </td>
+                        <td>A prime number is a whole number greater than 1 whose only factors are 1 and itself. </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="TwrapOverFlow" style="width:1560px;">
+                <div class="inner_table" style="width:1560px;">
+                    <table style="width:1560px; overflow-x: auto;">
+                        <tr>
+                            <td style="width:50px;"><pre>Odd</pre><pre>1</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>2</pre><pre>Prime</pre></td>
+                            <td style="width:50px;"><pre>Odd</pre><pre>3</pre><pre>Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>4</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Odd</pre><pre>5</pre><pre>Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>6</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Odd</pre><pre>7</pre><pre>Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>8</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Odd</pre><pre>9</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>10</pre><pre>Not Prime</pre></td>
+                        </tr>
+                        <tr>
+                            <td style="width:50px;"><pre>Odd</pre><pre>11</pre><pre>Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>12</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Odd</pre><pre>13</pre><pre>Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>14</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Odd</pre><pre>15</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>16</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Odd</pre><pre>17</pre><pre>Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>18</pre><pre>Not Prime</pre></td>
+                            <td style="width:50px;"><pre>Odd</pre><pre>19</pre><pre>Prime</pre></td>
+                            <td style="width:50px;"><pre>Even</pre><pre>20</pre><pre>Not Prime</pre></td>
+                        </tr>
+                        @{
+                            int x = 20;
+                            for (int i = 0; i < 8; i++)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < 10; j++)
+                                    {
+                                        <td style="width:50px;">
+                                            <pre>@Html.TextBoxFor(model => model.ArithmeticsList[x].Odd, new { id = ("odd_" + x)})</pre>
+                                            <pre id=@(x + 1)>@(x + 1)</pre>
+                                            <pre>@Html.TextBoxFor(model => model.ArithmeticsList[x].Prime, new { id = "prime_" + x })</pre>
+                                        </td>
+                                        x++;
+                                    }
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+            <div>
+                <input type="button" id="check" value="CHECK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;"/>
+            </div>
+        </td>
+    </tr>
+
+</table>
+
+<script language="javascript">
+
+    $('#check').click(function () {
+        //$("#frmMain").submit();
+        for (var i = 20; i < 100; i++) {
+            $('#prime_' + i).css("color", "black");
+            if (isPrime(i + 1) && $('#prime_' + i).val().toLowerCase() != "prime") {
+                $('#prime_' + i).css("color", "red");
+            }
+            if (isPrime(i + 1) == false && $('#prime_' + i).val().toLowerCase() != "not prime") {
+                $('#prime_' + i).css("color", "red");
+            }
+
+            $('#odd_' + i).css("color", "black");
+            if (isOdd(i + 1) && $('#odd_' + i).val().toLowerCase() != "odd") {
+                $('#odd_' + i).css("color", "red");
+            }
+            if (isOdd(i + 1) == false && $('#odd_' + i).val().toLowerCase() != "even") {
+                $('#odd_' + i).css("color", "red");
+            }
+        }
+    });
+
+    function isPrime(input) {
+        let prime = true;
+        for (let i = 2; i <= Math.sqrt(input); i++) {
+            if (input % i == 0) {
+                prime = false;
+                break;
+            }
+        }
+        return prime && (input > 1);
+    }
+
+    function isOdd(input) {
+        let odd = true;
+        if ((odd % 2) == 0) { odd = false; }
+        return odd;
+    }
+</script>

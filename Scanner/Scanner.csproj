@@ -228,6 +228,7 @@
     </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="Models\ACCGroup.cs" />
+    <Compile Include="Models\Arithmetic.cs" />
     <Compile Include="Models\CoilSlit.cs" />
     <Compile Include="Models\CollectedOrders.cs" />
     <Compile Include="Models\Contact.cs" />
@@ -251,6 +252,8 @@
     <Content Include="Content\3.3.5\bootstrap.css" />
     <Content Include="Content\3.3.5\docs.css" />
     <Content Include="Content\3.3.5\prettify.css" />
+    <Content Include="Content\bootstrap-slider.css" />
+    <Content Include="Content\bootstrap-slider.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -397,6 +400,7 @@
     <Content Include="Views\SideMenu\CoilSlit.cshtml" />
     <Content Include="Views\SideMenu\CoilMasterDetails.cshtml" />
     <Content Include="Views\SideMenu\CoilReadFile.cshtml" />
+    <Content Include="Views\SideMenu\Arithmetic.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
