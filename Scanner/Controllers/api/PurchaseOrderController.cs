@@ -44,6 +44,28 @@ namespace Scanner.Controllers.api
             return jObject;
         }
 
+        // get all orders by acc name
+        public JObject Get(string ACCNAME)
+        {
+            IList<ReceivedOrder> results = new List<ReceivedOrder>();
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    object[] parameters = { ACCNAME };
+                    results = context.Database.SqlQuery<ReceivedOrder>("GramOnline.dbo.proc_Y_App_GetPurchaseOrder {0}", parameters).ToList<ReceivedOrder>();
+                }
+            }
+            catch (Exception e)
+            {
+                results = null;
+            }
+            var json = JsonConvert.SerializeObject(new { results = results });
+            var jObject = JObject.Parse(json);
+
+            return jObject;
+        }
+
         // POST: api/JobOrder
 
         public JObject Post(JObject results)

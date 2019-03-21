@@ -20,6 +20,7 @@ namespace Scanner.Models
         public Nullable<double> ORD_QUANT { get; set; }
         public Nullable<double> SUP_QUANT { get; set; }
         public Nullable<int> SEQNO { get; set; }
+        public string NAME { get; set; }
 
         public Nullable<double> QTYReceived { get; set; }
     }
