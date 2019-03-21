@@ -20,8 +20,8 @@
                     <td>&nbsp;</td>
                     <td>@Html.TextBoxFor(o => o.whereStr, new { autocomplete = "off" })</td>
                     <td>&nbsp;</td>
-                    <td><input type="button" class="btn btn-primary" onclick="submitNavpage(1)" value="SEARCH" style="width:80px;" /></td>
-                    <td><input type="button" class="btn btn-primary" onclick="clearText()" value="CLEAR" style="width:80px;" /></td>
+                    <td><button type="button" class="btn btn-primary" onclick="submitNavpage(1)"><span class="glyphicon glyphicon-search"></span> Search</button></td>
+                    <td><button type="button" class="btn btn-primary" onclick="clearText()"><span class="glyphicon glyphicon-trash"></span> Clear</button></td>
                     <td><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
                 </tr>
             </table>
@@ -286,14 +286,14 @@
             <table>
                 <tr>
                     <td>
-                        <label for="UploadedFile" class="btn btn-primary btn-lg" style="height:40px; width: 120px; margin-bottom:10px;margin-top:10px;">
-                            SELECT FILE
+                        <label for="UploadedFile" class="btn btn-primary btn-lg" style="margin-bottom:10px;margin-top:10px;">
+                            <span class="glyphicon glyphicon-folder-open"></span>  SELECT FILE
                         </label>
                         <span id="file-selected"></span>&nbsp;&nbsp;
                         <input type="file" id="UploadedFile" name="UploadedFile" style="display: none " />
                     </td>
                     <td>
-                        <input type="button" id="Open" value="Open" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="readFile()" />
+                        <button type="button" id="Open" class="btn btn-primary btn-lg" onclick="readFile()" style="float:left; width:100px;"><span class="glyphicon glyphicon-file"></span> Open</button>
                         <span style="font-size:100%; color:red; "> @if (Model.message != null)
                         {@Model.message}</span>
                         <div>@Html.TextBoxFor(model => model.openFileFlag, new { id = "openFileFlag", type = "hidden" })</div>
@@ -301,7 +301,7 @@
                 </tr>
             </table>
             <div>
-                <input type="button" id="PRINT" value="PRINT" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="PrintCoilMasterLabel()" />
+                <button type="button" id="PRINT" class="btn btn-primary btn-lg col-md-1" style="float:right;" onclick="PrintCoilMasterLabel()"><span class="glyphicon glyphicon-print"></span> Print</button>
                 <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
             </div>
             @*@Html.Partial("_BottomPanel")*@

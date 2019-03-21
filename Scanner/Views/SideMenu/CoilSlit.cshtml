@@ -18,8 +18,8 @@
                     <td>&nbsp;</td>
                     <td>@Html.TextBoxFor(o => o.whereStr, new { autocomplete = "off" })</td>
                     <td>&nbsp;</td>
-                    <td><input type="button" class="btn btn-primary" onclick="submitNavpage(1)" value="SEARCH" style="width:80px;" /></td>
-                    <td><input type="button" class="btn btn-primary" onclick="clearText()" value="CLEAR" style="width:80px;" /></td>
+                    <td><button type="button" class="btn btn-primary" onclick="submitNavpage(1)"><span class="glyphicon glyphicon-search"></span> Search</button></td>
+                    <td><button type="button" class="btn btn-primary" onclick="clearText()"><span class="glyphicon glyphicon-trash"></span> Clear</button></td>
                     <td><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
                 </tr>
                 <tr>

@@ -18,6 +18,7 @@ namespace Scanner.Models
         public string STOCKCODE { get; set; }
         public string DESCRIPTION { get; set; }
         public Nullable<double> ORD_QUANT { get; set; }
+        public Nullable<double> SUP_QUANT { get; set; }
         public Nullable<int> SEQNO { get; set; }
 
         public Nullable<double> QTYReceived { get; set; }

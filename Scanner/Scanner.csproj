@@ -243,6 +243,13 @@
     <Compile Include="Models\WorkOrder_HDR.cs" />
     <Compile Include="Models\WorkOrder_Line.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="test.aspx.cs">
+      <DependentUpon>test.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="test.aspx.designer.cs">
+      <DependentUpon>test.aspx</DependentUpon>
+    </Compile>
     <Compile Include="WebGlobal.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -343,6 +350,7 @@
     <Content Include="Scripts\Tree\dtree.js" />
     <Content Include="Scripts\Tree\images\misc.png" />
     <Content Include="Scripts\Tree\jquery-2.1.1.min.js" />
+    <Content Include="test.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
