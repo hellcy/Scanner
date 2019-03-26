@@ -18,7 +18,21 @@ namespace Scanner.Controllers.api
         // GET: api/JobOrder
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2", "purchase" };
+            List<string> accountNames;
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    accountNames = context.Database.SqlQuery<string>("SELECT NAME FROM GRAM_SYD_LIVE.dbo.CR_ACCS").ToList<string>();
+                }
+            }
+            catch (Exception e)
+            {
+                accountNames = null;
+            }
+
+            return accountNames;
+            //return new string[] { "value1", "value2", "purchase" };
         }
 
         // GET: api/JobOrder/5
@@ -53,7 +67,7 @@ namespace Scanner.Controllers.api
                 using (var context = new DbContext(Global.ConnStr))
                 {
                     object[] parameters = { ACCNAME };
-                    results = context.Database.SqlQuery<ReceivedOrder>("GramOnline.dbo.proc_Y_App_GetPurchaseOrder {0}", parameters).ToList<ReceivedOrder>();
+                    results = context.Database.SqlQuery<ReceivedOrder>("GramOnline.dbo.proc_Y_App_GetPurchaseOrderByName {0}", parameters).ToList<ReceivedOrder>();
                 }
             }
             catch (Exception e)
@@ -84,8 +98,8 @@ namespace Scanner.Controllers.api
                     using (var context = new DbContext(Global.ConnStr))
                     {
 
-                        object[] parameters = { receivedOrders.USERNAME, order.SEQNO, order.HDR_SEQNO, order.ACCNO, order.STOCKCODE, order.DESCRIPTION, order.ORD_QUANT, order.SUP_QUANT, order.ORDERDATE, order.QTYReceived, now};
-                        context.Database.ExecuteSqlCommand("GramOnline.dbo.proc_Y_App_UpdatePurchaseOrderQtyReceived {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", parameters);
+                        object[] parameters = { receivedOrders.USERNAME, order.SEQNO, order.HDR_SEQNO, order.ACCNO, order.ACCNAME, order.STOCKCODE, order.DESCRIPTION, order.ORD_QUANT, order.SUP_QUANT, order.ORDERDATE, order.QTYReceived, now};
+                        context.Database.ExecuteSqlCommand("GramOnline.dbo.proc_Y_App_UpdatePurchaseOrderQtyReceived {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", parameters);
                     }
                 }
                 catch (Exception e)

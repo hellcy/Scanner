@@ -1,0 +1,403 @@
+﻿@model Scanner.Models.ReceivedOrders
+@{
+    ViewBag.Title = "Received Purchase Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+}
+<table class="bodyTable">
+    <tr>
+        <td style="width:300px;vertical-align:top;">
+            <div class="sideMenuDiv">
+                @Html.Partial("_SideMenuPanel")
+            </div>
+        </td>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
+            <table>
+                <tr>
+                    <td><b>Search Text:</b></td>
+                    <td>&nbsp;</td>
+                    <td>@Html.TextBoxFor(o => o.whereStr, new { autocomplete = "off" })</td>
+                    <td>&nbsp;</td>
+                    <td><button type="button" class="btn btn-primary" onclick="submitNavpage(1)"><span class="glyphicon glyphicon-search"></span> Search</button></td>
+                    <td><button type="button" class="btn btn-primary" onclick="clearText()"><span class="glyphicon glyphicon-trash"></span> Clear</button></td>
+                    <td><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
+                </tr>
+            </table>
+            <div class="TwrapOverFlow" style="width:1560px;">
+                <span style="float:right; font-weight:bold">Total Coils : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
+                <table class="head" style="width:1560px;">
+                    <tr>
+                        @if (Model.sortCol == "USERNAME")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('USERNAME','String')">USERNAME<span id="USERNAME_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('USERNAME','String')">USERNAME<span id="USERNAME_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "SEQNO")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('SEQNO','Number')">SEQNO<span id="SEQNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('SEQNO','Number')">SEQNO<span id="SEQNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "HDR_SEQNO")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('HDR_SEQNO','Number')">HDR_SEQNO<span id="HDR_SEQNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('HDR_SEQNO','Number')">HDR_SEQNO<span id="HDR_SEQNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "ACCNO")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ACCNO','Number')">ACCNO<span id="ACCNO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ACCNO','Number')">ACCNO<span id="ACCNO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "ACCNAME")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('ACCNAME','String')">ACCNAME<span id="ACCNAME_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('ACCNAME','String')">ACCNAME<span id="ACCNAME_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "STOCKCODE")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('STOCKCODE','String')">STOCKCODE<span id="STOCKCODE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('STOCKCODE','String')">STOCKCODE<span id="STOCKCODE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "DESCRIPTION")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('DESCRIPTION','String')">DESCRIPTION<span id="DESCRIPTION_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('DESCRIPTION','String')">DESCRIPTION<span id="DESCRIPTION_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "ORD_QUANT")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ORD_QUANT','Number')">ORD_QUANT<span id="ORD_QUANT_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ORD_QUANT','Number')">ORD_QUANT<span id="ORD_QUANT_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "SUP_QUANT")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('SUP_QUANT','Number')">SUP_QUANT<span id="SUP_QUANT_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('SUP_QUANT','Number')">SUP_QUANT<span id="SUP_QUANT_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "ORDERDATE")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('ORDERDATE','Date')">ORDERDATE<span id="ORDERDATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('ORDERDATE','Date')">ORDERDATE<span id="ORDERDATE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "QtyReceived")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('QtyReceived','Number')">QtyReceived<span id="QtyReceived_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('QtyReceived','Number')">QtyReceived<span id="QtyReceived_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "ReceivedTime")
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('ReceivedTime','Date')">ReceivedTime<span id="ReceivedTime_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('ReceivedTime','Date')">ReceivedTime<span id="ReceivedTime_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                        @if (Model.sortCol == "Status")
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('Status','String')">Status<span id="Status_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('Status','String')">Status<span id="Status_ord" style="float:right;color:green;display:none;"></span></a></td>
+                        }
+                    </tr>
+                </table>
+                <div class="inner_table" style="width:1560px;">
+                    @if (Model.errMsg == "")
+                    {
+                        <table style="width:1560px; overflow-x: auto;">
+                            @for (int i = 0; i < Model.results.Count; i++)
+                            {
+                                <tr>
+                                    <td style="width:50px;">@Model.results[i].USERNAME</td>
+                                    <td style="width:30px;">
+                                        @if (@Model.results[i].SEQNO != null)
+                                        {@Model.results[i].SEQNO}
+                                    </td>
+                                    <td style="width:30px;">
+                                        @if (@Model.results[i].HDR_SEQNO != null)
+                                        {@Model.results[i].HDR_SEQNO}
+                                    </td>
+                                    <td style="width:30px;">
+                                        @if (@Model.results[i].ACCNO != null)
+                                        {@Model.results[i].ACCNO}
+                                    </td>
+                                    <td style="width:50px;">@Model.results[i].ACCNAME</td>
+                                    <td style="width:50px;">@Model.results[i].STOCKCODE.ToString()</td>
+                                    <td style="width:50px;">@Model.results[i].DESCRIPTION.ToString()</td>
+                                    <td style="width:30px;">
+                                        @if (@Model.results[i].ORD_QUANT != null)
+                                        {@Model.results[i].ORD_QUANT}
+                                    </td>
+                                    <td style="width:30px;">
+                                        @if (@Model.results[i].SUP_QUANT != null)
+                                        {@Model.results[i].SUP_QUANT}
+                                    </td>
+                                    <td style="width:50px;">@Model.results[i].ORDERDATE.ToString()</td>
+                                    <td style="width:30px;">
+                                        @if (@Model.results[i].QTYReceived != null)
+                                        {@Model.results[i].QTYReceived}
+                                    </td>
+                                    <td style="width:50px;">@Model.results[i].ReceivedTime.ToString()</td>
+                                    <td style="width:30px;">@Model.results[i].Status</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                </div>
+                @{
+                    var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
+                    var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
+                    var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
+                    var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
+                    var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
+                    var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
+                    var selAll = "";
+                    if (Model.totalRows > 0) { selAll = (Model.rowsPerPage == Model.totalRows) ? "selected " : ""; }
+                }
+                <br />
+                <span style="float:right; font-weight:bold">
+                    @Html.TextBoxFor(o => o.totalPages, new { style = "display:none;" })Total Pages: @Model.totalPages.ToString(), Records per Page:
+                    <select name="rowsPerPage" id="rowsPerPage" onchange="reloadWorkOrders()" style="height:28px;font-size:14px;">
+                        <option value=15 @sel15>15</option>
+                        <option value=30 @sel30>30</option>
+                        <option value=50 @sel50>50</option>
+                        <option value=100 @sel100>100</option>
+                        <option value=150 @sel150>150</option>
+                        <option value=200 @sel200>200</option>
+                        <option value=@Model.totalRows @selAll>All</option>
+                    </select>
+                    &nbsp;&nbsp;
+                    <a onclick="backNavpage()"><span class="glyphicon glyphicon-backward"></span></a>&nbsp;
+                    @Html.TextBoxFor(o => o.pageNum, new { style = "width:30px;font-size:14px;font-weight:bold;border:solid 1px #666; height:28px;font-color:black;" })
+                    &nbsp;<a onclick="forwardNavpage()"><span class="glyphicon glyphicon-forward"></span></a>
+                </span>
+                <input type="hidden" name="rows" id="rowsCnt" value="" />
+                <input type="hidden" name="cols" id="colsCnt" value="" />
+                @Html.TextBoxFor(o => o.sortCol, new { id = "sortCol", style = "display:none" })
+                @Html.TextBoxFor(o => o.sortColType, new { style = "display:none" })
+                @Html.TextBoxFor(o => o.orderBy, new { style = "display:none" })
+            </div>
+            <table>
+                <tr>
+                    <td>
+                        <button type="button" id="updateButton" class="btn btn-primary btn-lg" style="height:40px; width: 100px; float:right;" onclick="update()">Update</button>
+                        <div>
+                            @Html.TextBoxFor(model => model.updateFlag, new { id = "updateFlag", type = "hidden" })
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            @*@Html.Partial("_BottomPanel")*@
+        </td>
+    </tr>
+</table>
+<script language="javascript">
+    $('#updateFlag').val('');
+
+    function update() {
+        $('#updateFlag').val('update');
+        $("#frmMain").submit();
+    }
+
+    var loadErrMsg = '@Html.Raw(Model.errMsg)';
+
+    if (loadErrMsg != "") {
+        BootstrapDialog.show({
+            title: '<font style="font-size:30px;font-weight:bold;"><i class="glyphicon glyphicon-warning-sign"></i> Warning</font>',
+            message: "<font style='font-size:25px;'>" + loadErrMsg + "</font>",
+            buttons: [{
+                label: 'OK',
+                cssClass: 'btn-dialog',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+        });
+    }
+
+    function submitNavpage(ini) {
+        if (ini == 0) {
+            if ($("#pageNum").val().replace(/ /g, "") == "") {
+                $("#pageNum").val("1");
+            }
+        }
+        else {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+            $("#pageNum").val($("#pageNum").val().replace(/\D/g, ''));
+
+            if ($("#pageNum").val() == "0") {
+                $("#pageNum").val("1");
+            }
+        }
+        else {
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+                $("#pageNum").val($("#totalPages").val());
+            }
+
+            $("#byClick").val("1");
+
+            if (ini == 1) {
+                $("#sortCol").val("DefaultSort");
+            }
+
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "ReceivedPurchaseOrder").replace("-2", "SideMenu");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+    $('#pageNum').keypress(function (e) {
+        if (e.which == 13) {
+            submitNavpage(0);
+        }
+    });
+
+    $('#whereStr').keypress(function (e) {
+        if (e.which == 13) {
+            submitNavpage(1);
+        }
+    });
+
+    function clearText() {
+        $('#categorySort').val('');
+        $('#statusSort').val('-1');
+        $('#whereStr').val('');
+        submitNavpage(1);
+    }
+
+
+    function forwardNavpage() {
+        if ($("#pageNum").val().replace(/ /g, "") == "") {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+        }
+        else {
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+                $("#pageNum").val($("#totalPages").val());
+            }
+
+            if (parseInt($("#pageNum").val()) < parseInt($("#totalPages").val())) {
+                $("#pageNum").val(parseInt($("#pageNum").val()) + 1);
+            }
+            $("#byClick").val("1");
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "ReceivedPurchaseOrder").replace("-2", "SideMenu");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+
+    function backNavpage() {
+        if ($("#pageNum").val().replace(/ /g, "") == "") {
+            $("#pageNum").val("1");
+        }
+
+        var flag = isPosInteger($("#pageNum").val());
+        if (!flag) {
+            showWarning("Page Number input is not a valid number.");
+        }
+        else {
+            if (parseInt($("#pageNum").val()) > parseInt($("#totalPages").val())) {
+                $("#pageNum").val($("#totalPages").val());
+            }
+
+            if (parseInt($("#pageNum").val()) < 1) {
+                $("#pageNum").val(1);
+            }
+
+            if (parseInt($("#pageNum").val()) > 1) {
+                $("#pageNum").val(parseInt($("#pageNum").val()) - 1);
+            }
+
+            $("#byClick").val("1");
+            var url = '@Url.Action("-1", "-2")';
+            url = url.replace("-1", "ReceivedPurchaseOrder").replace("-2", "SideMenu");
+            $("#frmMain").attr('action', url);
+            $("#frmMain").submit();
+        }
+    }
+
+    function reloadWorkOrders() {
+        $("#byClick").val("1");
+        var url = '@Url.Action("-1", "-2")';
+        url = url.replace("-1", "ReceivedPurchaseOrder").replace("-2", "SideMenu");
+        $("#frmMain").attr('action', url);
+        $("#frmMain").submit();
+    }
+
+    function orderToggle(Id, sortType) {
+        if (Id == $("#sortCol").val()) {
+            if ($("#orderBy").val() == "glyphicon glyphicon-arrow-down") {
+                $("#orderBy").val("glyphicon glyphicon-arrow-up");
+            }
+            else {
+                $("#orderBy").val("glyphicon glyphicon-arrow-down");
+            }
+        }
+        else {
+            $("#sortCol").val(Id);
+            $("#orderBy").val("glyphicon glyphicon-arrow-up");
+        }
+
+        $("#sortColType").val(sortType);
+
+        $("#byClick").val("1");
+        var url = '@Url.Action("-1", "-2")';
+        url = url.replace("-1", "ReceivedPurchaseOrder").replace("-2", "SideMenu");
+        $("#frmMain").attr('action', url);
+        $("#frmMain").submit();
+    }
+
+</script>

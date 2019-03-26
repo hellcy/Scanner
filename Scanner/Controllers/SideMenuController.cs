@@ -16,6 +16,7 @@ using Zen.Barcode;
 using System.Drawing;
 using OfficeOpenXml;
 using System.Configuration;
+using System.Collections;
 
 namespace Scanner.Controllers
 {
@@ -309,6 +310,8 @@ namespace Scanner.Controllers
                     master.Barcodes[i] = String.Format("<img src=\"data:image/png;base64,{0}\"/>", imgString);
                 }
             }
+
+            ViewBag.month_year = DateTime.Now.ToString("MMM").ToUpper() + "_" + DateTime.Now.ToString("yy");
 
             return View(master);
         }
@@ -969,11 +972,159 @@ namespace Scanner.Controllers
 
         [SessionExpire]
         [Authorize]
-        public ActionResult Option_4()
+        public ActionResult ReceivedPurchaseOrder()
         {
-            ViewBag.Title = "Option_4";
-            Session["CurrForm"] = "Option_4";
-            return View();
+            ReceivedOrders receivedOrders = new ReceivedOrders();
+            return ReceivedPurchaseOrder(receivedOrders);
+        }
+
+        [SessionExpire]
+        [HttpPost]
+        [Authorize]
+        public ActionResult ReceivedPurchaseOrder(ReceivedOrders receivedOrders)
+        {
+            ViewBag.Title = "Received Purchase Order";
+            Session["CurrForm"] = "Received Purchase Order";
+
+            if (string.IsNullOrEmpty(receivedOrders.sortCol))
+            {
+                if ((Request.Form["actReq"] != null) && (Request.Form["actReq"].ToString() == "f"))
+                {
+                    var rowsCnt = (Session[Request.Form["frmName"].ToString()] != null) ? ((DataTable)Session[Request.Form["frmName"].ToString()]).Rows.Count : 0;
+                    if ((Request.Form["rows"] != null) && (Request.Form["rows"].ToString() != ""))
+                    {
+                        rowsCnt = Convert.ToInt32(Request.Form["rows"]);
+                    }
+
+                    fillCurrTable(Request.Form["frmName"].ToString(), rowsCnt);
+                }
+
+                receivedOrders.sortCol = "DefaultSort";
+                receivedOrders.sortColType = "Number";
+                receivedOrders.rowsPerPage = 15;
+                receivedOrders.pageNum = 1;
+                receivedOrders.orderBy = "glyphicon glyphicon-arrow-up";
+            }
+
+            if (receivedOrders.sortCol != "USERNAME" && receivedOrders.sortCol != "SEQNO" && receivedOrders.sortCol != "HDR_SEQNO" && receivedOrders.sortCol != "ACCNO" && receivedOrders.sortCol != "ACCNAME"
+                && receivedOrders.sortCol != "STOCKCODE" && receivedOrders.sortCol != "DESCRIPTION" && receivedOrders.sortCol != "ORD_QUANT" && receivedOrders.sortCol != "SUP_QUANT" && receivedOrders.sortCol != "ORDERDATE"
+                && receivedOrders.sortCol != "QtyReceived" && receivedOrders.sortCol != "ReceivedTime" && receivedOrders.sortCol != "Status")
+            {
+                receivedOrders.sortCol = "DefaultSort";
+            }
+
+            if (String.IsNullOrEmpty(receivedOrders.whereStr))
+            {
+                receivedOrders.whereStr = "";
+            }
+
+            if (receivedOrders.whereStr.Replace(" ", "") == "")
+            {
+                receivedOrders.whereStr = "";
+            }
+
+            var Role = new SqlParameter("@Role", ((Scanner.Models.User)Session["User"]).Role);
+            var UserName = new SqlParameter("@UserName", ((Scanner.Models.User)Session["User"]).UserName);
+            var pageNum = new SqlParameter("@pageNum", (receivedOrders.pageNum == 0) ? 1 : receivedOrders.pageNum);
+            var rowsPerPage = new SqlParameter("@rowsPerPage", receivedOrders.rowsPerPage);
+            var sortCol = new SqlParameter("@sortCol", receivedOrders.sortCol);
+            var sortColType = new SqlParameter("@sortColType", receivedOrders.sortColType);
+            var whereStr = new SqlParameter("@whereStr", receivedOrders.whereStr.ToString());
+
+            var orderBy = (receivedOrders.orderBy == "glyphicon glyphicon-arrow-down") ?
+                new SqlParameter("@orderBy", "desc") :
+                new SqlParameter("@orderBy", "asc");
+
+
+            var table = new SqlParameter("@table", "GramOnline.dbo.TB_Y_App_PurchaseOrderQtyReceived");
+            var selStr = new SqlParameter("@selStr", "");
+
+
+            // sideMenus = context.Database.SqlQuery<SideMenu>("GramOnline.dbo.proc_Y_GetSideMenu_v2").ToList<SideMenu>();
+            var sql = "exec GramOnline.dbo.proc_Y_GetReceivedPurchaseOrder " +
+                "@Role," +
+                "@UserName, " +
+                "@pageNum, " +
+                "@rowsPerPage, " +
+                "@sortCol, " +
+                "@sortColType, " +
+                "@whereStr, " +
+                "@orderBy, " +
+                "@table, " +
+                "@selStr";
+
+            var oldMsg = "";
+
+            if (receivedOrders.errMsg == null)
+                receivedOrders.errMsg = "";
+            else
+                oldMsg = receivedOrders.errMsg;
+
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    receivedOrders.results = context.Database.SqlQuery<ReceivedOrder>(sql,
+                       Role,
+                       UserName,
+                       pageNum,
+                       rowsPerPage,
+                       sortCol,
+                       sortColType,
+                       whereStr,
+                       orderBy,
+                       table,
+                       selStr).ToList<ReceivedOrder>();
+                }
+            }
+            catch (Exception e)
+            {
+                receivedOrders.totalPages = 0;
+                receivedOrders.totalRows = 0;
+                receivedOrders.results = null;
+                receivedOrders.errMsg = e.Message.ToString().Replace("'", "\"");
+                if (e.Message.Equals("The specified cast from a materialized 'System.String' type to the 'System.Int32' type is not valid."))
+                {
+                    receivedOrders.errMsg = "No Record Found.";
+                }
+            }
+
+            // execute the stored update procedure.
+            if (receivedOrders.updateFlag == "update")
+            {
+                var DistinctItems = receivedOrders.results.GroupBy(x => x.ACCNO).Select(y => y.First());
+
+                foreach (var item in DistinctItems)
+                {
+                    try
+                    {
+                        using (var context = new DbContext(Global.ConnStr))
+                        {
+                            object[] parameters = { item.ReceivedTime, item.ACCNO };
+                            context.Database.ExecuteSqlCommand("GRAM_SYD_LIVE.dbo.X_PROC_SYD_RECEIPT {0},{1}", parameters);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("test to be finished");
+                        receivedOrders.errMsg = e.Message;
+                    }
+                }
+            }
+
+            if (receivedOrders.results != null)
+            {
+                if (receivedOrders.results.Count > 0)
+                {
+                    receivedOrders.totalPages = receivedOrders.results[0].maxPages;
+                    receivedOrders.totalRows = receivedOrders.results[0].TotalRows;
+                }
+            }
+
+            if (oldMsg != "")
+                receivedOrders.errMsg = oldMsg;
+
+            return View(receivedOrders);
         }
 
         [SessionExpire]
