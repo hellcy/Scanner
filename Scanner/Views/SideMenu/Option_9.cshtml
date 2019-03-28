@@ -2,6 +2,230 @@
 @{
     ViewBag.Title = "Option_9";
 }
+<style>
+    #myAddress.ng-invalid {
+        background-color: lightblue;
+    }
+</style>
+
+<style>
+
+    #animated_div {
+        width: 200px;
+        height: 100px;
+        background: #92B901;
+        color: #ffffff;
+        position: relative;
+        font-weight: bold;
+        font-size: 20px;
+        padding: 10px;
+        animation: animated_div 5s infinite;
+        -moz-animation: animated_div 5s infinite;
+        -webkit-animation: animated_div 5s infinite;
+        -o-animation: animated_div 5s infinite;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+    }
+
+    @@keyframes animated_div {
+        0% {
+            transform: rotate(0deg);
+            left: 0px;
+        }
+
+        25% {
+            transform: rotate(20deg);
+            left: 0px;
+        }
+
+        50% {
+            transform: rotate(0deg);
+            left: 500px;
+        }
+
+        55% {
+            transform: rotate(0deg);
+            left: 500px;
+        }
+
+        70% {
+            transform: rotate(0deg);
+            left: 500px;
+            background: #1ec7e6;
+        }
+
+        100% {
+            transform: rotate(-360deg);
+            left: 0px;
+        }
+    }
+
+    @@-webkit-keyframes animated_div {
+        0% {
+            -webkit-transform: rotate(0deg);
+            left: 0px;
+        }
+
+        25% {
+            -webkit-transform: rotate(20deg);
+            left: 0px;
+        }
+
+        50% {
+            -webkit-transform: rotate(0deg);
+            left: 500px;
+        }
+
+        55% {
+            -webkit-transform: rotate(0deg);
+            left: 500px;
+        }
+
+        70% {
+            -webkit-transform: rotate(0deg);
+            left: 500px;
+            background: #1ec7e6;
+        }
+
+        100% {
+            -webkit-transform: rotate(-360deg);
+            left: 0px;
+        }
+    }
+
+    @@-moz-keyframes animated_div {
+        0% {
+            -moz-transform: rotate(0deg);
+            left: 0px;
+        }
+
+        25% {
+            -moz-transform: rotate(20deg);
+            left: 0px;
+        }
+
+        50% {
+            -moz-transform: rotate(0deg);
+            left: 500px;
+        }
+
+        55% {
+            -moz-transform: rotate(0deg);
+            left: 500px;
+        }
+
+        70% {
+            -moz-transform: rotate(0deg);
+            left: 500px;
+            background: #1ec7e6;
+        }
+
+        100% {
+            -moz-transform: rotate(-360deg);
+            left: 0px;
+        }
+    }
+
+    @@-o-keyframes animated_div {
+        0% {
+            transform: rotate(0deg);
+            left: 0px;
+        }
+
+        25% {
+            transform: rotate(20deg);
+            left: 0px;
+        }
+
+        50% {
+            transform: rotate(0deg);
+            left: 500px;
+        }
+
+        55% {
+            transform: rotate(0deg);
+            left: 500px;
+        }
+
+        70% {
+            transform: rotate(0deg);
+            left: 500px;
+            background: #1ec7e6;
+        }
+
+        100% {
+            transform: rotate(-360deg);
+            left: 0px;
+        }
+    }
+</style>
+<style>
+
+    .example2 {
+        height: 50px;
+        width: 1300px;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .example2 h3 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            line-height: 50px;
+            text-align: center;
+            /* Starting position */
+            -moz-transform: translateX(100%);
+            -webkit-transform: translateX(100%);
+            transform: translateX(100%);
+            /* Apply animation to this element */
+            -moz-animation: example2 30s linear infinite;
+            -webkit-animation: example2 30s linear infinite;
+            animation: example2 30s linear infinite;
+        }
+
+    /* Move it (define the animation) */
+
+    @@-moz-keyframes example2 {
+        0% {
+            -moz-transform: translateX(100%);
+        }
+
+        100% {
+            -moz-transform: translateX(-100%);
+        }
+    }
+
+    @@-webkit-keyframes example2 {
+        0% {
+            -webkit-transform: translateX(100%);
+        }
+
+        100% {
+            -webkit-transform: translateX(-100%);
+        }
+    }
+
+    @@keyframes example2 {
+        0% {
+            -moz-transform: translateX(100%); /* Firefox bug fix */
+            -webkit-transform: translateX(100%); /* Firefox bug fix */
+            transform: translateX(100%);
+        }
+
+        100% {
+            -moz-transform: translateX(-100%); /* Firefox bug fix */
+            -webkit-transform: translateX(-100%); /* Firefox bug fix */
+            transform: translateX(-100%);
+        }
+    }
+</style>
+
+<div class="example2">
+    <h3>Nancy, you need your own Google account!Nancy, you need your own Google account!Nancy, you need your own Google account!</h3>
+</div>
+<div id="animated_div">Nancy, you need your own Google account!</div>
 <table class="bodyTable">
     <tr>
         <td style="width:300px;vertical-align:top;">
@@ -11,6 +235,76 @@
         </td>
         <td valign="top">
             @Html.Partial("_PageTitlePanel")
+            <table class="col-md-12">
+                <tr>
+                    <td>
+                        <div ng-init="points=[1,2,3,4,5]">
+                            <p>{{points[2]}}</p>
+                            <yuan-directive></yuan-directive>
+                        </div>
+                        Email:
+                        <input type="email" id="myAddress" name="myAddress" ng-model="myText" ng-init="myText = 'post@myweb.com'" required>
+                        <span ng-show="frmMain.myAddress.$error.email">Not a valid e-mail address</span>
+                        <p ng-bind="myText"></p>
+                        <h1>Status</h1>
+                        <p>Valid: {{frmMain.myAddress.$valid}} (if true, the value meets all criteria).</p>
+                        <p>Dirty: {{frmMain.myAddress.$dirty}} (if true, the value has been changed).</p>
+                        <p>Touched: {{frmMain.myAddress.$touched}} (if true, the field has been in focus).</p>
+                        <br />
+                        <p><span ng-bind="firstname"></span>     <span>{{value}}</span></p>
+                        <button type="button" class="btn btn-primary" ng-click="changeName()">change name</button>
+                        <ul>
+                            <li ng-repeat="person in Persons | orderBy: '-age'">{{person.name + " -- " + (person.age | currency)}}</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <p>The url of this page is:</p>
+                        <h3>{{myUrl}}</h3>
+                        <p>Today's welcome message is:</p>
+                        @*<h1>{{myWelcome}}</h1>*@
+                        <h1>{{theTime}}</h1>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>
+
+
+<script>
+    var app = angular.module("myApp", []);
+    app.directive("yuanDirective", function () {
+        return {
+            template: "<h1>Made by a directive!</h1>"
+        };
+    });
+
+    app.controller('myCtrl', function ($scope, $location, $http, $interval) {
+        $scope.value = 0;
+        $scope.firstname = "John";
+        $scope.changeName = function () {
+            if ($scope.firstname == "John") $scope.firstname = "Nelly";
+            else if ($scope.firstname == "Nelly") $scope.firstname = "John";
+            $scope.value++;
+        }
+        $scope.Persons = [
+            { name: "Peter", age: 20 },
+            { name: "Pablo", age: 55 },
+            { name: "Linda", age: 20 },
+            { name: "Marta", age: 37 },
+            { name: "Othello", age: 20 },
+            { name: "Markus", age: 32 }];
+
+        $scope.myUrl = $location.absUrl();
+
+        $http.get("http://localhost:50252/scanner/").then(function (response) {
+            $scope.myWelcome = response.data;
+        });
+
+        $scope.theTime = new Date().toLocaleTimeString();
+        $interval(function () {
+            $scope.theTime = new Date().toLocaleTimeString();
+        }, 1000);
+    });
+
+</script>

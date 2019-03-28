@@ -1129,10 +1129,57 @@ namespace Scanner.Controllers
 
         [SessionExpire]
         [Authorize]
-        public ActionResult Option_5()
+        public ActionResult CoilCheck()
         {
-            ViewBag.Title = "Option_5";
-            Session["CurrForm"] = "Option_5";
+            return CoilCheckPost();
+        }
+
+        [SessionExpire]
+        [HttpPost]
+        [Authorize]
+        [ActionName("CoilCheck")]
+        public ActionResult CoilCheckPost()
+        {
+            ViewBag.Title = "CoilCheck";
+            Session["CurrForm"] = "CoilCheck";
+
+            string updateFlag = Request["updateFlag"];
+            string message = Request["message"];
+
+            HttpPostedFileBase file = Request.Files["UploadedFile"];
+            if ((updateFlag == "update") && (string.IsNullOrEmpty(file.FileName)))
+            {
+                message = "Please select a file.";
+            }
+            if ((file != null) && (file.ContentLength > 0) && !string.IsNullOrEmpty(file.FileName) && updateFlag == "update")
+            {
+                string fileName = file.FileName;
+                string extension = System.IO.Path.GetExtension(fileName).ToLower();
+                string fileContentType = file.ContentType;
+                byte[] fileBytes = new byte[file.ContentLength];
+                var data = file.InputStream.Read(fileBytes, 0, Convert.ToInt32(file.ContentLength));
+
+                if (extension.Equals(".csv") || extension.Equals(".txt"))
+                {
+                    Guid gid = Guid.NewGuid();
+                    file.SaveAs(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"));
+
+                    string[] lineArr;
+                    if ((System.IO.File.Exists(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"))) == true)
+                    {
+                        foreach (string line in System.IO.File.ReadLines(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv")))
+                        {
+                            lineArr = line.Split('+');
+                            // to do 
+                            // for each line, store them in the temp table, if already exist, skip them
+                            // then grab the first element in the list, run the validation check on master coil table or slitted coil table, depends on the length of the first element
+                            // update the temp table status
+
+                        }
+                        System.IO.File.Delete(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"));
+                    }
+                }
+            }
             return View();
         }
 

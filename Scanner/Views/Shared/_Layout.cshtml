@@ -36,83 +36,54 @@
     var formId = "frmMain";
     var formClass = "";
 
-    if (ViewBag.Title == "Coil")
+    switch ((string)ViewBag.Title)
     {
-        ctrlName = "Scanner";
-        actName = "Coil";
-        formId = "frmMain";
-        formClass = "";
+        case "Coil":
+            ctrlName = "Scanner";
+            actName = "Coil";
+            break;
+        case "Scanner Page":
+            ctrlName = "Scanner";
+            actName = "Index";
+            break;
+        case "Work Order Lines":
+            ctrlName = "SideMenu";
+            actName = "WorkOrderLines";
+            break;
+        case "Coil Master":
+            ctrlName = "SideMenu";
+            actName = "CoilMaster";
+            break;
+        case "Coil Master Details":
+            ctrlName = "SideMenu";
+            actName = "CoilMasterDetails";
+            break;
+        case "Sliting":
+            ctrlName = "Scanner";
+            actName = "Sliting";
+            break;
+        case "CoilReadFile":
+            ctrlName = "SideMenu";
+            actName = "CoilReadFile";
+            break;
+        case "Received Purchase Order":
+            ctrlName = "SideMenu";
+            actName = "ReceivedPurchaseOrder";
+            break;
+        case "Coil Check":
+            ctrlName = "SideMenu";
+            actName = "CoilCheck";
+            break;
+        case "Arithmetic":
+            ctrlName = "SideMenu";
+            actName = "Arithmetic";
+            break;
+        default:
+            break;
     }
-
-    if (ViewBag.Title == "Scanner Page")
-    {
-        ctrlName = "Scanner";
-        actName = "Index";
-        formId = "frmMain";
-        formClass = "";
-    }
-
-    if (ViewBag.Title == "Work Order Lines")
-    {
-        ctrlName = "SideMenu";
-        actName = "WorkOrderLines";
-        formId = "frmMain";
-        formClass = "";
-    }
-
-    if (ViewBag.Title == "Coil Master")
-    {
-        ctrlName = "SideMenu";
-        actName = "CoilMaster";
-        formId = "frmMain";
-        formClass = "";
-    }
-
-    if (ViewBag.Title == "Coil Master Details")
-    {
-        ctrlName = "SideMenu";
-        actName = "CoilMasterDetails";
-        formId = "frmMain";
-        formClass = "";
-    }
-
-    if (ViewBag.Title == "Sliting")
-    {
-        ctrlName = "Scanner";
-        actName = "Sliting";
-        formId = "frmMain";
-        formClass = "";
-    }
-
-    if (ViewBag.Title == "CoilReadFile")
-    {
-        ctrlName = "SideMenu";
-        actName = "CoilReadFile";
-        formId = "frmMain";
-        formClass = "";
-    }
-
-    if (ViewBag.Title == "Received Purchase Order")
-    {
-        ctrlName = "SideMenu";
-        actName = "ReceivedPurchaseOrder";
-        formId = "frmMain";
-        formClass = "";
-    }
-
-    if (ViewBag.Title == "Arithmetic")
-    {
-        ctrlName = "SideMenu";
-        actName = "Arithmetic";
-        formId = "frmMain";
-        formClass = "";
-    }
-
 }
+
 <!DOCTYPE html>
-
-
-
 @*<link rel="icon" type="image/png" href="~/Content/Gram/images/favicon.png" />*@
 <!--[if IE 6]>
 
@@ -133,6 +104,9 @@
 <html lang="en-US">
 <!--<![endif]-->
 <head>
+    <!-- angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -178,7 +152,7 @@
     <style type='text/css'>
         img#wpstats {
             display: none
-        }
+}
     </style>
     @*<link rel="stylesheet" href="http://www.gram.com.au/wp-content/plugins/jquery-vertical-mega-menu/skin.php?widget_id=2&amp;skin=blue" type="text/css" media="screen" />*@
     <meta name="description" itemprop="description" content="Gramline is the #1 fencing supplier and contractor in Australia, provide fencing services in Sydney, Melbourne, Perth and Brisbane." />
@@ -869,8 +843,8 @@
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 
-<body onload="startTime()" style="width:100% !important;">
-    @using (Html.BeginForm(actName, ctrlName, FormMethod.Post, new { @id = formId, @class = formClass, enctype = "multipart/form-data" }))
+<body onload="startTime()" style="width:100% !important;" ng-app="myApp" ng-controller="myCtrl">
+    @using (Html.BeginForm(actName, ctrlName, FormMethod.Post, new { @id = formId, @class = formClass, @name = formId, enctype = "multipart/form-data" }))
     {
         @*<div class="wrapper2"  style="width:100%">
             <div id="page" class="hfeed">
@@ -880,8 +854,8 @@
         {
             <div id="google_translate_element"></div>
         }
-        <input type="hidden" name="pubDir2" id="pubDir2" value="@pubDir2" />
 
+        <input type="hidden" name="pubDir2" id="pubDir2" value="@pubDir2" />
         <table style="width:100%">
             <tr style="display:@dispHeading">
                 <td>
@@ -893,7 +867,7 @@
                                     <table style="margin-left:auto;margin-right:auto;width:1200px;">
                                         <tr>
                                             <td>
-                                                <img border="0" src="~/Content/Gram/images/logo1.jpg" width="290" height="100" alt="Gramline" title="GramLine" onclick="gotoPage('Index','SideMenu','')" onmouseover="" style="cursor: pointer;"/>
+                                                <img border="0" src="~/Content/Gram/images/logo1.jpg" width="290" height="100" alt="Gramline" title="GramLine" onclick="gotoPage('Index','SideMenu','')" onmouseover="" style="cursor: pointer;" />
 
                                                 @*<img border="0" src="http://www.gram.com.au/wp-content/themes/twentyeleven/images/logo1.jpg" width="290" height="100" alt="Gramline" title="GramLine" />*@
                                             </td>
@@ -929,12 +903,12 @@
                                         </tr>
                                     </table>
                                     @*@if (Session["User"] != null)
-                                    {
-                                        <br />
-                                        <div class="sideMenuDiv">
-                                            @Html.Partial("_SideMenuPanel")
-                                        </div>
-                                    }*@
+                                        {
+                                            <br />
+                                            <div class="sideMenuDiv">
+                                                @Html.Partial("_SideMenuPanel")
+                                            </div>
+                                        }*@
                                 </div>
                                 @*</hgroup>*@
                             </header>

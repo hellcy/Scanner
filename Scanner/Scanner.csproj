@@ -427,7 +427,7 @@
     <Content Include="Views\Scanner\Sliting.cshtml" />
     <Content Include="Views\SideMenu\CoilMaster.cshtml" />
     <Content Include="Views\SideMenu\ReceivedPurchaseOrder.cshtml" />
-    <Content Include="Views\SideMenu\Option_5.cshtml" />
+    <Content Include="Views\SideMenu\CoilCheck.cshtml" />
     <Content Include="Views\SideMenu\Option_6.cshtml" />
     <Content Include="Views\SideMenu\Option_7.cshtml" />
     <Content Include="Views\SideMenu\Option_8.cshtml" />

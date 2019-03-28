@@ -97,7 +97,7 @@ namespace Scanner.Controllers.api
                 {
                     using (var context = new DbContext(Global.ConnStr))
                     {
-
+                        
                         object[] parameters = { receivedOrders.USERNAME, order.SEQNO, order.HDR_SEQNO, order.ACCNO, order.ACCNAME, order.STOCKCODE, order.DESCRIPTION, order.ORD_QUANT, order.SUP_QUANT, order.ORDERDATE, order.QTYReceived, now};
                         context.Database.ExecuteSqlCommand("GramOnline.dbo.proc_Y_App_UpdatePurchaseOrderQtyReceived {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", parameters);
                     }
