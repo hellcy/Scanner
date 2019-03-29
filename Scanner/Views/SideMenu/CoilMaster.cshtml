@@ -3,6 +3,7 @@
     ViewBag.Title = "Coil Master";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+    var role = ((Scanner.Models.User)Session["User"]).Role;
 
 }
 <table class="bodyTable">
@@ -20,291 +21,304 @@
                     <td>&nbsp;</td>
                     <td>@Html.TextBoxFor(o => o.whereStr, new { autocomplete = "off" })</td>
                     <td>&nbsp;</td>
-                    <td><button type="button" class="btn btn-primary" onclick="submitNavpage(1)"><span class="glyphicon glyphicon-search"></span> Search</button></td>
+                    @if (role == "Gram Admin")
+                    {
+                        <td><button type="button" class="btn btn-primary" onclick="submitNavpage(1)"><span class="glyphicon glyphicon-search"></span> Search</button></td>
+                    }
+                    else
+                    {
+                        <td><button type="button" class="btn btn-primary" onclick="gotoPage('CoilMasterDetails', 'SideMenu', 'ID=@Model.whereStr')"><span class="glyphicon glyphicon-search"></span> Search</button></td>
+                    }
                     <td><button type="button" class="btn btn-primary" onclick="clearText()"><span class="glyphicon glyphicon-trash"></span> Clear</button></td>
                     <td><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
                 </tr>
             </table>
-            <div class="TwrapOverFlow" style="width:1560px;">
-                <span style="float:right; font-weight:bold">Total Coils : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
-                <table class="head" style="width:1560px;">
+            @if (role == "Gram Admin")
+            {
+                <div class="TwrapOverFlow" style="width:1560px;">
+                    <span style="float:right; font-weight:bold">Total Coils : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
+                    <table class="head" style="width:1560px;">
+                        <tr>
+                            @if (Model.sortCol == "COILID")
+                            {
+                                <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COILID','String')">COILID<span id="COILID_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COILID','String')">COILID<span id="COILID_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "TYPE")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('TYPE','String')">TYPE<span id="TYPE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('TYPE','String')">TYPE<span id="TYPE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "COLOR")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('COLOR','String')">COLOR<span id="COLOR_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('COLOR','String')">COLOR<span id="COLOR_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "WEIGHT")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WEIGHT','Number')">WEIGHT<span id="WEIGHT_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WEIGHT','Number')">WEIGHT<span id="WEIGHT_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "GAUGE")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('GAUGE','Number')">GAUGE<span id="GAUGE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('GAUGE','Number')">GAUGE<span id="GAUGE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "WIDTH")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WIDTH','Number')">WIDTH<span id="WIDTH_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WIDTH','Number')">WIDTH<span id="WIDTH_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "[ORDER]")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('[ORDER]','Number')">ORDER<span id="ORDER_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('[ORDER]','Number')">ORDER<span id="ORDER_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "P_ORDER")
+                            {
+                                <td style="width:40px;font-weight:bold;"><a onclick="orderToggle('P_ORDER','String')">P_ORDER<span id="P_ORDER_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:40px;font-weight:bold;"><a onclick="orderToggle('P_ORDER','String')">P_ORDER<span id="P_ORDER_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "MONTH_RECD")
+                            {
+                                <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('MONTH_RECD','String')">MONTH_RECD<span id="MONTH_RECD_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('MONTH_RECD','String')">MONTH_RECD<span id="MONTH_RECD_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "DATE_INWH")
+                            {
+                                <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_INWH','Date')">DATE_INWH<span id="DATE_INWH_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_INWH','Date')">DATE_INWH<span id="DATE_INWH_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "DATE_TRANSFER")
+                            {
+                                <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_TRANSFER','Date')">DATE_TRANSFER<span id="DATE_TRANSFER_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_TRANSFER','Date')">DATE_TRANSFER<span id="DATE_TRANSFER_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "LAST_STOCKTAKE_DATE")
+                            {
+                                <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('LAST_STOCKTAKE_DATE','Date')">LAST_STOCKTAKE_DATE<span id="LAST_STOCKTAKE_DATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('LAST_STOCKTAKE_DATE','Date')">LAST_STOCKTAKE_DATE<span id="LAST_STOCKTAKE_DATE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "STATUS")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('STATUS','String')">STATUS<span id="STATUS_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('STATUS','String')">STATUS<span id="STATUS_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "CLENGTH")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('CLENGTH','Number')">CLENGTH<span id="CLENGTH_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('CLENGTH','Number')">CLENGTH<span id="CLENGTH_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "ZINCCOAT")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ZINCCOAT','Number')">ZINCCOAT<span id="ZINCCOAT_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ZINCCOAT','Number')">ZINCCOAT<span id="ZINCCOAT_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "LOCATION")
+                            {
+                                <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('LOCATION','String')">LOCATION<span id="LOCATION_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('LOCATION','String')">LOCATION<span id="LOCATION_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "INV_NO")
+                            {
+                                <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('INV_NO','String')">INV_NO<span id="INV_NO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('INV_NO','String')">INV_NO<span id="INV_NO_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "INV_DATE")
+                            {
+                                <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('INV_DATE','Date')">INV_DATE<span id="INV_DATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('INV_DATE','Date')">INV_DATE<span id="INV_DATE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                            @if (Model.sortCol == "UNITPRICE")
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('UNITPRICE','Number')">UNITPRICE<span id="UNITPRICE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('UNITPRICE','Number')">UNITPRICE<span id="UNITPRICE_ord" style="float:right;color:green;display:none;"></span></a></td>
+                            }
+                        </tr>
+                    </table>
+                    <div class="inner_table" style="width:1560px;">
+                        @if (Model.errMsg == "")
+                        {
+                            <table style="width:1560px; overflow-x: auto;">
+                                @for (int i = 0; i < Model.CoilDetails.Count; i++)
+                                {
+                                    <tr>
+                                        <td style="width:50px;">
+                                            <a onclick="gotoPage('CoilMasterDetails','SideMenu','ID=@Model.CoilDetails[i].COILID')">
+                                                @if (@Model.CoilDetails[i].COILID != null)
+                                                {@Model.CoilDetails[i].COILID}
+                                            </a>
+                                        </td>
+                                        <td class="context-menu_@Model.CoilDetails[i].TYPE" style="width:30px;">
+                                            @if (@Model.CoilDetails[i].TYPE != null)
+                                            {@Model.CoilDetails[i].TYPE}
+                                        </td>
+                                        <td class="context-menu_@Model.CoilDetails[i].COLOR" style="width:30px;">
+                                            @if (@Model.CoilDetails[i].COLOR != null)
+                                            {@Model.CoilDetails[i].COLOR}
+                                        </td>
+                                        <td style="width:30px;">@Model.CoilDetails[i].WEIGHT.ToString()</td>
+                                        @if (Model.CoilDetails[i].GAUGE.ToString().Length == 3)
+                                        {
+                                            <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,1)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
+                                        }
+                                        @if (Model.CoilDetails[i].GAUGE.ToString().Length == 4)
+                                        {
+                                            <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,2)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
+                                        }
+                                        <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
+                                        <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
+                                        <td style="width:40px;">
+                                            @if (@Model.CoilDetails[i].P_ORDER != null)
+                                            {@Model.CoilDetails[i].P_ORDER}
+                                        </td>
+                                        <td style="width:50px;">
+                                            @if (@Model.CoilDetails[i].MONTH_RECD != null)
+                                            {@Model.CoilDetails[i].MONTH_RECD}
+                                        </td>
+                                        <td style="width:70px;">@Model.CoilDetails[i].DATE_INWH.ToString()</td>
+                                        <td style="width:70px;">@Model.CoilDetails[i].DATE_TRANSFER.ToString()</td>
+                                        <td style="width:70px;">@Model.CoilDetails[i].LAST_STOCKTAKE_DATE.ToString()</td>
+                                        <td style="width:30px;">
+                                            @if (@Model.CoilDetails[i].STATUS != null)
+                                            {@Model.CoilDetails[i].STATUS}
+                                        </td>
+                                        <td style="width:30px;">@Model.CoilDetails[i].CLENGTH.ToString()</td>
+                                        <td style="width:30px;">
+                                            @if (@Model.CoilDetails[i].ZINCCOAT != null)
+                                            {@Model.CoilDetails[i].ZINCCOAT}
+                                        </td>
+                                        <td style="width:50px;">
+                                            @if (@Model.CoilDetails[i].LOCATION != null)
+                                            {@Model.CoilDetails[i].LOCATION}
+                                        </td>
+                                        <td style="width:50px;">
+                                            @if (@Model.CoilDetails[i].INV_NO != null)
+                                            {@Model.CoilDetails[i].INV_NO}
+                                        </td>
+                                        <td style="width:70px;">@Model.CoilDetails[i].INV_DATE.ToString()</td>
+                                        <td style="width:30px;">@Model.CoilDetails[i].UNITPRICE.ToString()</td>
+                                    </tr>
+                                }
+                            </table>
+                        }
+                    </div>
+                    @{
+                        var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
+                        var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
+                        var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
+                        var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
+                        var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
+                        var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
+                        var selAll = "";
+                        if (Model.totalRows > 0) { selAll = (Model.rowsPerPage == Model.totalRows) ? "selected " : ""; }
+                    }
+                    <br />
+                    <span style="float:right; font-weight:bold">
+                        @Html.TextBoxFor(o => o.totalPages, new { style = "display:none;" })Total Pages: @Model.totalPages.ToString(), Records per Page:
+                        <select name="rowsPerPage" id="rowsPerPage" onchange="reloadWorkOrders()" style="height:28px;font-size:14px;">
+                            <option value=15 @sel15>15</option>
+                            <option value=30 @sel30>30</option>
+                            <option value=50 @sel50>50</option>
+                            <option value=100 @sel100>100</option>
+                            <option value=150 @sel150>150</option>
+                            <option value=200 @sel200>200</option>
+                            <option value=@Model.totalRows @selAll>All</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <a onclick="backNavpage()"><span class="glyphicon glyphicon-backward"></span></a>&nbsp;
+                        @Html.TextBoxFor(o => o.pageNum, new { style = "width:30px;font-size:14px;font-weight:bold;border:solid 1px #666; height:28px;font-color:black;" })
+                        &nbsp;<a onclick="forwardNavpage()"><span class="glyphicon glyphicon-forward"></span></a>
+                    </span>
+                    <input type="hidden" name="rows" id="rowsCnt" value="" />
+                    <input type="hidden" name="cols" id="colsCnt" value="" />
+                    @Html.TextBoxFor(o => o.sortCol, new { id = "sortCol", style = "display:none" })
+                    @Html.TextBoxFor(o => o.sortColType, new { style = "display:none" })
+                    @Html.TextBoxFor(o => o.orderBy, new { style = "display:none" })
+                </div>
+                <table>
                     <tr>
-                        @if (Model.sortCol == "COILID")
-                        {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COILID','String')">COILID<span id="COILID_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('COILID','String')">COILID<span id="COILID_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "TYPE")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('TYPE','String')">TYPE<span id="TYPE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('TYPE','String')">TYPE<span id="TYPE_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "COLOR")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('COLOR','String')">COLOR<span id="COLOR_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('COLOR','String')">COLOR<span id="COLOR_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "WEIGHT")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WEIGHT','Number')">WEIGHT<span id="WEIGHT_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WEIGHT','Number')">WEIGHT<span id="WEIGHT_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "GAUGE")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('GAUGE','Number')">GAUGE<span id="GAUGE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('GAUGE','Number')">GAUGE<span id="GAUGE_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "WIDTH")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WIDTH','Number')">WIDTH<span id="WIDTH_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('WIDTH','Number')">WIDTH<span id="WIDTH_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "[ORDER]")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('[ORDER]','Number')">ORDER<span id="ORDER_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('[ORDER]','Number')">ORDER<span id="ORDER_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "P_ORDER")
-                        {
-                            <td style="width:40px;font-weight:bold;"><a onclick="orderToggle('P_ORDER','String')">P_ORDER<span id="P_ORDER_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:40px;font-weight:bold;"><a onclick="orderToggle('P_ORDER','String')">P_ORDER<span id="P_ORDER_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "MONTH_RECD")
-                        {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('MONTH_RECD','String')">MONTH_RECD<span id="MONTH_RECD_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('MONTH_RECD','String')">MONTH_RECD<span id="MONTH_RECD_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "DATE_INWH")
-                        {
-                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_INWH','Date')">DATE_INWH<span id="DATE_INWH_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_INWH','Date')">DATE_INWH<span id="DATE_INWH_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "DATE_TRANSFER")
-                        {
-                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_TRANSFER','Date')">DATE_TRANSFER<span id="DATE_TRANSFER_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('DATE_TRANSFER','Date')">DATE_TRANSFER<span id="DATE_TRANSFER_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "LAST_STOCKTAKE_DATE")
-                        {
-                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('LAST_STOCKTAKE_DATE','Date')">LAST_STOCKTAKE_DATE<span id="LAST_STOCKTAKE_DATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('LAST_STOCKTAKE_DATE','Date')">LAST_STOCKTAKE_DATE<span id="LAST_STOCKTAKE_DATE_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "STATUS")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('STATUS','String')">STATUS<span id="STATUS_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('STATUS','String')">STATUS<span id="STATUS_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "CLENGTH")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('CLENGTH','Number')">CLENGTH<span id="CLENGTH_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('CLENGTH','Number')">CLENGTH<span id="CLENGTH_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "ZINCCOAT")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ZINCCOAT','Number')">ZINCCOAT<span id="ZINCCOAT_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('ZINCCOAT','Number')">ZINCCOAT<span id="ZINCCOAT_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "LOCATION")
-                        {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('LOCATION','String')">LOCATION<span id="LOCATION_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('LOCATION','String')">LOCATION<span id="LOCATION_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "INV_NO")
-                        {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('INV_NO','String')">INV_NO<span id="INV_NO_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:50px;font-weight:bold;"><a onclick="orderToggle('INV_NO','String')">INV_NO<span id="INV_NO_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "INV_DATE")
-                        {
-                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('INV_DATE','Date')">INV_DATE<span id="INV_DATE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:70px;font-weight:bold;"><a onclick="orderToggle('INV_DATE','Date')">INV_DATE<span id="INV_DATE_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
-                        @if (Model.sortCol == "UNITPRICE")
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('UNITPRICE','Number')">UNITPRICE<span id="UNITPRICE_ord" style="float:right;color:green;" class="@Model.orderBy"></span></a></td>
-                        }
-                        else
-                        {
-                            <td style="width:30px;font-weight:bold;"><a onclick="orderToggle('UNITPRICE','Number')">UNITPRICE<span id="UNITPRICE_ord" style="float:right;color:green;display:none;"></span></a></td>
-                        }
+                        <td>
+                            <label for="UploadedFile" class="btn btn-primary btn-lg" style="margin-bottom:10px;margin-top:10px;">
+                                <span class="glyphicon glyphicon-folder-open"></span>  SELECT FILE
+                            </label>
+                            <span id="file-selected"></span>&nbsp;&nbsp;
+                            <input type="file" id="UploadedFile" name="UploadedFile" style="display: none " />
+                        </td>
+                        <td>
+                            <button type="button" id="Open" class="btn btn-primary btn-lg" onclick="readFile()" style="float:left; width:100px;"><span class="glyphicon glyphicon-file"></span> Open</button>
+                            <span style="font-size:100%; color:red; ">
+                                @if (Model.message != null)
+                                {@Model.message}
+                            </span>
+                            <div>@Html.TextBoxFor(model => model.openFileFlag, new { id = "openFileFlag", type = "hidden" })</div>
+                        </td>
                     </tr>
                 </table>
-                <div class="inner_table" style="width:1560px;">
-                    @if (Model.errMsg == "")
-                    {
-                        <table style="width:1560px; overflow-x: auto;">
-                            @for (int i = 0; i < Model.CoilDetails.Count; i++)
-                            {
-                                <tr>
-                                    <td style="width:50px;">
-                                        <a onclick="gotoPage('CoilMasterDetails','SideMenu','ID=@Model.CoilDetails[i].COILID')">
-                                            @if (@Model.CoilDetails[i].COILID != null)
-                                            {@Model.CoilDetails[i].COILID}
-                                        </a>
-                                    </td>
-                                    <td class="context-menu_@Model.CoilDetails[i].TYPE" style="width:30px;">
-                                        @if (@Model.CoilDetails[i].TYPE != null)
-                                        {@Model.CoilDetails[i].TYPE}
-                                    </td>
-                                    <td class="context-menu_@Model.CoilDetails[i].COLOR" style="width:30px;">
-                                        @if (@Model.CoilDetails[i].COLOR != null)
-                                        {@Model.CoilDetails[i].COLOR}
-                                    </td>
-                                    <td style="width:30px;">@Model.CoilDetails[i].WEIGHT.ToString()</td>
-                                    @if (Model.CoilDetails[i].GAUGE.ToString().Length == 3)
-                                    {
-                                        <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,1)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
-                                    }
-                                    @if (Model.CoilDetails[i].GAUGE.ToString().Length == 4)
-                                    {
-                                        <td class="context-menu_@Model.CoilDetails[i].GAUGE.ToString().Substring(2,2)" style="width:30px;">@Model.CoilDetails[i].GAUGE.ToString()</td>
-                                    }
-                                    <td style="width:30px;">@Model.CoilDetails[i].WIDTH.ToString()</td>
-                                    <td style="width:30px;">@Model.CoilDetails[i].ORDER.ToString()</td>
-                                    <td style="width:40px;">
-                                        @if (@Model.CoilDetails[i].P_ORDER != null)
-                                        {@Model.CoilDetails[i].P_ORDER}
-                                    </td>
-                                    <td style="width:50px;">
-                                        @if (@Model.CoilDetails[i].MONTH_RECD != null)
-                                        {@Model.CoilDetails[i].MONTH_RECD}
-                                    </td>
-                                    <td style="width:70px;">@Model.CoilDetails[i].DATE_INWH.ToString()</td>
-                                    <td style="width:70px;">@Model.CoilDetails[i].DATE_TRANSFER.ToString()</td>
-                                    <td style="width:70px;">@Model.CoilDetails[i].LAST_STOCKTAKE_DATE.ToString()</td>
-                                    <td style="width:30px;">
-                                        @if (@Model.CoilDetails[i].STATUS != null)
-                                        {@Model.CoilDetails[i].STATUS}
-                                    </td>
-                                    <td style="width:30px;">@Model.CoilDetails[i].CLENGTH.ToString()</td>
-                                    <td style="width:30px;">
-                                        @if (@Model.CoilDetails[i].ZINCCOAT != null)
-                                        {@Model.CoilDetails[i].ZINCCOAT}
-                                    </td>
-                                    <td style="width:50px;">
-                                        @if (@Model.CoilDetails[i].LOCATION != null)
-                                        {@Model.CoilDetails[i].LOCATION}
-                                    </td>
-                                    <td style="width:50px;">
-                                        @if (@Model.CoilDetails[i].INV_NO != null)
-                                        {@Model.CoilDetails[i].INV_NO}
-                                    </td>
-                                    <td style="width:70px;">@Model.CoilDetails[i].INV_DATE.ToString()</td>
-                                    <td style="width:30px;">@Model.CoilDetails[i].UNITPRICE.ToString()</td>
-                                </tr>
-                            }
-                        </table>
-                    }
+                <div>
+                    <button type="button" id="PRINT" class="btn btn-primary btn-lg col-md-1" style="float:right;" onclick="PrintCoilMasterLabel()"><span class="glyphicon glyphicon-print"></span> Print</button>
+                    <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
                 </div>
-                @{
-                    var sel15 = (Model.rowsPerPage == 15) ? "selected " : "";
-                    var sel30 = (Model.rowsPerPage == 30) ? "selected " : "";
-                    var sel50 = (Model.rowsPerPage == 50) ? "selected " : "";
-                    var sel100 = (Model.rowsPerPage == 100) ? "selected " : "";
-                    var sel150 = (Model.rowsPerPage == 150) ? "selected " : "";
-                    var sel200 = (Model.rowsPerPage == 200) ? "selected " : "";
-                    var selAll = "";
-                    if (Model.totalRows > 0) { selAll = (Model.rowsPerPage == Model.totalRows) ? "selected " : ""; }
-                }
-                <br />
-                <span style="float:right; font-weight:bold">
-                    @Html.TextBoxFor(o => o.totalPages, new { style = "display:none;" })Total Pages: @Model.totalPages.ToString(), Records per Page:
-                    <select name="rowsPerPage" id="rowsPerPage" onchange="reloadWorkOrders()" style="height:28px;font-size:14px;">
-                        <option value=15 @sel15>15</option>
-                        <option value=30 @sel30>30</option>
-                        <option value=50 @sel50>50</option>
-                        <option value=100 @sel100>100</option>
-                        <option value=150 @sel150>150</option>
-                        <option value=200 @sel200>200</option>
-                        <option value=@Model.totalRows @selAll>All</option>
-                    </select>
-                    &nbsp;&nbsp;
-                    <a onclick="backNavpage()"><span class="glyphicon glyphicon-backward"></span></a>&nbsp;
-                    @Html.TextBoxFor(o => o.pageNum, new { style = "width:30px;font-size:14px;font-weight:bold;border:solid 1px #666; height:28px;font-color:black;" })
-                    &nbsp;<a onclick="forwardNavpage()"><span class="glyphicon glyphicon-forward"></span></a>
-                </span>
-                <input type="hidden" name="rows" id="rowsCnt" value="" />
-                <input type="hidden" name="cols" id="colsCnt" value="" />
-                @Html.TextBoxFor(o => o.sortCol, new { id = "sortCol", style = "display:none" })
-                @Html.TextBoxFor(o => o.sortColType, new { style = "display:none" })
-                @Html.TextBoxFor(o => o.orderBy, new { style = "display:none" })
-            </div>
-            <table>
-                <tr>
-                    <td>
-                        <label for="UploadedFile" class="btn btn-primary btn-lg" style="margin-bottom:10px;margin-top:10px;">
-                            <span class="glyphicon glyphicon-folder-open"></span>  SELECT FILE
-                        </label>
-                        <span id="file-selected"></span>&nbsp;&nbsp;
-                        <input type="file" id="UploadedFile" name="UploadedFile" style="display: none " />
-                    </td>
-                    <td>
-                        <button type="button" id="Open" class="btn btn-primary btn-lg" onclick="readFile()" style="float:left; width:100px;"><span class="glyphicon glyphicon-file"></span> Open</button>
-                        <span style="font-size:100%; color:red; "> @if (Model.message != null)
-                        {@Model.message}</span>
-                        <div>@Html.TextBoxFor(model => model.openFileFlag, new { id = "openFileFlag", type = "hidden" })</div>
-                    </td>
-                </tr>
-            </table>
-            <div>
-                <button type="button" id="PRINT" class="btn btn-primary btn-lg col-md-1" style="float:right;" onclick="PrintCoilMasterLabel()"><span class="glyphicon glyphicon-print"></span> Print</button>
-                <div>@Html.TextBoxFor(model => model.printFlag, new { id = "printFlag", type = "hidden" })</div>
-            </div>
-            @*@Html.Partial("_BottomPanel")*@
+                @*@Html.Partial("_BottomPanel")*@
+            }
+
         </td>
     </tr>
 </table>
@@ -327,6 +341,12 @@
                 }
             }]
         });
+    }
+
+    function staffSearch()
+    {
+        var input = $('#whereStr').val();
+        gotoPage('CoilMasterDetails', 'SideMenu', 'ID=$('#whereStr').val()')
     }
 
     function submitNavpage(ini) {
@@ -507,18 +527,18 @@
         * Layout: Landscape
         * Paper Size: User Defined
         * Margins: Default
-        * Scale: 100 
+        * Scale: 100
         */
 
         //For big label, 1.5cm margin-top on printer preference
         //mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilMasterLabels.Count; i++){<br/><br/><br/><br/><br/><br/><table><tr><td>@Html.Raw(Model.QRcodes[i])</td><td><div>&emsp;@Html.Raw(Model.Barcodes[i])</div><div style="font-size:150%">&emsp;@Html.Raw(Model.CoilMasterLabels[i])</div></td></tr></table><br/><br/><br/>}}');
-            
+
         //For Coil Master and Slit label, no margin on printer preference
         //mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilMasterLabels.Count; i++){<table><tr><td>@Html.Raw(Model.QRcodes[i])</td><td><div style="float:right;">@Html.Raw(Model.Barcodes[i])</div><div style="font-size:150%;float:right;">@Html.Raw(Model.CoilMasterLabels[i])</div><div style="font-size:600%;font-weight:bold;">@Html.Raw(Model.CoilDetails[i].COLOR) <span style="font-size:30%;font-weight: bold;">@Html.Raw(Model.CoilDetails[i].TYPE)</span></div></td></tr></table><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>}}');
-        
+
         //For Coil Master and Slit label, no margin on printer preference, choose NONE for margin
         mywindow.document.write('@if (Model.QRcodes != null){for (int i = 0; i < Model.CoilMasterLabels.Count; i++){<table><tr><td><div style="margin-left:10px;">@Html.Raw(Model.QRcodes[i])</div></td><td><div style="font-size:400%;font-weight:bold;">@Html.Raw(Model.CoilDetails[i].COLOR) <div style="font-size:50%;font-weight: bold;">@Html.Raw(Model.CoilDetails[i].TYPE)</div><div style="font-size:50%; font-weight:bold;">@ViewBag.month_year</div></td><td><div style="float:right;margin-right:10px;">@Html.Raw(Model.Barcodes[i])</div><div style="font-size:150%;float:right;margin-right:10px;">@Html.Raw(Model.CoilMasterLabels[i])</div></td></tr></table><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>}}');
-    
+
 
         mywindow.document.write('</body></html>');
         mywindow.document.close();

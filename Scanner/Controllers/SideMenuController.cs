@@ -336,6 +336,7 @@ namespace Scanner.Controllers
             ViewBag.Title = "Coil Master Details";
             Session["CurrForm"] = "CoilMasterDetails";
             string CoilID = Request.QueryString["ID"];
+            if (CoilID == "") CoilID = Request["whereStr"];
 
             var sql = "select * from GRAM_SYD_LIVE.dbo.X_COIL_MASTER where COILID = '" + CoilID + "';"; // to get all information from X_COIL_MASTER table where CoilID matches
 
@@ -1174,6 +1175,19 @@ namespace Scanner.Controllers
                             // for each line, store them in the temp table, if already exist, skip them
                             // then grab the first element in the list, run the validation check on master coil table or slitted coil table, depends on the length of the first element
                             // update the temp table status
+
+                            try
+                            {
+                                using (var context = new DbContext(Global.ConnStr))
+                                {
+                                    object[] parameters = lineArr;
+                                    context.Database.ExecuteSqlCommand("GramOnline.dbo.proc_Y_UpdateExceptionCoilCheck {0},{1},{2},{3},{4},{5}", parameters);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("test to be finished");
+                            }
 
                         }
                         System.IO.File.Delete(Server.MapPath(@"~\TmpFiles\" + gid.ToString() + ".csv"));

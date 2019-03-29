@@ -3,7 +3,9 @@
     ViewBag.Title = "Coil Master Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+    var role = ((Scanner.Models.User)Session["User"]).Role;
 
+    bool isAdmin = (role == "Gram Admin") ;
 
 }
 
@@ -16,6 +18,8 @@
         </td>
         <td valign="top">
             @Html.Partial("_PageTitlePanel")
+            @if (isAdmin)
+            {
             <div class="col-md-12">
                 <table class="col-md-6">
                     <tr>
@@ -98,6 +102,38 @@
                     </tr>
                 </table>
             </div>
+            }
+            else
+            {
+            <div class="col-md-12">
+                <table class="col-md-6">
+                    <tr>
+                        <td style="width:200px;font-weight:bold;">Coil ID</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @id = "COILID", @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">TYPE</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].TYPE, new { @id = "TYPE", @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">COLOR</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].COLOR, new { @id = "COLOR", @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">WEIGHT</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].WEIGHT, new { @id = "WEIGHT", @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">GAUGE</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].GAUGE, new { @id = "GAUGE", @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;">WIDTH</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].WIDTH, new { @id = "WIDTH", @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                    </tr>
+                </table>
+            </div>
+            }
             <div class="col-md-12">
                 <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('CoilMaster','SideMenu','');" />&nbsp;&nbsp;
                 <input type="submit" id="updateButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="update()" />

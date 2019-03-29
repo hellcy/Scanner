@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Coil";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
+    var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName + " " + ((Scanner.Models.User)Session["User"]).Role;
 }
 
 <style type="text/css" id="custom-background-css">
