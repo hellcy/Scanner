@@ -109,7 +109,7 @@
                 <table class="col-md-6">
                     <tr>
                         <td style="width:200px;font-weight:bold;">Coil ID</td>
-                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @id = "COILID", @readonly = true, style = "background-color:#e2e2e2;" })</td>
+                        <td>@Html.TextBoxFor(model => model.CoilDetails[0].COILID, new { @id = "COILID", @name = "COILID", @readonly = true, style = "background-color:#e2e2e2;" })</td>
                     </tr>
                     <tr>
                         <td style="font-weight:bold;">TYPE</td>
@@ -136,7 +136,14 @@
             }
             <div class="col-md-12">
                 <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('CoilMaster','SideMenu','');" />&nbsp;&nbsp;
-                <input type="submit" id="updateButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="update()" />
+                @if (role == "Gram Admin")
+                {
+                    <input type="submit" id="updateButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="update()" />
+                }
+                else
+                {
+                    <button type="button" id="updateButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="gotoPage('StaffCoilMasterDetails', 'SideMenu', 'ID=@Model.CoilDetails[0].COILID')" >UPDATE</button>
+                }
                 <div>
                     @Html.TextBoxFor(model => model.CoilDetails[0].updateFlag, new { id = "updateFlag", type = "hidden" })
                 </div>

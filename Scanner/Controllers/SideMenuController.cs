@@ -408,9 +408,51 @@ namespace Scanner.Controllers
             catch (Exception e)
             {
                 coil.errMsg = "No Record Found: ";
+                coil.CoilDetails[0].COILID = "";
+                coil.CoilDetails[0].TYPE = "";
+                coil.CoilDetails[0].COLOR = "";
+                coil.CoilDetails[0].WEIGHT = 0;
+                coil.CoilDetails[0].GAUGE = 0;
+                coil.CoilDetails[0].WIDTH = 0;
+
             }
 
             return View(coil);
+        }
+
+        [SessionExpire]
+        [HttpPost]
+        [Authorize]
+        public ActionResult StaffCoilMasterDetails(CoilMasters coil)
+        {
+            ViewBag.Title = "Staff Coil Master Details";
+            Session["CurrForm"] = "CoilMasterDetails";
+            string CoilID = Request.QueryString["ID"];
+
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    if (coil.CoilDetails != null) // first enter the page the coil.CoilDetails is null.
+                    {
+                        object[] parameters = { CoilID };
+                        context.Database.ExecuteSqlCommand("example procedure {0}", parameters);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                coil.errMsg = "No Record Found: ";
+                coil.CoilDetails[0].COILID = "";
+                coil.CoilDetails[0].TYPE = "";
+                coil.CoilDetails[0].COLOR = "";
+                coil.CoilDetails[0].WEIGHT = 0;
+                coil.CoilDetails[0].GAUGE = 0;
+                coil.CoilDetails[0].WIDTH = 0;
+
+            }
+
+            return View("CoilMasterDetails", coil);
         }
 
         [SessionExpire]
