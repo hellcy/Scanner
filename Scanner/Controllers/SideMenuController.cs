@@ -435,6 +435,9 @@ namespace Scanner.Controllers
                 {
                     if (coil.CoilDetails != null) // first enter the page the coil.CoilDetails is null.
                     {
+                        // to do
+                        // change the procedure name provided
+                        // procedure will update the status and time in the master coil table
                         object[] parameters = { CoilID };
                         context.Database.ExecuteSqlCommand("example procedure {0}", parameters);
                     }
@@ -1305,12 +1308,6 @@ namespace Scanner.Controllers
         {
             Arithmetics arithmetics = new Arithmetics();
             CoilMasters coilMasters = new CoilMasters();
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    Arithmetic arithmetic = new Arithmetic();
-            //    arithmetics.arithmetics.Add(arithmetic);
-            //}
-            //arithmetics.arithmetics[0].prime = "";
             return View(arithmetics);
         }
 
@@ -1345,6 +1342,13 @@ namespace Scanner.Controllers
                     return false;
 
             return true;
+        }
+
+        public ActionResult Lottery()
+        {
+            Lottery lottery = new Lottery();
+            lottery.totalPrize = 0;
+            return View(lottery);
         }
 
     }

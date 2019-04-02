@@ -1,0 +1,153 @@
+﻿@model Scanner.Models.Lottery
+@{
+    ViewBag.Title = "Lottery";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    .lottery {
+        margin: 0 auto;
+        text-align: center;
+        width:400px;
+    }
+
+    .lottery ul li {
+        border: 1px solid black;
+        display: inline;
+    }
+
+    .table-hover > tbody > tr > td:hover, .table-hover > tbody > tr > th:hover {
+        background-color: #808080 !important;
+    }
+
+    .table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+        background-color: inherit;
+    }
+</style>
+
+<table class="bodyTable">
+    <tr>
+        <td valign="top">
+            @Html.Partial("_PageTitlePanel")
+            <div class="col-md-12">
+                <div style="text-align:center">
+                    <p style="font-size:35px">Total Prize</p>
+                    <br />
+                    <p style="font-size:50px;">$ @Model.totalPrize</p>
+                </div>
+                <br />
+
+                <!-- Trigger the modal with a button -->
+                <div class="col-md-12" style="text-align:center">
+                    <button type="button" class="btn btn-info btn-lg" style="width:300px" data-toggle="modal" data-target="#myModal">Open Modal</button>
+                    <br />
+
+                    <div class="lottery col-md-12">
+                        <ul>
+                            <li>Your Lottery: </li>
+                            <li style="width:50px" ng-repeat="x in selection">{{x}}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Good Luck!</h4>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered table-hover">
+                                    <caption>
+                                        Please select 5 lucky numbers:
+                                    </caption>
+                                    <tbody>
+                                        @{
+                                            int i = 0;
+                                            for (int row = 0; row < 6; row++)
+                                            {
+                                                <tr>
+                                                    @for (int column = 0; column < 5; column++)
+                                                    {
+                                                        <td id="@row @column" ng-click="saveToSelection(@i)">{{luckyNumbers[@i]}}</td>
+                                                        i++;
+                                                    }
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                                <table class="table table-bordered table-hover">
+                                    <caption>
+                                        Please select 1 special number:
+                                    </caption>
+                                    <tbody>
+                                        @{
+                                            int j = 1;
+                                            for (int row = 0; row < 2; row++)
+                                            {
+                                                <tr>
+                                                    @for (int column = 0; column < 5; column++)
+                                                    {
+                                                        <td id="special @row @column" ng-click="saveToSelectionSpecial(@j)">{{speicalNumbers[@j]}}</td>
+                                                        j++;
+                                                    }
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                                <table>
+                                    <caption>
+                                        Your selection:
+                                    </caption>
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:50px" ng-repeat="x in selection">{{x}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Save and Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Modal -->
+            </div>
+            <div class="TwrapOverFlow" style="margin-right:10px;">
+            </div>
+        </td>
+    </tr>
+</table>
+
+<script language="javascript">
+    var app = angular.module("myApp", []);
+
+    app.controller('myCtrl', function ($scope) {
+        $scope.luckyNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+        $scope.specialNumebrs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $scope.selection = [];
+
+        $scope.saveToSelection = function (index) {
+            if ($scope.selection.length < 5)
+            {
+                $scope.selection.push($scope.luckyNumbers[index]);
+            }
+        }
+
+        $scope.saveToSelectionSpecial = function (index)
+        {
+            if ($scope.selection.length < 6)
+            {
+                $scope.selection.push($scope.specialNumebrs[index])
+            }
+        }
+    })
+</script>

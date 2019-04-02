@@ -235,6 +235,7 @@
     <Compile Include="Models\CollectedOrders.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\LoginUser.cs" />
+    <Compile Include="Models\Lottery.cs" />
     <Compile Include="Models\PasswordReq.cs" />
     <Compile Include="Models\CoilMaster.cs" />
     <Compile Include="Models\ReceivedOrders.cs" />
@@ -449,6 +450,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\SideMenu\Lottery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
