@@ -74,7 +74,7 @@
                                                 <tr>
                                                     @for (int column = 0; column < 5; column++)
                                                     {
-                                                        <td id="@row @column" ng-click="saveToSelection(@i)">{{luckyNumbers[@i]}}</td>
+                                                        <td id="@i" ng-click="saveToSelection(@i)">{{luckyNumbers[@i]}}</td>
                                                         i++;
                                                     }
                                                 </tr>
@@ -94,7 +94,7 @@
                                                 <tr>
                                                     @for (int column = 0; column < 5; column++)
                                                     {
-                                                        <td id="special @row @column" ng-click="saveToSelectionSpecial(@j)">{{specialNumbers[@j]}}</td>
+                                                        <td id="special_@j" ng-click="saveToSelectionSpecial(@j)">{{specialNumbers[@j]}}</td>
                                                         j++;
                                                     }
                                                 </tr>
@@ -108,9 +108,9 @@
                                     </caption>
                                     <tbody>
                                         <tr>
-                                            <td style="width:50px" ng-repeat="x in selection"><button type="button" ng-click="removeFromSelection()">{{x}}</button></td>
+                                            <td style="width:50px" ng-repeat="x in selection"><button type="button" ng-click="removeFromSelection(x)">{{x}}</button></td>
                                             <td style="width:30px;" text-align="center">|</td>
-                                            <td style="width:50px"><button type="button" ng-click="removeFromSpecial()">{{special}}</button></td>
+                                            <td style="width:50px"><button type="button" ng-click="removeFromSpecial(special)">{{special}}</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -138,23 +138,40 @@
         $scope.selection = [];
         $scope.special = "";
 
-        $scope.saveToSelection = function (index) {
-            if ($scope.selection.length < 5)
+        $scope.saveToSelection = function (value) {
+            if ($.inArray(value + 1, $scope.selection) != -1)
             {
-                $scope.selection.push($scope.luckyNumbers[index]);
+                $scope.removeFromSelection(value + 1);
+            }
+            else if ($scope.selection.length < 5 && $.inArray(value + 1, $scope.selection) == -1)
+            {
+                $('#' + value).css('background', '#808080');
+                $scope.selection.push($scope.luckyNumbers[value]);
             }
         }
 
-        $scope.saveToSelectionSpecial = function (index)
+        $scope.saveToSelectionSpecial = function (value)
         {
-            $scope.special = $scope.specialNumbers[index];
+            if ($scope.special == value + 1) $scope.removeFromSpecial(value + 1);
+            else if ($scope.special == "")
+            {
+                $('#special_' + value).css('background', '#808080');
+                $scope.special = $scope.specialNumbers[value];
+            }
         }
 
-        $scope.removeFromSelection = function () {
-            $scope.selection.pop();
+        $scope.removeFromSelection = function (value) {
+            var colorValue = value - 1;
+            $('#' + colorValue).css('background', "");
+            var index = $scope.selection.indexOf(value);
+            if (index > -1) {
+                $scope.selection.splice(index, 1);
+            }
         }
 
-        $scope.removeFromSpecial = function () {
+        $scope.removeFromSpecial = function (value) {
+            var colorValue = value - 1;
+            $('#special_' + colorValue).css('background', "");
             $scope.special = "";
         }
 
