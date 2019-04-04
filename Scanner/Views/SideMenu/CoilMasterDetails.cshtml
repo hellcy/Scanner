@@ -5,7 +5,7 @@
     var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
     var role = ((Scanner.Models.User)Session["User"]).Role;
 
-    bool isAdmin = (role == "Gram Admin") ;
+    bool isAdmin = (role == "Gram Admin Manager" || role == "Gram Admin Super") ;
 
 }
 
@@ -136,7 +136,7 @@
             }
             <div class="col-md-12">
                 <input type="button" id="back" value="BACK" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px;" onclick="gotoPage('CoilMaster','SideMenu','');" />&nbsp;&nbsp;
-                @if (role == "Gram Admin")
+                @if (isAdmin)
                 {
                     <input type="submit" id="updateButton" value="UPDATE" class="btn btn-primary btn-lg" style="height:40px; width: 100px; margin-bottom:10px;margin-top:10px; float:right;" onclick="update()" />
                 }

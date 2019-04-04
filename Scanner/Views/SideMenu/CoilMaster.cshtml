@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var loginUserName = ((Scanner.Models.User)Session["User"]).FirstName + " " + ((Scanner.Models.User)Session["User"]).LastName;
     var role = ((Scanner.Models.User)Session["User"]).Role;
+    bool isAdmin = (role == "Gram Admin Manager" || role == "Gram Admin Super");
+
 
 }
 <table class="bodyTable">
@@ -21,7 +23,7 @@
                     <td>&nbsp;</td>
                     <td>@Html.TextBoxFor(o => o.whereStr, new { autocomplete = "off" })</td>
                     <td>&nbsp;</td>
-                    @if (role == "Gram Admin")
+                    @if (isAdmin)
                     {
                         <td><button type="button" class="btn btn-primary" onclick="submitNavpage(1)"><span class="glyphicon glyphicon-search"></span> Search</button></td>
                     }
@@ -33,7 +35,7 @@
                     <td><font color="red">@Html.ValidationMessageFor(o => o.whereStr)</font></td>
                 </tr>
             </table>
-            @if (role == "Gram Admin")
+            @if (isAdmin)
             {
                 <div class="TwrapOverFlow" style="width:1560px;">
                     <span style="float:right; font-weight:bold">Total Coils : @Model.totalRows.ToString(),&nbsp;&nbsp;&nbsp;Page: @Model.pageNum.ToString()</span>
