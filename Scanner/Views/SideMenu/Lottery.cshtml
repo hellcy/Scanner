@@ -3,14 +3,13 @@
     ViewBag.Title = "Lottery";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <style>
     p {
-        font-size:25px;
+        font-size: 25px;
     }
 
     .lottery ul li {
-        font-size:30px;
+        font-size: 30px;
     }
 
     .table-hover > tbody > tr > td:hover, .table-hover > tbody > tr > th:hover {
@@ -20,6 +19,90 @@
     .table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
         background-color: inherit;
     }
+
+    
+    /* Prize info fade in to appear. */
+    .aniPrize::after {
+        animation: zoom 2s;
+        color:cornflowerblue;
+        animation-iteration-count: 1;
+        animation-fill-mode: both;
+        content: attr(data-num);
+        cursor: default;
+        font-size: 100px;
+        position: absolute;
+        top: 50%;
+        left: 25%;
+        text-align: center;
+        margin-left: -24px;
+        opacity: 0;
+        width: 50%;
+    }
+
+    /* Calculator after dividing by zero */
+    .broken {
+        animation: broken 2s;
+        transform: translate3d(0,-2000px,0);
+        opacity: 0;
+    }
+
+    /* Animations */
+    @@keyframes zoom {
+        0% {
+            transform: scale(.2);
+            opacity: 1;
+        }
+
+        70% {
+            transform: scale(1);
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    /* Division by zero animation */
+    @@keyframes broken {
+        0% {
+            transform: translate3d(0,0,0);
+            opacity: 1;
+        }
+
+        5% {
+            transform: rotate(5deg);
+        }
+
+        15% {
+            transform: rotate(-5deg);
+        }
+
+        20% {
+            transform: rotate(5deg);
+        }
+
+        25% {
+            transform: rotate(-5deg);
+        }
+
+        50% {
+            transform: rotate(45deg);
+        }
+
+        70% {
+            transform: scale(.2);
+            opacity: 1;
+        }
+
+        95% {
+            transform: scale(1);
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+    
 </style>
 
 <table class="bodyTable">
@@ -30,14 +113,14 @@
                 <div style="text-align:center">
                     <p style="font-size:35px">Total Prize</p>
                     <br />
-                    <p style="font-size:50px;">$ @Model.totalPrize</p>
+                    <p style="font-size:50px;" id="prize" data-num="{{prizeAni[prizeLevel]}}">$ @Model.totalPrize</p>
                 </div>
                 <br />
 
                 <!-- Trigger the modal with a button -->
                 <div class="col-md-12" style="text-align:center">
                     <button type="button" class="btn btn-info btn-lg" style="width:300px" data-toggle="modal" data-target="#buyEntryModal" ng-click="clearAllSelection()">Buy New Entry $ 20</button>
-                    <button type="button" class="btn btn-info btn-lg" style="width:300px" id="spin">Draw</button>
+                    <button type="button" class="btn btn-info btn-lg" style="width:300px" id="spin" ng-click="checkSelection()" data-num="{{selection}}">Draw</button>
                 </div>
                 <br />
                 <br />
@@ -48,7 +131,13 @@
                         <li style="width:50px" ng-repeat="x in selection">{{x}}</li>
                         <li style="width:50px">{{special}}</li>
                     </ul>
-                    <p id="num" style="text-align:center"></p>
+                    <ul style="text-align:center" class="list-inline">
+                        <li style="width:50px" id="num_0"></li>
+                        <li style="width:50px" id="num_1"></li>
+                        <li style="width:50px" id="num_2"></li>
+                        <li style="width:50px" id="num_3"></li>
+                        <li style="width:50px" id="num_4"></li>
+                    </ul>
                 </div>
 
                 <!-- Modal -->
@@ -126,6 +215,8 @@
             <div class="col-md-12">
                 <div class="col-md-6" style="text-align:center">
                     <p>Your wallet</p>
+                    <p style="font-size:50px;">$ <span id="wallet">@Model.wallet</span></p>
+                    @Html.TextBoxFor(model => model.wallet, new { id = "saveWallet", type = "hidden" })
                 </div>
                 <div class="col-md-6" style="text-align:center">
                     <p>Prize history</p>
@@ -138,88 +229,175 @@
 </table>
 
 <script language="javascript">
-    var app = angular.module("myApp", []);
+        var app = angular.module("myApp", []);
 
-    app.controller('myCtrl', function ($scope) {
-        $scope.luckyNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
-        $scope.specialNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        $scope.selection = [];
-        $scope.special = "";
-
-        $scope.saveToSelection = function (value) {
-            if ($.inArray(value, $scope.selection) != -1)
-            {
-                $scope.removeFromSelection(value);
-            }
-            else if ($scope.selection.length < 5 && $.inArray(value, $scope.selection) == -1)
-            {
-                $('#' + value).css('background', '#808080');
-                $scope.selection.push(value);
-            }
-        }
-
-        $scope.saveToSelectionSpecial = function (value)
-        {
-            if ($scope.special == value) $scope.removeFromSpecial(value);
-            else if ($scope.special == "")
-            {
-                $('#special_' + value).css('background', '#808080');
-                $scope.special = $scope.specialNumbers[value];
-            }
-            else {
-                $scope.removeFromSpecial($scope.special)
-                $('#special_' + value).css('background', '#808080');
-                $scope.special = $scope.specialNumbers[value];
-            }
-        }
-
-        $scope.removeFromSelection = function (value) {
-            $('#' + value).css('background', "");
-            var index = $scope.selection.indexOf(value);
-            if (index > -1) {
-                $scope.selection.splice(index, 1);
-            }
-        }
-
-        $scope.removeFromSpecial = function (value) {
-            $('#special_' + value).css('background', "");
+        app.controller('myCtrl', function ($scope) {
+            $scope.luckyNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+            $scope.specialNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            $scope.selection = [];
             $scope.special = "";
-        }
 
-        $scope.clearAllSelection = function () {
-            var length = $scope.selection.length
-            for (var i = 0; i < length; i++)
-            {
-                $scope.removeFromSelection($scope.selection[0])
+            $scope.draw = [];
+            $scope.prizeLevel = 0;
+            $scope.prizeAni = ["No Match!", "Single Match!", "Double Match!", "Triple Match!", "Quadruple Match!", "Perfect Match!"];
+            $scope.wallet = @Model.wallet;
+
+            $scope.saveToSelection = function (value) {
+                if ($.inArray(value, $scope.selection) != -1) {
+                    $scope.removeFromSelection(value);
+                }
+                else if ($scope.selection.length < 5 && $.inArray(value, $scope.selection) == -1) {
+                    $('#' + value).css('background', '#808080');
+                    $scope.selection.push(value);
+                }
             }
-            $scope.removeFromSpecial($scope.special);
-        }
-    })
 
-    // for spinning numbers
-    $.fn.animateNumbers = function (stop, commas, duration, ease) {
-        return this.each(function () {
-            var $this = $(this);
-            var start = parseInt($this.text().replace(/,/g, ""));
-            commas = (commas === undefined) ? true : commas;
-            $({ value: start }).animate({ value: stop }, {
-                duration: duration == undefined ? 3000 : duration,
-                easing: ease == undefined ? "swing" : ease,
-                step: function () {
-                    $this.text(Math.floor(this.value)*Math.random()*10);
-                    if (commas) { $this.text($this.text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")); }
-                },
-                complete: function () {
-                    if (parseInt($this.text()) !== stop) {
-                        $this.text(stop);
-                        if (commas) { $this.text($this.text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")); }
+            $scope.saveToSelectionSpecial = function (value) {
+                if ($scope.special == value) $scope.removeFromSpecial(value);
+                else if ($scope.special == "") {
+                    $('#special_' + value).css('background', '#808080');
+                    $scope.special = $scope.specialNumbers[value];
+                }
+                else {
+                    $scope.removeFromSpecial($scope.special)
+                    $('#special_' + value).css('background', '#808080');
+                    $scope.special = $scope.specialNumbers[value];
+                }
+            }
+
+            $scope.removeFromSelection = function (value) {
+                $('#' + value).css('background', "");
+                var index = $scope.selection.indexOf(value);
+                if (index > -1) {
+                    $scope.selection.splice(index, 1);
+                }
+            }
+
+            $scope.removeFromSpecial = function (value) {
+                $('#special_' + value).css('background', "");
+                $scope.special = "";
+            }
+
+            $scope.clearAllSelection = function () {
+                //getWallet();
+                //@Model.wallet = getWallet();
+                $scope.wallet = $scope.wallet -20;
+                $('#wallet').animateNumbers($scope.wallet);
+                var length = $scope.selection.length
+                for (var i = 0; i < length; i++) {
+                    $scope.removeFromSelection($scope.selection[0])
+                }
+                $scope.removeFromSpecial($scope.special);
+            }
+
+            $scope.checkSelection = function () {
+                $scope.prizeLevel = 0;
+                $('#prize').removeClass('aniPrize');
+                $('#num_0').removeClass('broken');
+                $('#num_1').removeClass('broken');
+                $('#num_2').removeClass('broken');
+                $('#num_3').removeClass('broken');
+                $('#num_4').removeClass('broken');
+
+                setTimeout(function () {
+                    $scope.draw[0] = parseInt($('#num_0').html());
+                    $scope.draw[1] = parseInt($('#num_1').html());
+                    $scope.draw[2] = parseInt($('#num_2').html());
+                    $scope.draw[3] = parseInt($('#num_3').html());
+                    $scope.draw[4] = parseInt($('#num_4').html());
+                    console.log($scope.draw);
+                    for (var i = 0; i < $scope.draw.length; i++) {
+                        if ($.inArray($scope.draw[i], $scope.selection) != -1) {
+                            // angular won't call $digest with Asynchronous calls, so to force angular to update the view
+                            // we need the $apply function
+                            console.log($scope.draw[i] + " " + $scope.selection);
+                            $('#num_' + i).addClass('broken');
+                            $scope.$apply(function () {
+                                $scope.prizeLevel++;
+                            })
+                        }
                     }
+                    switch ($scope.prizeLevel) {
+                        case 1:
+                            $scope.wallet = $scope.wallet + 20;
+                            break;
+                        case 2:
+                            $scope.wallet = $scope.wallet + 100;
+                            break;
+                        case 3:
+                            $scope.wallet = $scope.wallet + 500;
+                            break;
+                        case 4:
+                            $scope.wallet = $scope.wallet + 1000;
+                            break;
+                        case 5:
+                            $scope.wallet = $scope.wallet + 10000;
+                            break;
+                        default:
+                            $scope.wallet = $scope.wallet - 20;
+                            break;
+                    }
+                    $('#prize').addClass('aniPrize');
+                    $('#wallet').animateNumbers($scope.wallet);
+                    $('#saveWallet').val($scope.wallet);
+                    setTimeout(function () {
+                        sendWallet($scope.wallet);
+                    }, 600);
+                }, 600);
+            }
+
+        });
+
+        // for spinning numbers
+        $.fn.animateNumbers = function (stop, commas, duration, ease) {
+            return this.each(function () {
+                var $this = $(this);
+                var start = parseInt($this.text().replace(/,/g, ""));
+                commas = (commas === undefined) ? true : commas;
+                $({ value: start }).animate({ value: stop }, {
+                    duration: duration == undefined ? 500 : duration,
+                    easing: ease == undefined ? "swing" : ease,
+                    step: function () {
+                        $this.text(Math.floor(this.value));
+                        if (commas) { $this.text($this.text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")); }
+                    },
+                    complete: function () {
+                        if (parseInt($this.text()) !== stop) {
+                            $this.text(stop);
+                            if (commas) { $this.text($this.text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")); }
+                        }
+                    }
+                });
+            });
+        };
+
+        $('#spin').on('click', function (event) {
+            $('#num_0').animateNumbers(Math.round(Math.random() * 30 + 1));
+            $('#num_1').animateNumbers(Math.round(Math.random() * 30 + 1));
+            $('#num_2').animateNumbers(Math.round(Math.random() * 30 + 1));
+            $('#num_3').animateNumbers(Math.round(Math.random() * 30 + 1));
+            $('#num_4').animateNumbers(Math.round(Math.random() * 30 + 1));
+        });
+
+        function sendWallet(wallet) {
+            $.ajax({
+                type: "POST",
+                url: "Lottery",
+                data: "&wallet=" + wallet,
+                complete: function (data) {
+                    //alert("Item added to cart");
                 }
             });
-        });
-    };
+        }
 
-    $('#spin').on('click', function (event) {
-        $('#num').animateNumbers(Math.round(Math.random() * 30));
-    });
+        function getWallet() {
+            $.ajax({
+                type: "GET",
+                url: "getLottery",
+                success: function (data) {
+                    alert(data);
+                    return data;
+                }
+            });
+        }
 </script>

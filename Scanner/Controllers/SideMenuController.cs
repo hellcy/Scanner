@@ -1347,8 +1347,56 @@ namespace Scanner.Controllers
         public ActionResult Lottery()
         {
             Lottery lottery = new Lottery();
-            lottery.totalPrize = 0;
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    lottery.wallet = context.Database.SqlQuery<double>("SELECT wallet FROM GramOnline.dbo.TB_Y_Lottery WHERE account = 'Test'").ToList<double>()[0];
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("test to be finished");
+            }
             return View(lottery);
+        }
+        
+        [HttpPost]
+        public ActionResult Lottery(Lottery lottery)
+        {
+            ViewBag.Title = "Lottery";
+            Session["CurrForm"] = "Lottery";
+
+            double test = lottery.wallet;
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    context.Database.ExecuteSqlCommand("UPDATE GramOnline.dbo.TB_Y_Lottery SET wallet = " + lottery.wallet + ", count = " + lottery.count + " WHERE account = 'Test'");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("test to be finished");
+            }
+            return View(lottery);
+        }
+
+        public double getLottery()
+        {
+            double wallet = 0;
+            try
+            {
+                using (var context = new DbContext(Global.ConnStr))
+                {
+                    wallet = context.Database.SqlQuery<double>("SELECT wallet FROM GramOnline.dbo.TB_Y_Lottery WHERE account = 'Test'").ToList<double>()[0];
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("test to be finished");
+            }
+            return wallet;
         }
 
     }
