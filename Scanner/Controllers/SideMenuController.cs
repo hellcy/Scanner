@@ -894,7 +894,7 @@ namespace Scanner.Controllers
                     fillCurrTable(Request.Form["frmName"].ToString(), rowsCnt);
                 }
 
-                orders.sortCol = "DefaultSort";
+                orders.sortCol = "ORDSTATUS";
                 orders.sortColType = "Number";
                 orders.rowsPerPage = 15;
                 orders.pageNum = 1;
@@ -906,7 +906,7 @@ namespace Scanner.Controllers
                 && orders.sortCol != "REFERENCE" && orders.sortCol != "STAFFNO" && orders.sortCol != "EXPIRY_DATE" && orders.sortCol != "X_BR_ORDER" && orders.sortCol != "X_BR_ACCNO"
                 && orders.sortCol != "X_BR_INVNO" && orders.sortCol != "X_CATEGORY" && orders.sortCol != "X_COMPLETION_DATE")
             {
-                orders.sortCol = "DefaultSort";
+                orders.sortCol = "ORDSTATUS";
             }
 
             if (String.IsNullOrEmpty(orders.whereStr))

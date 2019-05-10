@@ -19,7 +19,7 @@
         font-weight: bold;
         font-size: 20px;
         padding: 10px;
-        animation: animated_div 5s infinite;
+        animation: animated_div 5s 0; /*infinite*/
         -moz-animation: animated_div 5s infinite;
         -webkit-animation: animated_div 5s infinite;
         -o-animation: animated_div 5s infinite;
@@ -225,7 +225,7 @@
 <div class="example2">
     <h3>Nancy, you need your own Google account!Nancy, you need your own Google account!Nancy, you need your own Google account!</h3>
 </div>
-<div id="animated_div">Nancy, you need your own Google account!</div>
+@*<div id="animated_div">Nancy, you need your own Google account!</div>*@
 <table class="bodyTable">
     <tr>
         <td style="width:300px;vertical-align:top;">
@@ -261,8 +261,15 @@
                         <p>The url of this page is:</p>
                         <h3>{{myUrl}}</h3>
                         <p>Today's welcome message is:</p>
-                        @*<h1>{{myWelcome}}</h1>*@
+                        <h1>{{myWelcome}}</h1>
                         <h1>{{theTime}}</h1>
+                        <select ng-model="selectedCar" ng-options="x.name for x in Persons"></select>
+
+                        <h1>You selected: {{selectedCar.name}}</h1>
+                        <p>Its color is: {{selectedCar.age}}</p>
+                    </td>
+                    <td>
+                        <div id="like_button_container"></div>
                     </td>
                 </tr>
             </table>
@@ -297,8 +304,12 @@
 
         $scope.myUrl = $location.absUrl();
 
-        $http.get("http://localhost:50252/scanner/").then(function (response) {
-            $scope.myWelcome = response.data;
+        //$http.get("http://localhost:50252/scanner/").then(function (response) {
+        //    $scope.myWelcome = response.data;
+        //});
+
+        $http.get("https://www.w3schools.com/angular/customers.php").then(function (response) {
+            $scope.mywelcome = response.data.records;
         });
 
         $scope.theTime = new Date().toLocaleTimeString();

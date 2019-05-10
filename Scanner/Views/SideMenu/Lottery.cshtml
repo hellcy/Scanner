@@ -42,8 +42,8 @@
     /* Calculator after dividing by zero */
     .broken {
         animation: broken 2s;
-        transform: translate3d(0,-2000px,0);
-        opacity: 0;
+        /*transform: translate3d(0,-2000px,0);*/
+        color: blueviolet;
     }
 
     /* Animations */
@@ -94,15 +94,11 @@
             opacity: 1;
         }
 
-        95% {
-            transform: scale(1);
-        }
-
         100% {
-            opacity: 0;
+            transform: scale(1);
+            color:blueviolet;
         }
     }
-    
 </style>
 
 <table class="bodyTable">

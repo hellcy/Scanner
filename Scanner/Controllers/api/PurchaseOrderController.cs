@@ -61,6 +61,7 @@ namespace Scanner.Controllers.api
         // get all orders by acc name
         public JObject Get(string ACCNAME)
         {
+            ACCNAME = ACCNAME.Replace("%20", " ");
             IList<ReceivedOrder> results = new List<ReceivedOrder>();
             try
             {
